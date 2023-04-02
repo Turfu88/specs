@@ -1,3 +1,36 @@
-controllers:
-    resource: ../src/Controller/
-    type: attribute
+
+# API
+api:
+    path: '/api/create-user'
+    controller: App\Controller\ApiController::index
+    methods: GET
+default1:
+    path: '/api'
+    controller: App\Controller\ApiController::default
+    methods: GET
+default2:
+    path: '/api/{path}'
+    controller: App\Controller\ApiController::default
+    methods: GET
+default3:
+    path: '/api/{path}/{slug}'
+    controller: App\Controller\ApiController::default
+    methods: GET
+default4:
+    path: '/api/{path}/{slug}/{id}'
+    controller: App\Controller\ApiController::default
+    methods: GET
+
+# APP
+app_landing:
+    path: /
+    controller: App\Controller\AppController
+app:
+    path: '/{path}'
+    controller: App\Controller\AppController
+app2:
+    path: '/{path}/{slug}'
+    controller: App\Controller\AppController
+app3:
+    path: '/{path}/{slug}/{id}'
+    controller: App\Controller\AppController
