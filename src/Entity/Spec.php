@@ -53,11 +53,15 @@ class Spec
     #[ORM\OneToMany(mappedBy: 'spec', targetEntity: History::class)]
     private Collection $histories;
 
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'source')]
+    private ?self $source = null;
+
     public function __construct()
     {
         $this->elements = new ArrayCollection();
         $this->feedback = new ArrayCollection();
         $this->histories = new ArrayCollection();
+        $this->source = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -257,6 +261,40 @@ class Spec
             // set the owning side to null (unless already changed)
             if ($history->getSpec() === $this) {
                 $history->setSpec(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getSource(): ?self
+    {
+        return $this->source;
+    }
+
+    public function setSource(?self $source): self
+    {
+        $this->source = $source;
+
+        return $this;
+    }
+
+    public function addSource(self $source): self
+    {
+        if (!$this->source->contains($source)) {
+            $this->source->add($source);
+            $source->setSource($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSource(self $source): self
+    {
+        if ($this->source->removeElement($source)) {
+            // set the owning side to null (unless already changed)
+            if ($source->getSource() === $this) {
+                $source->setSource(null);
             }
         }
 

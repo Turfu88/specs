@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ElementRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -41,6 +43,14 @@ class Element
     #[ORM\ManyToOne(inversedBy: 'elements')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Project $project = null;
+
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'source')]
+    private ?self $source = null;
+
+    public function __construct()
+    {
+        $this->source = null;
+    }
 
     public function getId(): ?int
     {
@@ -151,6 +161,40 @@ class Element
     public function setProject(?Project $project): self
     {
         $this->project = $project;
+
+        return $this;
+    }
+
+    public function getSource(): ?self
+    {
+        return $this->source;
+    }
+
+    public function setSource(?self $source): self
+    {
+        $this->source = $source;
+
+        return $this;
+    }
+
+    public function addSource(self $source): self
+    {
+        if (!$this->source->contains($source)) {
+            $this->source->add($source);
+            $source->setSource($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSource(self $source): self
+    {
+        if ($this->source->removeElement($source)) {
+            // set the owning side to null (unless already changed)
+            if ($source->getSource() === $this) {
+                $source->setSource(null);
+            }
+        }
 
         return $this;
     }

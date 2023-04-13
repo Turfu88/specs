@@ -37,17 +37,8 @@ class Page
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $finished_at = null;
 
-    #[ORM\Column]
-    private ?bool $is_from_core = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $category = null;
-
-    #[ORM\Column]
-    private ?bool $is_private = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?bool $is_model_ok = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $model_url = null;
@@ -65,11 +56,24 @@ class Page
     #[ORM\OneToMany(mappedBy: 'page', targetEntity: History::class)]
     private Collection $histories;
 
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'source')]
+    private ?self $source = null;
+
+    #[ORM\Column]
+    private ?bool $isModelOk = null;
+
+    #[ORM\Column]
+    private ?bool $isFromCore = null;
+
+    #[ORM\Column]
+    private ?bool $isPrivate = null;
+
     public function __construct()
     {
         $this->sections = new ArrayCollection();
         $this->feedback = new ArrayCollection();
         $this->histories = new ArrayCollection();
+        $this->source = null;
     }
 
     public function getId(): ?int
@@ -161,18 +165,6 @@ class Page
         return $this;
     }
 
-    public function isIsFromCore(): ?bool
-    {
-        return $this->is_from_core;
-    }
-
-    public function setIsFromCore(bool $is_from_core): self
-    {
-        $this->is_from_core = $is_from_core;
-
-        return $this;
-    }
-
     public function getCategory(): ?string
     {
         return $this->category;
@@ -181,30 +173,6 @@ class Page
     public function setCategory(?string $category): self
     {
         $this->category = $category;
-
-        return $this;
-    }
-
-    public function isIsPrivate(): ?bool
-    {
-        return $this->is_private;
-    }
-
-    public function setIsPrivate(bool $is_private): self
-    {
-        $this->is_private = $is_private;
-
-        return $this;
-    }
-
-    public function isIsModelOk(): ?bool
-    {
-        return $this->is_model_ok;
-    }
-
-    public function setIsModelOk(?bool $is_model_ok): self
-    {
-        $this->is_model_ok = $is_model_ok;
 
         return $this;
     }
@@ -319,6 +287,76 @@ class Page
                 $history->setPage(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSource(): ?self
+    {
+        return $this->source;
+    }
+
+    public function setSource(?self $source): self
+    {
+        $this->source = $source;
+
+        return $this;
+    }
+
+    public function addSource(self $source): self
+    {
+        if (!$this->source->contains($source)) {
+            $this->source->add($source);
+            $source->setSource($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSource(self $source): self
+    {
+        if ($this->source->removeElement($source)) {
+            // set the owning side to null (unless already changed)
+            if ($source->getSource() === $this) {
+                $source->setSource(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isIsModelOk(): ?bool
+    {
+        return $this->isModelOk;
+    }
+
+    public function setIsModelOk(bool $isModelOk): self
+    {
+        $this->isModelOk = $isModelOk;
+
+        return $this;
+    }
+
+    public function isIsFromCore(): ?bool
+    {
+        return $this->isFromCore;
+    }
+
+    public function setIsFromCore(bool $isFromCore): self
+    {
+        $this->isFromCore = $isFromCore;
+
+        return $this;
+    }
+
+    public function isIsPrivate(): ?bool
+    {
+        return $this->isPrivate;
+    }
+
+    public function setIsPrivate(bool $isPrivate): self
+    {
+        $this->isPrivate = $isPrivate;
 
         return $this;
     }

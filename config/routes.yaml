@@ -1,24 +1,54 @@
 
 # API
-api:
-    path: '/api/create-user'
-    controller: App\Controller\ApiController::index
+
+# User
+create-user:
+    path: '/api/account/create'
+    controller: App\Controller\UserController::createAccount
+    methods: POST
+
+# Project
+create-core:
+    path: '/api/project/create-core'
+    controller: App\Controller\ProjectController::createCore
+    methods: POST
+projects-get-all:
+    path: '/api/projects/get-all'
+    controller: App\Controller\ProjectController::getAll
     methods: GET
+project-info:
+    path: '/api/project/{uid}'
+    controller: App\Controller\ProjectController::getProjectInfo
+    methods: GET
+
+# Page
+page-create:
+    path: '/api/page/create'
+    controller: App\Controller\PageController::createPage
+    methods: POST
+
+# Security
+login:
+    path: '/api/login'
+    controller: App\Controller\SecurityController::login
+    methods: POST
+
+# Default
 default1:
     path: '/api'
-    controller: App\Controller\ApiController::default
+    controller: App\Controller\DefaultController::default
     methods: GET
 default2:
     path: '/api/{path}'
-    controller: App\Controller\ApiController::default
+    controller: App\Controller\DefaultController::default
     methods: GET
 default3:
     path: '/api/{path}/{slug}'
-    controller: App\Controller\ApiController::default
+    controller: App\Controller\DefaultController::default
     methods: GET
 default4:
     path: '/api/{path}/{slug}/{id}'
-    controller: App\Controller\ApiController::default
+    controller: App\Controller\DefaultController::default
     methods: GET
 
 # APP

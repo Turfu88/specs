@@ -6,6 +6,7 @@
         "@hotwired/stimulus": "^3.0.0",
         "@symfony/stimulus-bridge": "^3.2.0",
         "@symfony/webpack-encore": "^4.0.0",
+        "@types/js-cookie": "^3.0.3",
         "core-js": "^3.23.0",
         "prop-types": "^15.8.1",
         "react": "^18.2.0",
@@ -27,12 +28,15 @@
     "dependencies": {
         "@emotion/react": "^11.10.6",
         "@emotion/styled": "^11.10.6",
+        "@mantine/form": "^6.0.6",
         "@mui/icons-material": "^5.11.11",
         "@mui/material": "^5.11.15",
         "@types/jest": "^29.5.0",
+        "@types/jwt-decode": "^3.1.0",
         "@types/node": "^18.15.11",
         "@types/react": "^18.0.31",
         "@types/react-dom": "^18.0.11",
+        "js-cookie": "^3.0.1",
         "react-query": "^3.39.3",
         "react-router-dom": "^6.10.0",
         "typescript": "^5.0.2"

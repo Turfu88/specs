@@ -56,12 +56,16 @@ class Section
     #[ORM\OneToMany(mappedBy: 'section', targetEntity: History::class)]
     private Collection $histories;
 
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'source')]
+    private ?self $source = null;
+
     public function __construct()
     {
         $this->links = new ArrayCollection();
         $this->features = new ArrayCollection();
         $this->feedback = new ArrayCollection();
         $this->histories = new ArrayCollection();
+        $this->source = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -291,6 +295,40 @@ class Section
             // set the owning side to null (unless already changed)
             if ($history->getSection() === $this) {
                 $history->setSection(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getSource(): ?self
+    {
+        return $this->source;
+    }
+
+    public function setSource(?self $source): self
+    {
+        $this->source = $source;
+
+        return $this;
+    }
+
+    public function addSource(self $source): self
+    {
+        if (!$this->source->contains($source)) {
+            $this->source->add($source);
+            $source->setSource($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSource(self $source): self
+    {
+        if ($this->source->removeElement($source)) {
+            // set the owning side to null (unless already changed)
+            if ($source->getSource() === $this) {
+                $source->setSource(null);
             }
         }
 
