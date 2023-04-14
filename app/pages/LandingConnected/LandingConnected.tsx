@@ -4,6 +4,7 @@ import { Layout } from '../../common/components/Layout';
 import { Link } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { getAccountProjects } from '../../common/api/project';
+import { log } from 'console';
 
 interface Project {
     id: number,
@@ -17,7 +18,7 @@ export function LandingConnected() {
 
     const { isLoading, data: projects } = useQuery('getAccountProjects', () => getAccountProjects());
     const accountProjects = projects || null;
-    const core = accountProjects ? accountProjects.filter((project: Project) => project.isCore) : null;
+    const core = accountProjects && accountProjects.length > 0? accountProjects.filter((project: Project) => project.isCore) : null;
 
     return (
         <Layout>

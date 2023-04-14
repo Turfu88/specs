@@ -31,9 +31,6 @@ class Feature
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $created_at = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $datetime = null;
-
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updated_at = null;
 
@@ -42,9 +39,6 @@ class Feature
 
     #[ORM\Column]
     private ?bool $is_from_core = null;
-
-    #[ORM\ManyToOne(inversedBy: 'features')]
-    private ?Section $section = null;
 
     #[ORM\ManyToOne(inversedBy: 'features')]
     #[ORM\JoinColumn(nullable: false)]
@@ -65,13 +59,19 @@ class Feature
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'source')]
     private ?self $source = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $section = null;
+
+    #[ORM\ManyToOne(inversedBy: 'features')]
+    private ?Page $page = null;
+
     public function __construct()
     {
         $this->entryPoints = new ArrayCollection();
         $this->specs = new ArrayCollection();
         $this->feedback = new ArrayCollection();
         $this->histories = new ArrayCollection();
-        $this->source = new ArrayCollection();
+        $this->source = null;
     }
 
     public function getId(): ?int
@@ -139,18 +139,6 @@ class Feature
         return $this;
     }
 
-    public function getDatetime(): ?string
-    {
-        return $this->datetime;
-    }
-
-    public function setDatetime(string $datetime): self
-    {
-        $this->datetime = $datetime;
-
-        return $this;
-    }
-
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updated_at;
@@ -183,18 +171,6 @@ class Feature
     public function setIsFromCore(bool $is_from_core): self
     {
         $this->is_from_core = $is_from_core;
-
-        return $this;
-    }
-
-    public function getSection(): ?Section
-    {
-        return $this->section;
-    }
-
-    public function setSection(?Section $section): self
-    {
-        $this->section = $section;
 
         return $this;
     }
@@ -361,6 +337,30 @@ class Feature
                 $source->setSource(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSection(): ?string
+    {
+        return $this->section;
+    }
+
+    public function setSection(?string $section): self
+    {
+        $this->section = $section;
+
+        return $this;
+    }
+
+    public function getPage(): ?Page
+    {
+        return $this->page;
+    }
+
+    public function setPage(?Page $page): self
+    {
+        $this->page = $page;
 
         return $this;
     }

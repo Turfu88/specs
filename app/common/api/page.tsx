@@ -9,3 +9,13 @@ export async function createPage(values: NewPageForm) {
         return null;
     })
 }
+
+export async function getPageDetails(uid: string | undefined) {  
+    if (uid === undefined) return null;  
+    return await request(`/api/page/${uid}`, "GET", null, true).then((res) => {        
+        if (res.status === 200) {
+            return res.json.content;
+        }
+        return null;
+    });
+}

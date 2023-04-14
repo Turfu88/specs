@@ -12,6 +12,10 @@ create-core:
     path: '/api/project/create-core'
     controller: App\Controller\ProjectController::createCore
     methods: POST
+update-status:
+    path: '/api/project/update-status'
+    controller: App\Controller\ProjectController::updateStatus
+    methods: POST
 projects-get-all:
     path: '/api/projects/get-all'
     controller: App\Controller\ProjectController::getAll
@@ -21,10 +25,21 @@ project-info:
     controller: App\Controller\ProjectController::getProjectInfo
     methods: GET
 
+
 # Page
 page-create:
     path: '/api/page/create'
     controller: App\Controller\PageController::createPage
+    methods: POST
+page-info:
+    path: '/api/page/{uid}'
+    controller: App\Controller\PageController::getPageDetails
+    methods: GET
+
+# Feature
+feature-create:
+    path: '/api/feature/create'
+    controller: App\Controller\FeatureController::createFeature
     methods: POST
 
 # Security

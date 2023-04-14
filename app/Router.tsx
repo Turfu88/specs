@@ -11,9 +11,8 @@ import { ElementEdit } from './pages/Element/ElementEdit';
 import { ProjectEdit } from './pages/Project/ProjectEdit';
 import { EntryPoint } from './pages/EntryPoint/EntryPoint';
 import { EntryPointEdit } from './pages/EntryPoint/EntryPointEdit';
-import { Page } from './pages/Page/Page';
+import { PageView } from './pages/Page/PageView';
 import { Summary } from './pages/Summary/Summary';
-import { Section } from './pages/Section/Section';
 import { Feature } from './pages/Feature/Feature';
 import { Spec } from './pages/Spec/Spec';
 import { AddUser } from './pages/AddUser/AddUser';
@@ -21,6 +20,7 @@ import { CreateAccount } from './pages/CreateAccount/CreateAccount';
 import { isLogedIn } from './common/api/authentication';
 import { ProjectCore } from './pages/ProjectCore/ProjectCore';
 import { PageForm } from './pages/Page/PageForm';
+import { FeatureForm } from './pages/Feature/FeatureForm';
 
 export function Router() {
     return (
@@ -45,9 +45,9 @@ export function Router() {
                 <Route path="/point-entree/:uid"            element={<UserRoute><EntryPointEdit /></UserRoute>} />
                 <Route path="/point-entree"                 element={<UserRoute><EntryPoint /></UserRoute>} />
                 <Route path="/page/nouvelle"                element={<UserRoute><PageForm /></UserRoute>} />
-                <Route path="/page/:uid"                    element={<UserRoute><Page /></UserRoute>} />
+                <Route path="/page/:uid"                    element={<UserRoute><PageView /></UserRoute>} />
                 <Route path="/summary/:uid"                 element={<UserRoute><Summary /></UserRoute>} />
-                <Route path="/section/:uid"                 element={<UserRoute><Section /></UserRoute>} />
+                <Route path="/fonctionnalite/nouvelle"      element={<UserRoute><FeatureForm /></UserRoute>} />
                 <Route path="/fonctionnalite/:uid"          element={<UserRoute><Feature /></UserRoute>} />
                 <Route path="/spec/:uid"                    element={<UserRoute><Spec /></UserRoute>} />
                 <Route path="*"                             element={<NoMatchPage />} />

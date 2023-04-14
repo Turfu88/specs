@@ -34,9 +34,6 @@ class History
     private ?Page $page = null;
 
     #[ORM\ManyToOne(inversedBy: 'histories')]
-    private ?Section $section = null;
-
-    #[ORM\ManyToOne(inversedBy: 'histories')]
     private ?Feature $feature = null;
 
     #[ORM\ManyToOne(inversedBy: 'histories')]
@@ -118,18 +115,6 @@ class History
     public function setPage(?Page $page): self
     {
         $this->page = $page;
-
-        return $this;
-    }
-
-    public function getSection(): ?Section
-    {
-        return $this->section;
-    }
-
-    public function setSection(?Section $section): self
-    {
-        $this->section = $section;
 
         return $this;
     }

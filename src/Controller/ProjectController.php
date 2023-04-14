@@ -163,15 +163,32 @@ class ProjectController extends AbstractController
                 'category' => $page->getCategory()
             ];
         }
-        $projectFormated = [
+        return [
             'id' => $project->getId(),
             'uid' => $project->getUid(),
             'name' => $project->getName(),
             'isCore' => $project->isIsCore(),
             'status' => $project->getStatus(),
+            'statusChoices' => $project->getStatusChoices(),
+            'statusColors' => $project->getStatusColors(),
             'pages' => $pagesFormated
-        ];
-        
-        return $projectFormated;
+        ];        
+    }
+
+    public function updateStatus(Request $req, EntityManagerInterface $em): Response {
+        $json = json_decode($req->getContent());
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $project = $em->getRepository(Project::class)->find($json->projectId);
+        $project->setStatusChoices($json->statusChoices)
+                ->setStatusColors($json->statusColors)
+                ->setUpdatedAt(new \DateTimeImmutable);
+        $em->persist($project);
+        $em->flush();
+
+        return $response->setStatusCode(200)->setContent(json_encode([
+            'code' => 200,
+            'message' => 'Status mis à jour',
+        ]));
     }
 }

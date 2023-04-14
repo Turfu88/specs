@@ -47,9 +47,6 @@ class Page
     #[ORM\JoinColumn(nullable: false)]
     private ?Project $project = null;
 
-    #[ORM\OneToMany(mappedBy: 'page', targetEntity: Section::class, orphanRemoval: true)]
-    private Collection $sections;
-
     #[ORM\OneToMany(mappedBy: 'page', targetEntity: Feedback::class)]
     private Collection $feedback;
 
@@ -68,12 +65,15 @@ class Page
     #[ORM\Column]
     private ?bool $isPrivate = null;
 
+    #[ORM\OneToMany(mappedBy: 'page', targetEntity: Feature::class)]
+    private Collection $features;
+
     public function __construct()
     {
-        $this->sections = new ArrayCollection();
         $this->feedback = new ArrayCollection();
         $this->histories = new ArrayCollection();
         $this->source = null;
+        $this->features = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -197,36 +197,6 @@ class Page
     public function setProject(?Project $project): self
     {
         $this->project = $project;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Section>
-     */
-    public function getSections(): Collection
-    {
-        return $this->sections;
-    }
-
-    public function addSection(Section $section): self
-    {
-        if (!$this->sections->contains($section)) {
-            $this->sections->add($section);
-            $section->setPage($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSection(Section $section): self
-    {
-        if ($this->sections->removeElement($section)) {
-            // set the owning side to null (unless already changed)
-            if ($section->getPage() === $this) {
-                $section->setPage(null);
-            }
-        }
 
         return $this;
     }
@@ -357,6 +327,36 @@ class Page
     public function setIsPrivate(bool $isPrivate): self
     {
         $this->isPrivate = $isPrivate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Feature>
+     */
+    public function getFeatures(): Collection
+    {
+        return $this->features;
+    }
+
+    public function addFeature(Feature $feature): self
+    {
+        if (!$this->features->contains($feature)) {
+            $this->features->add($feature);
+            $feature->setPage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeature(Feature $feature): self
+    {
+        if ($this->features->removeElement($feature)) {
+            // set the owning side to null (unless already changed)
+            if ($feature->getPage() === $this) {
+                $feature->setPage(null);
+            }
+        }
 
         return $this;
     }

@@ -62,7 +62,7 @@ export function ProjectCore() {
             }).then(response => {
                 if (200 === response.status) {
                     window.location.replace('/dashboard');
-                    // @TODO: open notification sucess: Le coeur a été créé.
+                    // @TODO: open notification success: Le coeur a été créé.
                 } else {
                     // @TODO: open notification error: Une erreur s'est produite. Le coeur n'a pas pu être créé.
                 }

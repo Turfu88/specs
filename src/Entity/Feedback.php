@@ -44,9 +44,6 @@ class Feedback
     private ?Page $page = null;
 
     #[ORM\ManyToOne(inversedBy: 'feedback')]
-    private ?Section $section = null;
-
-    #[ORM\ManyToOne(inversedBy: 'feedback')]
     private ?Feature $feature = null;
 
     #[ORM\ManyToOne(inversedBy: 'feedback')]
@@ -167,19 +164,6 @@ class Feedback
 
         return $this;
     }
-
-    public function getSection(): ?Section
-    {
-        return $this->section;
-    }
-
-    public function setSection(?Section $section): self
-    {
-        $this->section = $section;
-
-        return $this;
-    }
-
     public function getFeature(): ?Feature
     {
         return $this->feature;

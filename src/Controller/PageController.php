@@ -42,4 +42,41 @@ class PageController extends AbstractController
         ]));
     }
 
+    public function getPageDetails(Request $req, EntityManagerInterface $em, string $uid): Response
+    {
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $page = $em->getRepository(Page::class)->findOneBy(['uid' => $uid]);
+        if ($page) {
+            $content = $this->serializePage($page);
+        } else {
+            $content = null;
+        }
+        return $response->setStatusCode(200)->setContent(json_encode([
+            'code' => 200,
+            'content' => $content,
+        ]));
+    }
+
+    private function serializePage($page)
+    {
+        $featuresFormated = [];
+        foreach ($page->getFeatures() as $feature) {
+            $featuresFormated[] = [
+                'id' => $feature->getId(),
+                'uid' => $feature->getUid(),
+                'name' => $feature->getName(),
+                'status' => $feature->getStatus()
+            ];
+        }
+        return [
+            'id' => $page->getId(),
+            'uid' => $page->getUid(),
+            'name' => $page->getName(),
+            'status' => $page->getStatus(),
+            'projectUid' => $page->getProject()->getUid(),
+            'projectName' => $page->getProject()->getName(),
+            'features' => $featuresFormated
+        ];
+    }
 }

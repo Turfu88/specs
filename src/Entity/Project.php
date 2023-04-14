@@ -77,6 +77,15 @@ class Project
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'source')]
     private ?self $source = null;
 
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $section = [];
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $statusChoices = [];
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $statusColors = [];
+
     public function __construct()
     {
         $this->summaries = new ArrayCollection();
@@ -489,4 +498,41 @@ class Project
 
         return $this;
     }
+
+    public function getSection(): array
+    {
+        return $this->section;
+    }
+
+    public function setSection(array $section): self
+    {
+        $this->section = $section;
+
+        return $this;
+    }
+
+    public function getStatusChoices(): array
+    {
+        return $this->statusChoices;
+    }
+
+    public function setStatusChoices(?array $statusChoices): self
+    {
+        $this->statusChoices = $statusChoices;
+
+        return $this;
+    }
+
+    public function getStatusColors(): array
+    {
+        return $this->statusColors;
+    }
+
+    public function setStatusColors(?array $statusColors): self
+    {
+        $this->statusColors = $statusColors;
+
+        return $this;
+    }
+
 }

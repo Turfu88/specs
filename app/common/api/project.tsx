@@ -1,3 +1,4 @@
+import { ProjectStatusForm } from "../../pages/Project/ProjectEditStatus";
 import { DefaultCoreForm, DefaultElement, DefaultPage } from "../../pages/ProjectCore/defaultValues";
 import request from "./request";
 
@@ -25,7 +26,7 @@ export async function getAccountProjects() {
     });
 }
 
-export async function getOneProject(uid: string | undefined) {  
+export async function getProjectDetails(uid: string | undefined) {  
     if (uid === undefined) return null;  
     return await request(`/api/project/${uid}`, "GET", null, true).then((res) => {        
         if (res.status === 200) {
@@ -33,6 +34,15 @@ export async function getOneProject(uid: string | undefined) {
         }
         return null;
     });
+}
+ 
+export async function updateProjectStatus(values: ProjectStatusForm) {  
+    return await request('/api/project/update-status', "POST", values, true).then((res) => {
+        if (res.status === 200) {
+            return res.json;
+        }
+        return null;
+    })
 }
 
 // @TODO: typer les params d'entrée

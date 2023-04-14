@@ -23,3 +23,6 @@ a {
 .bg-neutral {
     background-color: #DAD2D8 !important;
 }
+.link:hover {
+    text-decoration: underline;
+}

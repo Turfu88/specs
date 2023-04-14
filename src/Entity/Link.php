@@ -25,10 +25,6 @@ class Link
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToOne(inversedBy: 'links')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Section $section = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -78,18 +74,6 @@ class Link
     public function setDescription(?string $description): self
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getSection(): ?Section
-    {
-        return $this->section;
-    }
-
-    public function setSection(?Section $section): self
-    {
-        $this->section = $section;
 
         return $this;
     }
