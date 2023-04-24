@@ -8,9 +8,11 @@ import { useState } from 'react';
 import { Drawer } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { DrawerNavLinks } from './DrawerNavLinks';
+import { isLogedIn } from '../api/authentication';
 
 export function Header() {
     const [drawer, setDrawer] = useState(false);
+    const isLoggedIn = isLogedIn('ROLE_USER');
 
     function toggleDrawer(event: React.KeyboardEvent | React.MouseEvent) {
         if (
@@ -38,28 +40,31 @@ export function Header() {
                                 <MenuIcon />
                             </IconButton>
                         </div>
-                        <Box display="flex" gap={2} alignItems="center">
-                            <Link to="/login">
-                                <Button
-                                    variant="outlined"
-                                    color="primary"
-                                    className="bg-neutral"
-                                    size="small"
-                                >
-                                    Connexion
-                                </Button>
-                            </Link>
-                            <Link to="/creer-un-compte">
-                                <Button
-                                    color="third"
-                                    variant="outlined"
-                                    className="bg-neutral"
-                                    size="small"
-                                >
-                                    Inscription
-                                </Button>
-                            </Link>
-                        </Box>
+                        {!isLoggedIn &&
+                            <Box display="flex" gap={2} alignItems="center">
+                                <Link to="/login">
+                                    <Button
+                                        variant="outlined"
+                                        color="primary"
+                                        className="bg-neutral"
+                                        size="small"
+                                    >
+                                        Connexion
+                                    </Button>
+                                </Link>
+                                <Link to="/creer-un-compte">
+                                    <Button
+                                        color="third"
+                                        variant="outlined"
+                                        className="bg-neutral"
+                                        size="small"
+                                    >
+                                        Inscription
+                                    </Button>
+                                </Link>
+                            </Box>
+                        }
+
                     </Box>
                 </Toolbar>
             </AppBar>

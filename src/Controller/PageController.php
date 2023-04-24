@@ -25,6 +25,8 @@ class PageController extends AbstractController
         $page = new Page();
         $page->setName($json->name)
             ->setComment($json->comment)
+            ->setStatus($json->status)
+            ->setCategory($json->category)
             ->setCreatedAt(new \DateTimeImmutable)
             ->setUpdatedAt(new \DateTimeImmutable)
             ->setUid(Uuid::v1())
@@ -39,6 +41,29 @@ class PageController extends AbstractController
         return $response->setStatusCode(200)->setContent(json_encode([
             'code' => 200,
             'message' => 'Nouvelle page créée avec succès',
+        ]));
+    }
+
+    public function editPage(Request $req, EntityManagerInterface $em, $id): Response
+    {
+        $json = json_decode($req->getContent());
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $page = $em->getRepository(Page::class)->find($id);
+
+        $page->setName($json->name)
+            ->setComment($json->comment)
+            ->setCategory($json->category)
+            ->setStatus($json->status)
+            ->setUpdatedAt(new \DateTimeImmutable)
+            ->setIsModelOk($json->isModelOk)
+            ->setIsPrivate($json->isPrivate);
+        $em->persist($page);
+        $em->flush();
+
+        return $response->setStatusCode(200)->setContent(json_encode([
+            'code' => 200,
+            'message' => 'Modification de la page ok',
         ]));
     }
 
@@ -62,20 +87,33 @@ class PageController extends AbstractController
     {
         $featuresFormated = [];
         foreach ($page->getFeatures() as $feature) {
+            $specsFormated = [];
+            foreach ($feature->getSpecs() as $spec) {
+                $specsFormated[] = [
+                    'id' => $spec->getId(),
+                    'uid' => $spec->getUid(),
+                    'name' => $spec->getName(),
+                    'status' => $spec->getStatus()
+                ];
+            }
             $featuresFormated[] = [
                 'id' => $feature->getId(),
                 'uid' => $feature->getUid(),
                 'name' => $feature->getName(),
-                'status' => $feature->getStatus()
+                'status' => $feature->getStatus(),
+                'specs' => $specsFormated
             ];
         }
         return [
             'id' => $page->getId(),
             'uid' => $page->getUid(),
             'name' => $page->getName(),
+            'comment' => $page->getComment(),
             'status' => $page->getStatus(),
             'projectUid' => $page->getProject()->getUid(),
             'projectName' => $page->getProject()->getName(),
+            'isModelOk' => $page->isIsModelOk(),
+            'isPrivate' => $page->isIsPrivate(),
             'features' => $featuresFormated
         ];
     }

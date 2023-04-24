@@ -44,9 +44,6 @@ class Spec
     #[ORM\JoinColumn(nullable: false)]
     private ?Feature $feature = null;
 
-    #[ORM\OneToMany(mappedBy: 'spec', targetEntity: Element::class)]
-    private Collection $elements;
-
     #[ORM\OneToMany(mappedBy: 'spec', targetEntity: Feedback::class)]
     private Collection $feedback;
 
@@ -56,12 +53,15 @@ class Spec
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'source')]
     private ?self $source = null;
 
+    #[ORM\ManyToMany(targetEntity: Element::class, inversedBy: 'specs')]
+    private Collection $elements;
+
     public function __construct()
     {
-        $this->elements = new ArrayCollection();
         $this->feedback = new ArrayCollection();
         $this->histories = new ArrayCollection();
-        $this->source = new ArrayCollection();
+        $this->source = null;
+        $this->elements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -178,36 +178,6 @@ class Spec
     }
 
     /**
-     * @return Collection<int, Element>
-     */
-    public function getElements(): Collection
-    {
-        return $this->elements;
-    }
-
-    public function addElement(Element $element): self
-    {
-        if (!$this->elements->contains($element)) {
-            $this->elements->add($element);
-            $element->setSpec($this);
-        }
-
-        return $this;
-    }
-
-    public function removeElement(Element $element): self
-    {
-        if ($this->elements->removeElement($element)) {
-            // set the owning side to null (unless already changed)
-            if ($element->getSpec() === $this) {
-                $element->setSpec(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, Feedback>
      */
     public function getFeedback(): Collection
@@ -297,6 +267,30 @@ class Spec
                 $source->setSource(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Element>
+     */
+    public function getElements(): Collection
+    {
+        return $this->elements;
+    }
+
+    public function addElement(Element $element): self
+    {
+        if (!$this->elements->contains($element)) {
+            $this->elements->add($element);
+        }
+
+        return $this;
+    }
+
+    public function removeElement(Element $element): self
+    {
+        $this->elements->removeElement($element);
 
         return $this;
     }

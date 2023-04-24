@@ -21,7 +21,7 @@ class Feedback
     private ?\DateTimeInterface $created_at = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeImmutable $updated_at = null;
+    private ?\DateTimeInterface $updated_at = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
@@ -52,6 +52,9 @@ class Feedback
     #[ORM\ManyToOne(inversedBy: 'feedback')]
     private ?EntryPoint $entrypoint = null;
 
+    #[ORM\Column]
+    private ?bool $toTreat = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -81,12 +84,12 @@ class Feedback
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt(\DateTimeInterface $updated_at): self
     {
         $this->updated_at = $updated_at;
 
@@ -196,6 +199,18 @@ class Feedback
     public function setEntrypoint(?EntryPoint $entrypoint): self
     {
         $this->entrypoint = $entrypoint;
+
+        return $this;
+    }
+
+    public function isToTreat(): ?bool
+    {
+        return $this->toTreat;
+    }
+
+    public function setToTreat(bool $toTreat): self
+    {
+        $this->toTreat = $toTreat;
 
         return $this;
     }

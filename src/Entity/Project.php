@@ -78,13 +78,13 @@ class Project
     private ?self $source = null;
 
     #[ORM\Column(type: Types::ARRAY, nullable: true)]
-    private array $section = [];
-
-    #[ORM\Column(type: Types::ARRAY, nullable: true)]
     private array $statusChoices = [];
 
     #[ORM\Column(type: Types::ARRAY, nullable: true)]
     private array $statusColors = [];
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $sectionChoices = [];
 
     public function __construct()
     {
@@ -499,18 +499,6 @@ class Project
         return $this;
     }
 
-    public function getSection(): array
-    {
-        return $this->section;
-    }
-
-    public function setSection(array $section): self
-    {
-        $this->section = $section;
-
-        return $this;
-    }
-
     public function getStatusChoices(): array
     {
         return $this->statusChoices;
@@ -531,6 +519,18 @@ class Project
     public function setStatusColors(?array $statusColors): self
     {
         $this->statusColors = $statusColors;
+
+        return $this;
+    }
+
+    public function getSectionChoices(): array
+    {
+        return $this->sectionChoices;
+    }
+
+    public function setSectionChoices(?array $sectionChoices): self
+    {
+        $this->sectionChoices = $sectionChoices;
 
         return $this;
     }

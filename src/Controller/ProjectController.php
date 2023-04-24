@@ -37,6 +37,28 @@ class ProjectController extends AbstractController
             'message' => 'Nouvel utilisateur créé avec succès',
         ]));
     }
+    
+    public function updateProject(Request $req, EntityManagerInterface $em): Response
+    {
+        $json = json_decode($req->getContent());
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+
+        $project = $em->getRepository(Project::class)->find($json->projectId);
+        $project->setName($json->name)
+            ->setVersion($json->version)
+            ->setPreviousVersion($json->previousVersion)
+            ->setComment($json->comment)
+            ->setStatus($json->status)
+            ->setUpdatedAt(new \DateTimeImmutable);
+        $em->persist($project);
+        $em->flush();
+
+        return $response->setStatusCode(200)->setContent(json_encode([
+            'code' => 200,
+            'message' => 'Projet modifié avec succès',
+        ]));
+    }
 
     public function createCore(Request $req, EntityManagerInterface $em): Response
     {
@@ -139,7 +161,11 @@ class ProjectController extends AbstractController
      
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
-        $project = $em->getRepository(Project::class)->findOneBy(['uid' => $uid]);
+        if (strlen($uid) > 10) {
+            $project = $em->getRepository(Project::class)->findOneBy(['uid' => $uid]);
+        } else {
+            $project = $em->getRepository(Project::class)->find($uid);
+        }
         if ($project) {
             $content = $this->serializeProject($project);
         } else {
@@ -163,15 +189,55 @@ class ProjectController extends AbstractController
                 'category' => $page->getCategory()
             ];
         }
+        $elementsFormated = [];
+        foreach ($project->getElements() as $element) {
+            $elementsFormated[] = [
+                'id' => $element->getId(),
+                'uid' => $element->getUid(),
+                'name' => $element->getName(),
+                'comment' => $page->getComment()
+            ];
+        }
+        $connectionsFormated = [];
+        foreach ($project->getEntryPoints() as $connection) {
+            $connectionsFormated[] = [
+                'id' => $connection->getId(),
+                'uid' => $connection->getUid(),
+                'name' => $connection->getName(),
+                'code' => $connection->getCode(),
+                'description' => $connection->getDescription(),
+                'status' => $connection->getStatus(),
+                'isFromCore' => $connection->isIsFromCore(),
+                'url' => $connection->getStatus()
+            ];
+        }
+        $featuresFormated = [];
+        foreach ($project->getFeatures() as $feature) {
+            $featuresFormated[] = [
+                'id' => $feature->getId(),
+                'uid' => $feature->getUid(),
+                'name' => $feature->getName(),
+                'status' => $feature->getStatus(),
+                'hasPage' => $feature->getPage() ? true : false
+            ];
+        }
+
         return [
             'id' => $project->getId(),
             'uid' => $project->getUid(),
             'name' => $project->getName(),
+            'version' => $project->getVersion(),
+            'previousVersion' => $project->getPreviousVersion(),
+            'comment' => $project->getComment(),
             'isCore' => $project->isIsCore(),
             'status' => $project->getStatus(),
             'statusChoices' => $project->getStatusChoices(),
             'statusColors' => $project->getStatusColors(),
-            'pages' => $pagesFormated
+            'sectionChoices' => $project->getSectionChoices(),
+            'elements' => $elementsFormated,
+            'pages' => $pagesFormated,
+            'connections' => $connectionsFormated,
+            'features' => $featuresFormated
         ];        
     }
 
@@ -191,4 +257,20 @@ class ProjectController extends AbstractController
             'message' => 'Status mis à jour',
         ]));
     }
+    public function updateSection(Request $req, EntityManagerInterface $em): Response {
+        $json = json_decode($req->getContent());
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $project = $em->getRepository(Project::class)->find($json->projectId);
+        $project->setSectionChoices($json->sectionChoices)
+                ->setUpdatedAt(new \DateTimeImmutable);
+        $em->persist($project);
+        $em->flush();
+
+        return $response->setStatusCode(200)->setContent(json_encode([
+            'code' => 200,
+            'message' => 'Status mis à jour',
+        ]));
+    }
+    
 }

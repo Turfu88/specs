@@ -1,89 +1,111 @@
-import { Box, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField, Typography } from '@mui/material';
-import Button from '@mui/material/Button';
-import { Layout } from '../../common/components/Layout';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Box, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField, Typography } from "@mui/material";
+import { useForm } from '@mantine/form';
+import { Project } from "../../common/types";
+import { updateProject } from "../../common/api/project";
+import { useState } from "react";
+import { StatusChooser } from "../../common/components/StatusChooser";
 
-
-interface UserForm {
+export interface EditProjectForm {
     name: string,
+    comment: string,
     version: string,
     previousVersion: string,
-    comment: string,
-    devAccess: string,
-    isCore: boolean | null
-    status: string
+    status: string,
+    projectId: string
 }
 
-const formDefault = {
-    name: '',
-    version: '',
-    previousVersion: '',
-    comment: '',
-    devAccess: '',
-    isCore: null,
-    status: ''
+interface ProjectEditProps {
+    handleCloseDialog: () => void
+    project: Project
 }
 
-export function ProjectEdit() {
+export function ProjectEdit(props: ProjectEditProps) {
+    const { project, handleCloseDialog } = props;
+    const [selectedElements, setSelectedElements] = useState<number[]>([]);
 
-    const [form, setForm] = useState<UserForm>(formDefault);
+    const formPage = useForm({
+        initialValues: {
+            name: project.name,
+            version: project.version ? project.version : '',
+            previousVersion: project.previousVersion ? project.previousVersion : '',
+            status: project.status ? project.status : '',
+            comment: project.comment ? project.comment : '',
+            projectId: project.id ? project.id : ''
+            // devAccess: project.devAccess,
+        } as EditProjectForm,
+        validate: {
+            name: (value) => (value.length < 2 ? 'Nom de page incorrect (trop court)' : null),
+            comment: (value) => (value && value.length < 2 ? 'Commentaire incorrect (trop court)' : null),
+        },
+    });
 
-
-    function submitProject(values: any) {
-        console.log("submit project", values);
-
+    function handleUpdateProject(values: EditProjectForm) {
+        console.log(values);
+        updateProject(values);
+        handleCloseDialog();
     }
 
-    return (
-        <Layout>
-            <Box mt={2} mb={4}>
-                <Link to="/dashboard">
-                    <Button color="primary" variant="outlined">
-                        Retour
-                    </Button>
-                </Link>
-                <Typography component="h1" variant="h4" textAlign="center" mt={2}>
-                    Création d'un nouveau projet
-                </Typography>
-                <Box>
-                    <form onSubmit={() => submitProject(form)}>
-                        <Box display="flex" justifyContent="center" margin="auto" mt={2} className="mw-75">
-                            <TextField id="name" label="Nom du projet" variant="outlined" fullWidth />
-                        </Box>
-                        <Box display="flex" justifyContent="center" margin="auto" mt={2} className="mw-75">
-                            <TextField id="version" label="Version" variant="outlined" fullWidth />
-                        </Box>
-                        <Box display="flex" justifyContent="center" margin="auto" mt={2} className="mw-75">
-                            <TextField id="previousVersion" label="Précédente version" variant="outlined" fullWidth />
-                        </Box>
-                        <Box display="flex" justifyContent="center" margin="auto" mt={2} className="mw-75">
-                            <TextField id="comment" multiline minRows={2} label="Commentaire" variant="outlined" fullWidth />
-                        </Box>
-                        <Box display="flex" justifyContent="center" margin="auto" mt={2} className="mw-75">
-                            <TextField id="devAccess" multiline minRows={2} label="Liens d'accès" variant="outlined" fullWidth />
-                        </Box>
-                        <Box display="flex" justifyContent="center" margin="auto" mt={2} className="mw-75">
-                            <FormControl>
-                            <FormLabel id="demo-row-radio-buttons-group-label">Coeur des autres projets ?</FormLabel>
-                            <RadioGroup
-                                row
-                                aria-labelledby="demo-row-radio-buttons-group-label"
-                                name="row-radio-buttons-group"
-                            >
-                                <FormControlLabel value="true" control={<Radio />} label="Oui" />
-                                <FormControlLabel value="false" control={<Radio />} label="Non" />
-                            </RadioGroup>
-                        </FormControl>
-                        </Box>
-                        
-                        <Box display="flex" justifyContent="center" margin="auto" mt={2} className="mw-75">
-                            <Button type='submit' variant="contained" size='large'>Valider</Button>
-                        </Box>
-                    </form>
-                </Box>
 
-            </Box>
-        </Layout>
+    return (
+        <Box mt={4} mb={8}>
+            <Typography component="h1" variant="h4" textAlign="center">
+                Modifier les informations du projet
+            </Typography>
+            <form onSubmit={formPage.onSubmit((values) => handleUpdateProject(values))}>
+                <Box>
+                    <StatusChooser
+                        currentStatus={formPage.getInputProps('status').value}
+                        handleChooseStatus={(value: string) => formPage.setFieldValue('status', value)}
+                    />
+                </Box>
+                <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
+                    <TextField
+                        id="name"
+                        label="Nom du projet"
+                        variant="outlined"
+                        fullWidth
+                        {...formPage.getInputProps('name')}
+                    />
+                </Box>
+                <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
+                    <TextField
+                        id="version"
+                        label="Version"
+                        variant="outlined"
+                        fullWidth
+                        {...formPage.getInputProps('version')}
+                    />
+                </Box>
+                <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
+                    <TextField
+                        id="previousVersion"
+                        label="Version précédente"
+                        variant="outlined"
+                        fullWidth
+                        {...formPage.getInputProps('previousVersion')}
+                    />
+                </Box>
+                <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
+                    <TextField
+                        id="comment"
+                        label="Description"
+                        variant="outlined"
+                        fullWidth
+                        multiline
+                        minRows={4}
+                        {...formPage.getInputProps('comment')}
+                    />
+                </Box>
+                <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        size='large'
+                    >
+                        Modifier
+                    </Button>
+                </Box>
+            </form>
+        </Box>
     );
 }

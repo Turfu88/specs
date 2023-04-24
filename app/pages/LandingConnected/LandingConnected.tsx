@@ -54,13 +54,6 @@ export function LandingConnected() {
                                         </Button>
                                     </Link>
                                 </Box>
-                                <Box display="flex" justifyContent="center" mt={2}>
-                                    <Link to="/element/nouveau">
-                                        <Button variant="contained" color="primary">
-                                            Nouvel element
-                                        </Button>
-                                    </Link>
-                                </Box>
                             </>
                             :
                             <Box>

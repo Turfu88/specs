@@ -52,11 +52,7 @@ export function ProjectEditStatus(props: ProjectEditStatusProps) {
             <Typography variant="subtitle1" component="p" textAlign="center">
                 Si vous modifiez les status, mettre à jour les status de tous les éléments (car ils conservent l'ancien status)
             </Typography>
-            {project.status ?
-                project.statusChoices.map((status: string) => (
-                    <>{status}</>
-                ))
-                :
+            {project.statusChoices.length === 0 &&
                 <Box>
                     <Typography component="p" variant="subtitle1" textAlign="center" mt={2}>
                         Aucun status enregistré

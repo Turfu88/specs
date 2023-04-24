@@ -35,21 +35,23 @@ class Element
     private ?\DateTimeInterface $updated_at = null;
 
     #[ORM\ManyToOne(inversedBy: 'elements')]
-    private ?EntryPoint $entrypoint = null;
-
-    #[ORM\ManyToOne(inversedBy: 'elements')]
-    private ?Spec $spec = null;
-
-    #[ORM\ManyToOne(inversedBy: 'elements')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Project $project = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'source')]
     private ?self $source = null;
 
+    #[ORM\ManyToMany(targetEntity: Spec::class, mappedBy: 'element')]
+    private Collection $specs;
+
+    #[ORM\ManyToMany(targetEntity: EntryPoint::class, mappedBy: 'elements')]
+    private Collection $entryPoints;
+
     public function __construct()
     {
         $this->source = null;
+        $this->specs = new ArrayCollection();
+        $this->entryPoints = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -129,30 +131,6 @@ class Element
         return $this;
     }
 
-    public function getEntrypoint(): ?EntryPoint
-    {
-        return $this->entrypoint;
-    }
-
-    public function setEntrypoint(?EntryPoint $entrypoint): self
-    {
-        $this->entrypoint = $entrypoint;
-
-        return $this;
-    }
-
-    public function getSpec(): ?Spec
-    {
-        return $this->spec;
-    }
-
-    public function setSpec(?Spec $spec): self
-    {
-        $this->spec = $spec;
-
-        return $this;
-    }
-
     public function getProject(): ?Project
     {
         return $this->project;
@@ -194,6 +172,60 @@ class Element
             if ($source->getSource() === $this) {
                 $source->setSource(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Spec>
+     */
+    public function getSpecs(): Collection
+    {
+        return $this->specs;
+    }
+
+    public function addSpec(Spec $spec): self
+    {
+        if (!$this->specs->contains($spec)) {
+            $this->specs->add($spec);
+            $spec->addElement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSpec(Spec $spec): self
+    {
+        if ($this->specs->removeElement($spec)) {
+            $spec->removeElement($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EntryPoint>
+     */
+    public function getEntryPoints(): Collection
+    {
+        return $this->entryPoints;
+    }
+
+    public function addEntryPoint(EntryPoint $entryPoint): self
+    {
+        if (!$this->entryPoints->contains($entryPoint)) {
+            $this->entryPoints->add($entryPoint);
+            $entryPoint->addElement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEntryPoint(EntryPoint $entryPoint): self
+    {
+        if ($this->entryPoints->removeElement($entryPoint)) {
+            $entryPoint->removeElement($this);
         }
 
         return $this;

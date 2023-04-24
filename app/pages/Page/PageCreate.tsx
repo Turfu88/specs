@@ -2,10 +2,13 @@ import { Box, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGrou
 import { Layout } from "../../common/components/Layout";
 import { useForm } from '@mantine/form';
 import { createPage } from "../../common/api/page";
+import { StatusChooser } from "../../common/components/StatusChooser";
+import { useNavigate } from "react-router-dom";
 
 export interface NewPageForm {
     name: string,
     modelUrl: string,
+    status: string,
     comment: string,
     category: string,
     isModelOk: boolean | null,
@@ -13,11 +16,13 @@ export interface NewPageForm {
     project: string
 }
 
-export function PageForm() {
+export function PageCreate() {
+    const navigate = useNavigate();
 
     const formPage = useForm({
         initialValues: {
             name: '',
+            status: '',
             comment: '',
             category: '',
             modelUrl: '',
@@ -35,7 +40,7 @@ export function PageForm() {
     });
 
     function createAccount(values: NewPageForm) {
-        console.log(values);      
+        console.log(values);
         createPage(values)
     }
 
@@ -51,11 +56,22 @@ export function PageForm() {
     return (
         <Layout>
             <Box mt={4} mb={8}>
+                <Box mt={2}>
+                    <Button variant="outlined" onClick={() => navigate(-1)}>
+                        Retour
+                    </Button>
+                </Box>
                 <Typography component="h1" variant="h3" textAlign="center">
                     Nouvelle page
                 </Typography>
                 <Button onClick={dataTest}>Data test</Button>
                 <form onSubmit={formPage.onSubmit((values) => createAccount(values))}>
+                    <Box>
+                        <StatusChooser
+                            currentStatus={formPage.getInputProps('status').value}
+                            handleChooseStatus={(value: string) => formPage.setFieldValue('status', value)}
+                        />
+                    </Box>
                     <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
                         <TextField
                             id="name"

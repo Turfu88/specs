@@ -50,9 +50,6 @@ class EntryPoint
     #[ORM\JoinColumn(nullable: false)]
     private ?Project $project = null;
 
-    #[ORM\OneToMany(mappedBy: 'entrypoint', targetEntity: Element::class)]
-    private Collection $elements;
-
     #[ORM\OneToMany(mappedBy: 'entrypoint', targetEntity: Feedback::class)]
     private Collection $feedback;
 
@@ -62,12 +59,15 @@ class EntryPoint
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'source')]
     private ?self $source = null;
 
+    #[ORM\ManyToMany(targetEntity: Element::class, inversedBy: 'entryPoints')]
+    private Collection $elements;
+
     public function __construct()
     {
-        $this->elements = new ArrayCollection();
         $this->feedback = new ArrayCollection();
         $this->histories = new ArrayCollection();
-        $this->source = new ArrayCollection();
+        $this->source = null;
+        $this->elements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -208,39 +208,9 @@ class EntryPoint
     }
 
     /**
-     * @return Collection<int, Element>
-     */
-    public function getElements(): Collection
-    {
-        return $this->elements;
-    }
-
-    public function addElement(Element $element): self
-    {
-        if (!$this->elements->contains($element)) {
-            $this->elements->add($element);
-            $element->setEntrypoint($this);
-        }
-
-        return $this;
-    }
-
-    public function removeElement(Element $element): self
-    {
-        if ($this->elements->removeElement($element)) {
-            // set the owning side to null (unless already changed)
-            if ($element->getEntrypoint() === $this) {
-                $element->setEntrypoint(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, Feedback>
      */
-    public function getFeedback(): Collection
+    public function getFeedbacks(): Collection
     {
         return $this->feedback;
     }
@@ -327,6 +297,30 @@ class EntryPoint
                 $source->setSource(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Element>
+     */
+    public function getElements(): Collection
+    {
+        return $this->elements;
+    }
+
+    public function addElement(Element $element): self
+    {
+        if (!$this->elements->contains($element)) {
+            $this->elements->add($element);
+        }
+
+        return $this;
+    }
+
+    public function removeElement(Element $element): self
+    {
+        $this->elements->removeElement($element);
 
         return $this;
     }

@@ -13,7 +13,7 @@ export function PageThumbnail({ page }: { page: PageThumbnailProps }) {
 
     return (
         <Link to={`/page/${uid}`} className="col-4 m-auto">
-            <Box width={200} minHeight={350} style={{backgroundColor: "red"}} mt={2} className="rounded p-2">
+            <Box width={200} minHeight={350} mt={2} className=" border rounded p-2">
                 <Typography component="h2" variant="subtitle1" textAlign="center">
                     {name}
                 </Typography>

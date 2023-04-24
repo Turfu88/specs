@@ -1,6 +1,6 @@
 
 # API
-
+# -----------------------------------
 # User
 create-user:
     path: '/api/account/create'
@@ -16,6 +16,14 @@ update-status:
     path: '/api/project/update-status'
     controller: App\Controller\ProjectController::updateStatus
     methods: POST
+update-section:
+    path: '/api/project/update-section'
+    controller: App\Controller\ProjectController::updateSection
+    methods: POST
+update-project:
+    path: '/api/project/update'
+    controller: App\Controller\ProjectController::updateProject
+    methods: POST
 projects-get-all:
     path: '/api/projects/get-all'
     controller: App\Controller\ProjectController::getAll
@@ -25,12 +33,43 @@ project-info:
     controller: App\Controller\ProjectController::getProjectInfo
     methods: GET
 
+# Element
+element-create:
+    path: '/api/element/create'
+    controller: App\Controller\ElementController::createElement
+    methods: POST
+element-edit:
+    path: '/api/element/{id}/edit'
+    controller: App\Controller\ElementController::editElement
+    methods: PATCH
+element-details:
+    path: '/api/element/{uid}'
+    controller: App\Controller\ElementController::getElementDetails
+    methods: GET
+
+# Connection
+connection-create:
+    path: '/api/connection/create'
+    controller: App\Controller\ConnectionController::createConnection
+    methods: POST
+connection-edit:
+    path: '/api/connection/{id}/edit'
+    controller: App\Controller\ConnectionController::editConnection
+    methods: PATCH
+connection-details:
+    path: '/api/connection/{uid}'
+    controller: App\Controller\ConnectionController::getConnectionDetails
+    methods: GET
 
 # Page
 page-create:
     path: '/api/page/create'
     controller: App\Controller\PageController::createPage
     methods: POST
+page-edit:
+    path: '/api/page/{id}/edit'
+    controller: App\Controller\PageController::editPage
+    methods: PATCH
 page-info:
     path: '/api/page/{uid}'
     controller: App\Controller\PageController::getPageDetails
@@ -41,7 +80,38 @@ feature-create:
     path: '/api/feature/create'
     controller: App\Controller\FeatureController::createFeature
     methods: POST
+feature-edit:
+    path: '/api/feature/{id}/edit'
+    controller: App\Controller\FeatureController::editFeature
+    methods: PATCH
+feature-info:
+    path: '/api/feature/{uid}'
+    controller: App\Controller\FeatureController::getFeatureDetails
+    methods: GET
 
+# Spec
+spec-create:
+    path: '/api/spec/create'
+    controller: App\Controller\SpecController::createSpec
+    methods: POST
+spec-edit:
+    path: '/api/spec/{id}/edit'
+    controller: App\Controller\SpecController::editSpec
+    methods: PATCH
+spec-info:
+    path: '/api/spec/{uid}'
+    controller: App\Controller\SpecController::getSpecDetails
+    methods: GET
+
+# Feedback
+feedback-create:
+    path: '/api/feedback/create'
+    controller: App\Controller\FeedbackController::createFeedback
+    methods: POST
+feedback-edit:
+    path: '/api/feedback/{id}/edit'
+    controller: App\Controller\FeedbackController::editFeedback
+    methods: PATCH
 # Security
 login:
     path: '/api/login'
@@ -67,6 +137,8 @@ default4:
     methods: GET
 
 # APP
+# -----------------------------------
+# App front
 app_landing:
     path: /
     controller: App\Controller\AppController
