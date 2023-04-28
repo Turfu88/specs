@@ -1,5 +1,5 @@
-import { NewConnectionForm } from "../../pages/EntryPoint/ConnectionCreate";
-import { EditConnectionForm } from "../../pages/EntryPoint/ConnectionEdit";
+import { NewConnectionForm } from "../../pages/Connection/ConnectionCreate";
+import { EditConnectionForm } from "../../pages/Connection/ConnectionEdit";
 import request from "./request";
 
 export async function getConnectionDetails(uid: string | undefined) {  

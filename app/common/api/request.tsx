@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie'
-import { getAccountId } from './account'
+import { getUserId } from './user'
 
 export default async function request(url: string, method = "POST", values: any, includeCookie = false) {
     let myHeaders = new Headers()
@@ -9,9 +9,9 @@ export default async function request(url: string, method = "POST", values: any,
         myHeaders.append("Content-type", "application/json")
     }
 
-    const accountId = getAccountId();
-    if (null !== accountId) {
-        myHeaders.append("accountid", accountId.toString())
+    const userId = getUserId();
+    if (null !== userId) {
+        myHeaders.append("userid", userId.toString())
     }
     
     if (includeCookie === true) {

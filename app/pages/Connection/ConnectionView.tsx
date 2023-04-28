@@ -9,7 +9,7 @@ import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import { ConnectionEdit } from './ConnectionEdit';
 import { StatusShow } from '../../common/components/StatusShow';
-import { Element, Feedback } from '../../common/types';
+import { Element } from '../../common/types';
 import { FeedbackSection } from '../../common/components/FeedbackSection';
 
 const Transition = forwardRef(function Transition(
@@ -36,6 +36,7 @@ console.log(connection);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setOpenMenu(event.currentTarget);
     };
+
     const handleCloseMenu = () => {
         setOpenMenu(null);
     };

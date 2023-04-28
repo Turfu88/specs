@@ -4,7 +4,7 @@ import { forwardRef, useState } from "react";
 import { useForm } from "@mantine/form";
 import { StatusChooser } from "./StatusChooser";
 import { createFeedback } from "../api/feedback";
-import { getUserId } from "../api/account";
+import { getUserId } from "../api/user";
 import { StatusShow } from "./StatusShow";
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import { TransitionProps } from "@mui/material/transitions";

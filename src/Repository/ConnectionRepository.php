@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\EntryPoint;
+use App\Entity\Connection;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<EntryPoint>
+ * @extends ServiceEntityRepository<Connection>
  *
- * @method EntryPoint|null find($id, $lockMode = null, $lockVersion = null)
- * @method EntryPoint|null findOneBy(array $criteria, array $orderBy = null)
- * @method EntryPoint[]    findAll()
- * @method EntryPoint[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Connection|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Connection|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Connection[]    findAll()
+ * @method Connection[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class EntryPointRepository extends ServiceEntityRepository
+class ConnectionRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, EntryPoint::class);
+        parent::__construct($registry, Connection::class);
     }
 
-    public function save(EntryPoint $entity, bool $flush = false): void
+    public function save(Connection $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class EntryPointRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(EntryPoint $entity, bool $flush = false): void
+    public function remove(Connection $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class EntryPointRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return EntryPoint[] Returns an array of EntryPoint objects
+//     * @return Connection[] Returns an array of Connection objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class EntryPointRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?EntryPoint
+//    public function findOneBySomeField($value): ?Connection
 //    {
 //        return $this->createQueryBuilder('e')
 //            ->andWhere('e.exampleField = :val')

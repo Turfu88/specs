@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\AccountRepository;
+use App\Repository\AreaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: AccountRepository::class)]
-class Account
+#[ORM\Entity(repositoryClass: AreaRepository::class)]
+class Area
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -28,20 +28,16 @@ class Account
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updated_at = null;
 
-    #[ORM\OneToMany(mappedBy: 'account', targetEntity: User::class)]
-    private Collection $account;
-
-    #[ORM\OneToMany(mappedBy: 'account', targetEntity: Project::class)]
-    private Collection $projects;
-
-    #[ORM\OneToMany(mappedBy: 'account', targetEntity: User::class)]
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'areas')]
     private Collection $users;
+
+    #[ORM\ManyToMany(targetEntity: Project::class, inversedBy: 'areas')]
+    private Collection $projects;
 
     public function __construct()
     {
-        $this->account = new ArrayCollection();
-        $this->projects = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->projects = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -100,29 +96,23 @@ class Account
     /**
      * @return Collection<int, User>
      */
-    public function getAccount(): Collection
+    public function getUsers(): Collection
     {
-        return $this->account;
+        return $this->users;
     }
 
-    public function addAccount(User $account): self
+    public function addUser(User $user): self
     {
-        if (!$this->account->contains($account)) {
-            $this->account->add($account);
-            $account->setAccount($this);
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
         }
 
         return $this;
     }
 
-    public function removeAccount(User $account): self
+    public function removeUser(User $user): self
     {
-        if ($this->account->removeElement($account)) {
-            // set the owning side to null (unless already changed)
-            if ($account->getAccount() === $this) {
-                $account->setAccount(null);
-            }
-        }
+        $this->users->removeElement($user);
 
         return $this;
     }
@@ -139,7 +129,6 @@ class Account
     {
         if (!$this->projects->contains($project)) {
             $this->projects->add($project);
-            $project->setAccount($this);
         }
 
         return $this;
@@ -147,43 +136,9 @@ class Account
 
     public function removeProject(Project $project): self
     {
-        if ($this->projects->removeElement($project)) {
-            // set the owning side to null (unless already changed)
-            if ($project->getAccount() === $this) {
-                $project->setAccount(null);
-            }
-        }
+        $this->projects->removeElement($project);
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
-    }
-
-    public function addUser(User $user): self
-    {
-        if (!$this->users->contains($user)) {
-            $this->users->add($user);
-            $user->setAccount($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): self
-    {
-        if ($this->users->removeElement($user)) {
-            // set the owning side to null (unless already changed)
-            if ($user->getAccount() === $this) {
-                $user->setAccount(null);
-            }
-        }
-
-        return $this;
-    }
 }

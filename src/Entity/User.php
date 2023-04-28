@@ -44,19 +44,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Feedback::class)]
     private Collection $feedback;
 
-    #[ORM\ManyToOne(inversedBy: 'users')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Account $account = null;
-
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $created_at = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updated_at = null;
 
+    #[ORM\ManyToMany(targetEntity: Area::class, mappedBy: 'users')]
+    private Collection $areas;
+
     public function __construct()
     {
         $this->feedback = new ArrayCollection();
+        $this->areas = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -216,18 +216,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAccount(): ?Account
-    {
-        return $this->account;
-    }
-
-    public function setAccount(?Account $account): self
-    {
-        $this->account = $account;
-
-        return $this;
-    }
-
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->created_at;
@@ -251,4 +239,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Area>
+     */
+    public function getAreas(): Collection
+    {
+        return $this->areas;
+    }
+
+    public function addArea(Area $area): self
+    {
+        if (!$this->areas->contains($area)) {
+            $this->areas->add($area);
+            $area->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeArea(Area $area): self
+    {
+        if ($this->areas->removeElement($area)) {
+            $area->removeUser($this);
+        }
+
+        return $this;
+    }   
 }

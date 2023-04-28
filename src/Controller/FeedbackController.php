@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Project;
 use App\Entity\User;
 use App\Entity\Feedback;
-use App\Entity\EntryPoint;
+use App\Entity\Connection;
 use App\Entity\Spec;
 use App\Entity\Page;
 use App\Entity\Feature;
@@ -37,7 +37,7 @@ class FeedbackController extends AbstractController
             ->setUid(Uuid::v1())
             ->setProject($project)
             ->setPage(null)
-            ->setEntrypoint(null)
+            ->setConnection(null)
             ->setSpec(null)
             ->setFeature(null)
             ->setSummary(null)
@@ -45,8 +45,8 @@ class FeedbackController extends AbstractController
 
         switch ($json->feedbackType) {
             case 'connection':
-                $connection = $em->getRepository(EntryPoint::class)->find($json->parentId);
-                $feedback->setEntrypoint($connection);
+                $connection = $em->getRepository(Connection::class)->find($json->parentId);
+                $feedback->setConnection($connection);
                 break;
             case 'spec':
                 $spec = $em->getRepository(Spec::class)->find($json->parentId);

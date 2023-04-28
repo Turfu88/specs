@@ -3,7 +3,7 @@ import { Feedback } from "../types";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { StatusChooser } from "./StatusChooser";
 import { editFeedback } from "../api/feedback";
-import { getUserId } from "../api/account";
+import { getUserId } from "../api/user";
 
 export interface EditFeedbackForm {
     content: string,

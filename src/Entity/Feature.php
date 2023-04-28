@@ -44,8 +44,8 @@ class Feature
     #[ORM\JoinColumn(nullable: false)]
     private ?Project $project = null;
 
-    #[ORM\OneToMany(mappedBy: 'feature', targetEntity: EntryPoint::class)]
-    private Collection $entryPoints;
+    #[ORM\OneToMany(mappedBy: 'feature', targetEntity: Connection::class)]
+    private Collection $connections;
 
     #[ORM\OneToMany(mappedBy: 'feature', targetEntity: Spec::class, orphanRemoval: true)]
     private Collection $specs;
@@ -67,7 +67,7 @@ class Feature
 
     public function __construct()
     {
-        $this->entryPoints = new ArrayCollection();
+        $this->connections = new ArrayCollection();
         $this->specs = new ArrayCollection();
         $this->feedback = new ArrayCollection();
         $this->histories = new ArrayCollection();
@@ -188,29 +188,29 @@ class Feature
     }
 
     /**
-     * @return Collection<int, EntryPoint>
+     * @return Collection<int, Connection>
      */
-    public function getEntryPoints(): Collection
+    public function getConnections(): Collection
     {
-        return $this->entryPoints;
+        return $this->connections;
     }
 
-    public function addEntryPoint(EntryPoint $entryPoint): self
+    public function addConnection(Connection $connection): self
     {
-        if (!$this->entryPoints->contains($entryPoint)) {
-            $this->entryPoints->add($entryPoint);
-            $entryPoint->setFeature($this);
+        if (!$this->connections->contains($connection)) {
+            $this->connections->add($connection);
+            $connection->setFeature($this);
         }
 
         return $this;
     }
 
-    public function removeEntryPoint(EntryPoint $entryPoint): self
+    public function removeConnection(Connection $connection): self
     {
-        if ($this->entryPoints->removeElement($entryPoint)) {
+        if ($this->connections->removeElement($connection)) {
             // set the owning side to null (unless already changed)
-            if ($entryPoint->getFeature() === $this) {
-                $entryPoint->setFeature(null);
+            if ($connection->getFeature() === $this) {
+                $connection->setFeature(null);
             }
         }
 

@@ -1,4 +1,14 @@
-export const steps = ['Informations', 'Choix des éléments', 'Choix des pages', 'Informations du projet'];
+import { Area } from "../../common/types";
+
+export const steps = ['Informations', 'Choix des espaces', 'Choix des éléments', 'Choix des pages', 'Informations du projet'];
+
+export interface DefaultArea {
+    id: number,
+    name: string,
+    uid: string,
+    isActive: boolean,
+    choosed: boolean
+}
 
 export interface DefaultElement {
     name: string,

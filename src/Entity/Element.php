@@ -44,14 +44,14 @@ class Element
     #[ORM\ManyToMany(targetEntity: Spec::class, mappedBy: 'element')]
     private Collection $specs;
 
-    #[ORM\ManyToMany(targetEntity: EntryPoint::class, mappedBy: 'elements')]
-    private Collection $entryPoints;
+    #[ORM\ManyToMany(targetEntity: Connection::class, mappedBy: 'elements')]
+    private Collection $connections;
 
     public function __construct()
     {
         $this->source = null;
         $this->specs = new ArrayCollection();
-        $this->entryPoints = new ArrayCollection();
+        $this->connections = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -205,27 +205,27 @@ class Element
     }
 
     /**
-     * @return Collection<int, EntryPoint>
+     * @return Collection<int, Connection>
      */
-    public function getEntryPoints(): Collection
+    public function getConnections(): Collection
     {
-        return $this->entryPoints;
+        return $this->connections;
     }
 
-    public function addEntryPoint(EntryPoint $entryPoint): self
+    public function addConnection(Connection $connection): self
     {
-        if (!$this->entryPoints->contains($entryPoint)) {
-            $this->entryPoints->add($entryPoint);
-            $entryPoint->addElement($this);
+        if (!$this->connections->contains($connection)) {
+            $this->connections->add($connection);
+            $connection->addElement($this);
         }
 
         return $this;
     }
 
-    public function removeEntryPoint(EntryPoint $entryPoint): self
+    public function removeConnection(Connection $connection): self
     {
-        if ($this->entryPoints->removeElement($entryPoint)) {
-            $entryPoint->removeElement($this);
+        if ($this->connections->removeElement($connection)) {
+            $connection->removeElement($this);
         }
 
         return $this;

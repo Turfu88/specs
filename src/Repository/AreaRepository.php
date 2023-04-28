@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Account;
+use App\Entity\Area;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Account>
+ * @extends ServiceEntityRepository<Area>
  *
- * @method Account|null find($id, $lockMode = null, $lockVersion = null)
- * @method Account|null findOneBy(array $criteria, array $orderBy = null)
- * @method Account[]    findAll()
- * @method Account[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Area|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Area|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Area[]    findAll()
+ * @method Area[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class AccountRepository extends ServiceEntityRepository
+class AreaRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Account::class);
+        parent::__construct($registry, Area::class);
     }
 
-    public function save(Account $entity, bool $flush = false): void
+    public function save(Area $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class AccountRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Account $entity, bool $flush = false): void
+    public function remove(Area $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class AccountRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return Account[] Returns an array of Account objects
+//     * @return Area[] Returns an array of Area objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class AccountRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Account
+//    public function findOneBySomeField($value): ?Area
 //    {
 //        return $this->createQueryBuilder('a')
 //            ->andWhere('a.exampleField = :val')

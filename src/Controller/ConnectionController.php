@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\EntryPoint;
+use App\Entity\Connection;
 use App\Entity\Project;
 use App\Entity\Element;
 use Symfony\Component\Uid\Uuid;
@@ -22,7 +22,7 @@ class ConnectionController extends AbstractController
         $response->headers->set('Content-Type', 'application/json');
         $project = $em->getRepository(Project::class)->find($json->project);
 
-        $connection = new EntryPoint();
+        $connection = new Connection();
         $connection->setName($json->name)
             ->setDescription($json->description)
             ->setUrl($json->url)
@@ -48,7 +48,7 @@ class ConnectionController extends AbstractController
         $json = json_decode($req->getContent());
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
-        $connection = $em->getRepository(EntryPoint::class)->find($id);
+        $connection = $em->getRepository(Connection::class)->find($id);
 
         if (count($json->elements) > 0) {
             // Faire une différence entre les éléments existants et les nouveaux
@@ -57,7 +57,6 @@ class ConnectionController extends AbstractController
                     $connection->removeElement($element);
                 }
             }
-
             foreach ($json->elements as $elementId) {
                 $element = $em->getRepository(Element::class)->find($elementId);
                 $connection->addElement($element);
@@ -82,7 +81,7 @@ class ConnectionController extends AbstractController
     {
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
-        $connection = $em->getRepository(EntryPoint::class)->findOneBy(['uid' => $uid]);
+        $connection = $em->getRepository(Connection::class)->findOneBy(['uid' => $uid]);
         if ($connection) {
             $content = $this->serializeConnection($connection);
         } else {

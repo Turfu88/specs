@@ -4,7 +4,7 @@ import { useForm } from '@mantine/form';
 import { Connection, Element, Project } from '../../common/types';
 import { editConnection } from '../../common/api/connexion';
 import { StatusChooser } from '../../common/components/StatusChooser';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 import { getProjectDetails } from '../../common/api/project';
 import { useState } from 'react';
 

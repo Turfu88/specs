@@ -1,3 +1,18 @@
+export interface Area {
+    id: number,
+    name: string,
+    uid: string,
+    isActive: boolean,
+    projects: Project[]
+}
+
+export interface User {
+    username: string,
+    firstname: string,
+    lastname: string,
+    email: string,
+    company: string,
+}
 
 export interface Project {
     id: number,

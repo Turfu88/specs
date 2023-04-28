@@ -1,4 +1,4 @@
-import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, Typography } from "@mui/material";
+import { Box, Checkbox, FormControl, FormControlLabel, FormGroup, Typography } from "@mui/material";
 import { DefaultElement } from "./defaultValues";
 
 interface ElementChooserProps {

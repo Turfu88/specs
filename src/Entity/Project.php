@@ -49,10 +49,6 @@ class Project
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $dev_access = null;
 
-    #[ORM\ManyToOne(inversedBy: 'projects')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Account $account = null;
-
     #[ORM\OneToMany(mappedBy: 'project', targetEntity: Summary::class, orphanRemoval: true)]
     private Collection $summaries;
 
@@ -62,8 +58,8 @@ class Project
     #[ORM\OneToMany(mappedBy: 'project', targetEntity: Feature::class, orphanRemoval: true)]
     private Collection $features;
 
-    #[ORM\OneToMany(mappedBy: 'project', targetEntity: EntryPoint::class, orphanRemoval: true)]
-    private Collection $entryPoints;
+    #[ORM\OneToMany(mappedBy: 'project', targetEntity: Connection::class, orphanRemoval: true)]
+    private Collection $connections;
 
     #[ORM\OneToMany(mappedBy: 'project', targetEntity: Element::class, orphanRemoval: true)]
     private Collection $elements;
@@ -86,16 +82,20 @@ class Project
     #[ORM\Column(type: Types::ARRAY, nullable: true)]
     private array $sectionChoices = [];
 
+    #[ORM\ManyToMany(targetEntity: Area::class, mappedBy: 'projects')]
+    private Collection $areas;
+
     public function __construct()
     {
         $this->summaries = new ArrayCollection();
         $this->pages = new ArrayCollection();
         $this->features = new ArrayCollection();
-        $this->entryPoints = new ArrayCollection();
+        $this->connections = new ArrayCollection();
         $this->elements = new ArrayCollection();
         $this->feedback = new ArrayCollection();
         $this->histories = new ArrayCollection();
         $this->source = null;
+        $this->areas = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -235,17 +235,6 @@ class Project
         return $this;
     }
 
-    public function getAccount(): ?Account
-    {
-        return $this->account;
-    }
-
-    public function setAccount(?Account $account): self
-    {
-        $this->account = $account;
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, Summary>
@@ -338,29 +327,29 @@ class Project
     }
 
     /**
-     * @return Collection<int, EntryPoint>
+     * @return Collection<int, Connection>
      */
-    public function getEntryPoints(): Collection
+    public function getConnections(): Collection
     {
-        return $this->entryPoints;
+        return $this->connections;
     }
 
-    public function addEntryPoint(EntryPoint $entryPoint): self
+    public function addConnection(Connection $connection): self
     {
-        if (!$this->entryPoints->contains($entryPoint)) {
-            $this->entryPoints->add($entryPoint);
-            $entryPoint->setProject($this);
+        if (!$this->connections->contains($connection)) {
+            $this->connections->add($connection);
+            $connection->setProject($this);
         }
 
         return $this;
     }
 
-    public function removeEntryPoint(EntryPoint $entryPoint): self
+    public function removeConnection(Connection $connection): self
     {
-        if ($this->entryPoints->removeElement($entryPoint)) {
+        if ($this->connections->removeElement($connection)) {
             // set the owning side to null (unless already changed)
-            if ($entryPoint->getProject() === $this) {
-                $entryPoint->setProject(null);
+            if ($connection->getProject() === $this) {
+                $connection->setProject(null);
             }
         }
 
@@ -531,6 +520,33 @@ class Project
     public function setSectionChoices(?array $sectionChoices): self
     {
         $this->sectionChoices = $sectionChoices;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Area>
+     */
+    public function getAreas(): Collection
+    {
+        return $this->areas;
+    }
+
+    public function addArea(Area $area): self
+    {
+        if (!$this->areas->contains($area)) {
+            $this->areas->add($area);
+            $area->addProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeArea(Area $area): self
+    {
+        if ($this->areas->removeElement($area)) {
+            $area->removeProject($this);
+        }
 
         return $this;
     }

@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Feature;
 use App\Entity\Page;
 use App\Entity\Project;
-use App\Entity\EntryPoint;
+use App\Entity\Connection;
 use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,14 +61,14 @@ class FeatureController extends AbstractController
 
         if (count($json->connections) > 0) {
             // Faire une différence entre les connections existantes et les nouvelles
-            foreach($feature->getEntryPoints() as $connection) {
+            foreach($feature->getConnections() as $connection) {
                 if (!in_array($connection->getId(), $json->connections)) {
-                    $feature->removeEntryPoint($connection);
+                    $feature->removeConnection($connection);
                 }
             }
             foreach ($json->connections as $connectionId) {
-                $connection = $em->getRepository(EntryPoint::class)->find($connectionId);
-                $feature->addEntryPoint($connection);
+                $connection = $em->getRepository(Connection::class)->find($connectionId);
+                $feature->addConnection($connection);
             }
         }
         $feature->setName($json->name)
@@ -104,7 +104,7 @@ class FeatureController extends AbstractController
     private function serializeFeature($feature)
     {
         $connectionsFormated = [];
-        foreach ($feature->getEntryPoints() as $connection) {
+        foreach ($feature->getConnections() as $connection) {
             $connectionsFormated[] = [
                 'id' => $connection->getId(),
                 'uid' => $connection->getUid(),

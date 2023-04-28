@@ -1,14 +1,14 @@
 import { EditProjectForm } from "../../pages/Project/ProjectEdit";
 import { ProjectSectionForm } from "../../pages/Project/ProjectEditSection";
 import { ProjectStatusForm } from "../../pages/Project/ProjectEditStatus";
-import { DefaultCoreForm, DefaultElement, DefaultPage } from "../../pages/ProjectCore/defaultValues";
+import { DefaultArea, DefaultCoreForm, DefaultElement, DefaultPage } from "../../pages/ProjectCore/defaultValues";
 import request from "./request";
 
 interface createCoreType {
     elements: DefaultElement[],
     pages: DefaultPage[],
     form: DefaultCoreForm,
-    account: Number
+    areas: DefaultArea[]
 }
 
 export async function createCore(values: createCoreType) {    

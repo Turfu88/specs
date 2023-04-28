@@ -3,9 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Page;
-use App\Entity\Account;
+use App\Entity\Area;
 use App\Entity\Element;
 use App\Entity\Project;
+use App\Entity\User;
 use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,20 +25,20 @@ class ProjectController extends AbstractController
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
 
-        // $account = new Account();
-        // $account->setName($json->accountName)
+        // $area = new Area();
+        // $area->setName($json->areaName)
         //     ->setUid(Uuid::v1())
         //     ->setCreatedAt(new \DateTimeImmutable)
         //     ->setUpdatedAt(new \DateTimeImmutable);
-        // $em->persist($account);
+        // $em->persist($area);
 
-    
+
         return $response->setStatusCode(200)->setContent(json_encode([
             'code' => 200,
             'message' => 'Nouvel utilisateur créé avec succès',
         ]));
     }
-    
+
     public function updateProject(Request $req, EntityManagerInterface $em): Response
     {
         $json = json_decode($req->getContent());
@@ -65,10 +66,23 @@ class ProjectController extends AbstractController
         $json = json_decode($req->getContent());
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
-
-        $account = $em->getRepository(Account::class)->find($json->account);
-
+        $user = $em->getRepository(User::class)->find($req->headers->all()["userid"][0]);
+        
         $project = new Project();
+        // Ajouter les espaces choisis
+        if ($json->areas) {
+            $areaSelected = [];
+            foreach ($json->areas as $area) {
+                if ($area->choosed) {
+                    $areaSelected[] = $area->id;
+                }
+            }
+            foreach ($user->getAreas() as $area) {
+                if (in_array($area->getId(), $areaSelected)) {
+                    $project->addArea($area);
+                }
+            }
+        }
         $project->setName($json->form->name)
             ->setVersion($json->form->version)
             ->setComment($json->form->comment)
@@ -76,8 +90,7 @@ class ProjectController extends AbstractController
             ->setUpdatedAt(new \DateTimeImmutable)
             ->setUid(Uuid::v1())
             ->setIsCore(true)
-            ->setSource(null)
-            ->setAccount($account);
+            ->setSource(null);
         $em->persist($project);
 
         foreach ($json->pages as $page) {
@@ -112,7 +125,6 @@ class ProjectController extends AbstractController
                 ->setProject($project);
             $em->persist($elementNew);
         }
-
         $em->flush();
 
         return $response->setStatusCode(200)->setContent(json_encode([
@@ -124,15 +136,15 @@ class ProjectController extends AbstractController
     public function getAll(Request $req, EntityManagerInterface $em): Response
     {
         $response = new Response();
-        $response->headers->set('Content-Type', 'application/json'); 
-        $account = $em->getRepository(Account::class)->find($req->headers->all()["accountid"][0]);
-        if ($account) {
-            $projects = $account->getProjects();
+        $response->headers->set('Content-Type', 'application/json');
+        $area = $em->getRepository(Area::class)->find($req->headers->all()["areaid"][0]);
+        if ($area) {
+            $projects = $area->getProjects();
             $content = $this->serializeForProjects($projects);
         } else {
             $content = null;
         }
-        // dump($account);
+        // dump($area);
         // dump($projects);
         return $response->setStatusCode(200)->setContent(json_encode([
             'code' => 200,
@@ -158,7 +170,7 @@ class ProjectController extends AbstractController
 
     public function getProjectInfo(Request $req, EntityManagerInterface $em, string $uid): Response
     {
-     
+
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         if (strlen($uid) > 10) {
@@ -199,7 +211,7 @@ class ProjectController extends AbstractController
             ];
         }
         $connectionsFormated = [];
-        foreach ($project->getEntryPoints() as $connection) {
+        foreach ($project->getConnections() as $connection) {
             $connectionsFormated[] = [
                 'id' => $connection->getId(),
                 'uid' => $connection->getUid(),
@@ -238,17 +250,18 @@ class ProjectController extends AbstractController
             'pages' => $pagesFormated,
             'connections' => $connectionsFormated,
             'features' => $featuresFormated
-        ];        
+        ];
     }
 
-    public function updateStatus(Request $req, EntityManagerInterface $em): Response {
+    public function updateStatus(Request $req, EntityManagerInterface $em): Response
+    {
         $json = json_decode($req->getContent());
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $project = $em->getRepository(Project::class)->find($json->projectId);
         $project->setStatusChoices($json->statusChoices)
-                ->setStatusColors($json->statusColors)
-                ->setUpdatedAt(new \DateTimeImmutable);
+            ->setStatusColors($json->statusColors)
+            ->setUpdatedAt(new \DateTimeImmutable);
         $em->persist($project);
         $em->flush();
 
@@ -257,13 +270,14 @@ class ProjectController extends AbstractController
             'message' => 'Status mis à jour',
         ]));
     }
-    public function updateSection(Request $req, EntityManagerInterface $em): Response {
+    public function updateSection(Request $req, EntityManagerInterface $em): Response
+    {
         $json = json_decode($req->getContent());
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $project = $em->getRepository(Project::class)->find($json->projectId);
         $project->setSectionChoices($json->sectionChoices)
-                ->setUpdatedAt(new \DateTimeImmutable);
+            ->setUpdatedAt(new \DateTimeImmutable);
         $em->persist($project);
         $em->flush();
 
@@ -272,5 +286,5 @@ class ProjectController extends AbstractController
             'message' => 'Status mis à jour',
         ]));
     }
-    
+
 }

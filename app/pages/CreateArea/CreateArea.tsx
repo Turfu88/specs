@@ -11,10 +11,10 @@ interface UserForm {
     lastname: string,
     company: string,
     password: string
-    accountName: string
+    areaName: string
 }
 
-export function CreateAccount() {
+export function CreateArea() {
 
     const formUser = useForm({
         initialValues: {
@@ -23,7 +23,7 @@ export function CreateAccount() {
             lastname: '',
             email: '',
             company: '',
-            accountName: '',
+            areaName: '',
             password: '',
             confirmPassword: ''
         },
@@ -33,7 +33,7 @@ export function CreateAccount() {
             firstname: (value) => (value.length < 2 ? 'Prénom incorrect (trop court)' : null),
             lastname: (value) => (value.length < 2 ? 'Nom incorrect (trop court)' : null),
             company: (value) => (value.length < 2 ? 'Nom de l\'entreprise incorrect (trop court)' : null),
-            accountName: (value) => (value.length < 2 ? 'Nom du compte incorrect (trop court)' : null),
+            areaName: (value) => (value.length < 2 ? 'Nom de l\'espace incorrect (trop court)' : null),
             password: (value) => (value.length < 6 ? 'Mot de passe trop court (minimum 6 caractères)' : null),
             confirmPassword: (value, values) => value !== values.password ? 'Les mots de passe ne sont pas identiques' : null,
         },
@@ -50,7 +50,7 @@ export function CreateAccount() {
         formUser.setFieldValue('firstname', "Johan");
         formUser.setFieldValue('lastname', 'Clement');
         formUser.setFieldValue('company', 'PJ');
-        formUser.setFieldValue('accountName', 'SuperProjet');
+        formUser.setFieldValue('areaName', 'SuperProjet');
         formUser.setFieldValue('password', 'testyu');
         formUser.setFieldValue('confirmPassword', 'testyu');
     }
@@ -70,6 +70,8 @@ export function CreateAccount() {
                             variant="outlined"
                             fullWidth
                             {...formUser.getInputProps('username')}
+                            error={formUser.errors.username ? true : false}
+                            helperText={formUser.errors.username}
                         />
                     </Box>
                     <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
@@ -79,6 +81,8 @@ export function CreateAccount() {
                             variant="outlined"
                             fullWidth
                             {...formUser.getInputProps('firstname')}
+                            error={formUser.errors.firstname ? true : false}
+                            helperText={formUser.errors.firstname}
                         />
                     </Box>
                     <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
@@ -88,6 +92,8 @@ export function CreateAccount() {
                             variant="outlined"
                             fullWidth
                             {...formUser.getInputProps('lastname')}
+                            error={formUser.errors.lastname ? true : false}
+                            helperText={formUser.errors.lastname}
                         />
                     </Box>
                     <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
@@ -97,6 +103,8 @@ export function CreateAccount() {
                             variant="outlined"
                             fullWidth
                             {...formUser.getInputProps('email')}
+                            error={formUser.errors.email ? true : false}
+                            helperText={formUser.errors.email}
                         />
                     </Box>
                     <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
@@ -106,15 +114,19 @@ export function CreateAccount() {
                             variant="outlined"
                             fullWidth
                             {...formUser.getInputProps('company')}
+                            error={formUser.errors.company ? true : false}
+                            helperText={formUser.errors.company}
                         />
                     </Box>
                     <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
                         <TextField
-                            id="accountName"
-                            label="Nom du compte"
+                            id="areaName"
+                            label="Nom de l'espace"
                             variant="outlined"
                             fullWidth
-                            {...formUser.getInputProps('accountName')}
+                            {...formUser.getInputProps('areaName')}
+                            error={formUser.errors.areaName ? true : false}
+                            helperText={formUser.errors.areaName}
                         />
                     </Box>
                     <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
@@ -125,6 +137,8 @@ export function CreateAccount() {
                             variant="outlined"
                             fullWidth
                             {...formUser.getInputProps('password')}
+                            error={formUser.errors.password ? true : false}
+                            helperText={formUser.errors.password}
                         />
                     </Box>
                     <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
@@ -135,6 +149,8 @@ export function CreateAccount() {
                             variant="outlined"
                             fullWidth
                             {...formUser.getInputProps('confirmPassword')}
+                            error={formUser.errors.confirmPassword ? true : false}
+                            helperText={formUser.errors.confirmPassword}
                         />
                     </Box>
                     <Box className="d-flex justify-content-center mw-75 m-auto mt-4">

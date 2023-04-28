@@ -50,7 +50,7 @@ class Feedback
     private ?Spec $spec = null;
 
     #[ORM\ManyToOne(inversedBy: 'feedback')]
-    private ?EntryPoint $entrypoint = null;
+    private ?Connection $Connection = null;
 
     #[ORM\Column]
     private ?bool $toTreat = null;
@@ -191,14 +191,14 @@ class Feedback
         return $this;
     }
 
-    public function getEntrypoint(): ?EntryPoint
+    public function getConnection(): ?Connection
     {
-        return $this->entrypoint;
+        return $this->Connection;
     }
 
-    public function setEntrypoint(?EntryPoint $entrypoint): self
+    public function setConnection(?Connection $Connection): self
     {
-        $this->entrypoint = $entrypoint;
+        $this->Connection = $Connection;
 
         return $this;
     }

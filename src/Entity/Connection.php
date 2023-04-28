@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\EntryPointRepository;
+use App\Repository\ConnectionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: EntryPointRepository::class)]
-class EntryPoint
+#[ORM\Entity(repositoryClass: ConnectionRepository::class)]
+class Connection
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -43,23 +43,23 @@ class EntryPoint
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $updated_at = null;
 
-    #[ORM\ManyToOne(inversedBy: 'entryPoints')]
+    #[ORM\ManyToOne(inversedBy: 'connections')]
     private ?Feature $feature = null;
 
-    #[ORM\ManyToOne(inversedBy: 'entryPoints')]
+    #[ORM\ManyToOne(inversedBy: 'connections')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Project $project = null;
 
-    #[ORM\OneToMany(mappedBy: 'entrypoint', targetEntity: Feedback::class)]
+    #[ORM\OneToMany(mappedBy: 'connection', targetEntity: Feedback::class)]
     private Collection $feedback;
 
-    #[ORM\OneToMany(mappedBy: 'entrypoint', targetEntity: History::class)]
+    #[ORM\OneToMany(mappedBy: 'connection', targetEntity: History::class)]
     private Collection $histories;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'source')]
     private ?self $source = null;
 
-    #[ORM\ManyToMany(targetEntity: Element::class, inversedBy: 'entryPoints')]
+    #[ORM\ManyToMany(targetEntity: Element::class, inversedBy: 'connections')]
     private Collection $elements;
 
     public function __construct()
@@ -219,7 +219,7 @@ class EntryPoint
     {
         if (!$this->feedback->contains($feedback)) {
             $this->feedback->add($feedback);
-            $feedback->setEntrypoint($this);
+            $feedback->setConnection($this);
         }
 
         return $this;
@@ -229,8 +229,8 @@ class EntryPoint
     {
         if ($this->feedback->removeElement($feedback)) {
             // set the owning side to null (unless already changed)
-            if ($feedback->getEntrypoint() === $this) {
-                $feedback->setEntrypoint(null);
+            if ($feedback->getConnection() === $this) {
+                $feedback->setConnection(null);
             }
         }
 
@@ -249,7 +249,7 @@ class EntryPoint
     {
         if (!$this->histories->contains($history)) {
             $this->histories->add($history);
-            $history->setEntrypoint($this);
+            $history->setConnection($this);
         }
 
         return $this;
@@ -259,8 +259,8 @@ class EntryPoint
     {
         if ($this->histories->removeElement($history)) {
             // set the owning side to null (unless already changed)
-            if ($history->getEntrypoint() === $this) {
-                $history->setEntrypoint(null);
+            if ($history->getConnection() === $this) {
+                $history->setConnection(null);
             }
         }
 

@@ -40,7 +40,7 @@ class History
     private ?Spec $spec = null;
 
     #[ORM\ManyToOne(inversedBy: 'histories')]
-    private ?EntryPoint $entrypoint = null;
+    private ?Connection $connection = null;
 
     public function getId(): ?int
     {
@@ -143,14 +143,14 @@ class History
         return $this;
     }
 
-    public function getEntrypoint(): ?EntryPoint
+    public function getConnection(): ?Connection
     {
-        return $this->entrypoint;
+        return $this->connection;
     }
 
-    public function setEntrypoint(?EntryPoint $entrypoint): self
+    public function setConnection(?Connection $connection): self
     {
-        $this->entrypoint = $entrypoint;
+        $this->connection = $connection;
 
         return $this;
     }

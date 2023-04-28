@@ -9,29 +9,31 @@ import { Settings } from './pages/Settings/Settings';
 import { ElementView } from './pages/Element/ElementView';
 import { ElementCreate } from './pages/Element/ElementCreate';
 import { NewProjectForm } from './pages/Project/NewProjectForm';
-import { ConnectionView } from './pages/EntryPoint/ConnectionView';
-import { ConnectionCreate } from './pages/EntryPoint/ConnectionCreate';
+import { ConnectionView } from './pages/Connection/ConnectionView';
+import { ConnectionCreate } from './pages/Connection/ConnectionCreate';
 import { PageView } from './pages/Page/PageView';
 import { Summary } from './pages/Summary/Summary';
 import { FeatureView } from './pages/Feature/FeatureView';
 import { SpecView } from './pages/Spec/SpecView';
 import { AddUser } from './pages/AddUser/AddUser';
-import { CreateAccount } from './pages/CreateAccount/CreateAccount';
+import { CreateArea } from './pages/CreateArea/CreateArea';
 import { isLogedIn } from './common/api/authentication';
 import { ProjectCore } from './pages/ProjectCore/ProjectCore';
 import { PageCreate } from './pages/Page/PageCreate';
 import { FeatureCreate } from './pages/Feature/FeatureCreate';
 import { SpecCreate } from './pages/Spec/SpecCreate';
+import { AreaView } from './pages/Area/AreaView';
 
 export function Router() {
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/"                             element={<Homepage />} />
-                <Route path="/login"                        element={<Login />} />
+                <Route path="/connexion"                    element={<Login />} />
                 <Route path="/contact"                      element={<Contact />} />
-                <Route path="/creer-un-compte"              element={<CreateAccount />} />
+                <Route path="/creer-un-compte"              element={<CreateArea />} />
                 <Route path="/dashboard"                    element={<UserRoute><LandingConnected /></UserRoute>} />
+                <Route path="/espace/:uid"                  element={<UserRoute><AreaView /></UserRoute>} />
                 <Route path="/projet/nouveau"               element={<UserRoute><NewProjectForm /></UserRoute>} />
                 <Route path="/projet/nouveau-coeur"         element={<UserRoute><ProjectCore /></UserRoute>} />
                 <Route path="/projet/:uid"                  element={<UserRoute><ProjectView /></UserRoute>} />

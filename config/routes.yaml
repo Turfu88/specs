@@ -3,9 +3,23 @@
 # -----------------------------------
 # User
 create-user:
-    path: '/api/account/create'
+    path: '/api/area/create'
     controller: App\Controller\UserController::createAccount
     methods: POST
+user-areas:
+    path: '/api/user/areas'
+    controller: App\Controller\UserController::getUserAreas
+    methods: GET
+
+#Area
+area-edit:
+    path: '/api/area/{id}/edit'
+    controller: App\Controller\AreaController::editArea
+    methods: PATCH
+area-details:
+    path: '/api/area/{uid}'
+    controller: App\Controller\AreaController::getAreaDetails
+    methods: GET
 
 # Project
 create-core:
