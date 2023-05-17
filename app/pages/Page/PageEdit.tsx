@@ -4,7 +4,10 @@ import { useForm } from '@mantine/form';
 import { Page } from '../../common/types';
 import { StatusChooser } from '../../common/components/StatusChooser';
 import { editPage } from '../../common/api/page';
-import { useState } from 'react';
+import { useId, useState } from 'react';
+import { ValidationBlock } from '../../common/components/ValidationBlock';
+import { addPageValidation, deletePageValidation } from '../../common/api/validation';
+import { getUserId } from '../../common/api/user';
 
 export interface EditPageForm {
     name: string,
@@ -47,6 +50,24 @@ export function PageEdit(props: PageEditProps) {
         values = {...values, isModelOk, isPrivate}        
         editPage(page.id, values);
         handleCloseDialog();
+    }
+
+    function sendValidation(status: boolean, type: string, validationToRemove: number | null) {
+        if (status) {
+            console.log("Valider la page")
+            addPageValidation({
+                type,
+                projectId: localStorage.getItem('project'),
+                userId: getUserId(),
+                pageId: localStorage.getItem('page')
+            });
+        } else {
+            deletePageValidation({
+                id: validationToRemove,
+                userId: getUserId(),
+            });
+            console.log("Retirer la validation de la page");
+        }
     }
 
     function dataTest() {
@@ -115,6 +136,19 @@ export function PageEdit(props: PageEditProps) {
                         error={formPage.errors.modelUrl ? true : false}
                         helperText={formPage.errors.modelUrl}
                     />
+                </Box>
+                <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
+                    <Box width={'100%'}>
+                        <Typography component="div" variant={'body1'} textAlign="center" mb={2}>
+                            Valider la maquette de la page ?
+                        </Typography>
+                        <ValidationBlock
+                            validations={page.validations}
+                            validators={page.validators}
+                            sendValidation={sendValidation}
+                            element={'page'}
+                        />
+                    </Box>
                 </Box>
                 <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
                     <FormControl>

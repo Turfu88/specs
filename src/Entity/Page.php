@@ -68,12 +68,16 @@ class Page
     #[ORM\OneToMany(mappedBy: 'page', targetEntity: Feature::class)]
     private Collection $features;
 
+    #[ORM\OneToMany(mappedBy: 'page', targetEntity: Validation::class)]
+    private Collection $validations;
+
     public function __construct()
     {
         $this->feedback = new ArrayCollection();
         $this->histories = new ArrayCollection();
         $this->source = null;
         $this->features = new ArrayCollection();
+        $this->validations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -355,6 +359,36 @@ class Page
             // set the owning side to null (unless already changed)
             if ($feature->getPage() === $this) {
                 $feature->setPage(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Validation>
+     */
+    public function getValidations(): Collection
+    {
+        return $this->validations;
+    }
+
+    public function addValidation(Validation $validation): self
+    {
+        if (!$this->validations->contains($validation)) {
+            $this->validations->add($validation);
+            $validation->setPage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeValidation(Validation $validation): self
+    {
+        if ($this->validations->removeElement($validation)) {
+            // set the owning side to null (unless already changed)
+            if ($validation->getPage() === $this) {
+                $validation->setPage(null);
             }
         }
 

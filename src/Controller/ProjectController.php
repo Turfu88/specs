@@ -50,6 +50,7 @@ class ProjectController extends AbstractController
             ->setVersion($json->version)
             ->setPreviousVersion($json->previousVersion)
             ->setComment($json->comment)
+            ->setValidators($json->validators)
             ->setStatus($json->status)
             ->setUpdatedAt(new \DateTimeImmutable);
         $em->persist($project);
@@ -67,7 +68,7 @@ class ProjectController extends AbstractController
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         $user = $em->getRepository(User::class)->find($req->headers->all()["userid"][0]);
-        
+
         $project = new Project();
         // Ajouter les espaces choisis
         if ($json->areas) {
@@ -223,14 +224,37 @@ class ProjectController extends AbstractController
                 'url' => $connection->getStatus()
             ];
         }
+        $validationsFormated = [];
+        foreach ($project->getValidations() as $validation) {
+            $validationsFormated[] = [
+                'id' => $validation->getId(),
+                'type' => $validation->getType(),
+                'created' => $validation->getCreated(),
+                'user' => $validation->getUser()->getUsername(),
+                'pageId' => $validation->getPage() ? $validation->getPage()->getUid() : null,
+                'featureId' => $validation->getFeature() ? $validation->getFeature()->getUid() : null,
+                'specId' => $validation->getSpec() ? $validation->getSpec()->getUid() : null,
+            ];
+        }
         $featuresFormated = [];
         foreach ($project->getFeatures() as $feature) {
+            $specsFormated = [];
+            foreach ($feature->getSpecs() as $spec) {
+                $specsFormated[] = [
+                    'uid' => $spec->getUid(),
+                    'name' => $spec->getName(),
+                    'status' => $spec->getStatus(),
+                    'description' => $spec->getDescription(),
+                ];
+            }
             $featuresFormated[] = [
                 'id' => $feature->getId(),
                 'uid' => $feature->getUid(),
                 'name' => $feature->getName(),
                 'status' => $feature->getStatus(),
-                'hasPage' => $feature->getPage() ? true : false
+                'hasPage' => $feature->getPage() ? true : false,
+                'pageUid' => $feature->getPage() ? $feature->getPage()->getUid() : null,
+                'specs' => $specsFormated
             ];
         }
 
@@ -249,7 +273,8 @@ class ProjectController extends AbstractController
             'elements' => $elementsFormated,
             'pages' => $pagesFormated,
             'connections' => $connectionsFormated,
-            'features' => $featuresFormated
+            'features' => $featuresFormated,
+            'validations' => $validationsFormated
         ];
     }
 

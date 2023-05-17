@@ -1,18 +1,18 @@
 import { Box, TextField, Typography } from "@mui/material";
-import { DefaultCoreForm } from "./defaultValues";
+import { DefaultProjectForm } from "./defaultValues";
 
 interface CoreInformationsProps {
-    formCore: DefaultCoreForm,
-    handleChangeFormCore: (event: React.ChangeEvent<HTMLInputElement>) => void
+    formCore: DefaultProjectForm,
+    handleChangeFormProject: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 export function CoreInformations(props: CoreInformationsProps) {
-    const {formCore, handleChangeFormCore} = props; 
+    const {formCore, handleChangeFormProject} = props; 
 
     return (
         <>
-            <Typography component='p' variant="h5" textAlign="center" mt={4} mb={2}>
-                Dernière étape
+            <Typography component='p' variant="h5" textAlign="center" mb={2}>
+                Informations du projet
             </Typography>
             <div>
                 <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
@@ -21,7 +21,7 @@ export function CoreInformations(props: CoreInformationsProps) {
                         label="Nom du projet"
                         variant="outlined"
                         defaultValue={formCore.name}
-                        onChange={handleChangeFormCore}
+                        onChange={handleChangeFormProject}
                         fullWidth
                         required
                     />
@@ -32,7 +32,7 @@ export function CoreInformations(props: CoreInformationsProps) {
                         label="Version (optionnel)"
                         variant="outlined"
                         defaultValue={formCore.version}
-                        onChange={handleChangeFormCore}
+                        onChange={handleChangeFormProject}
                         fullWidth
                     />
                 </Box>
@@ -42,7 +42,7 @@ export function CoreInformations(props: CoreInformationsProps) {
                         label="Commentaire (optionnel)"
                         variant="outlined"
                         defaultValue={formCore.comment}
-                        onChange={handleChangeFormCore}
+                        onChange={handleChangeFormProject}
                         fullWidth
                         multiline
                         minRows={2}

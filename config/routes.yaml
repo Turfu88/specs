@@ -117,6 +117,17 @@ spec-info:
     controller: App\Controller\SpecController::getSpecDetails
     methods: GET
 
+# Validation
+validation-create:
+    path: '/api/validation/add'
+    controller: App\Controller\ValidationController::addValidation
+    methods: POST
+validation-delete:
+    path: '/api/validation/remove'
+    controller: App\Controller\ValidationController::removeValidation
+    methods: POST
+
+
 # Feedback
 feedback-create:
     path: '/api/feedback/create'

@@ -62,12 +62,16 @@ class Connection
     #[ORM\ManyToMany(targetEntity: Element::class, inversedBy: 'connections')]
     private Collection $elements;
 
+    #[ORM\OneToMany(mappedBy: 'connection', targetEntity: Validation::class)]
+    private Collection $validations;
+
     public function __construct()
     {
         $this->feedback = new ArrayCollection();
         $this->histories = new ArrayCollection();
         $this->source = null;
         $this->elements = new ArrayCollection();
+        $this->validations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -321,6 +325,36 @@ class Connection
     public function removeElement(Element $element): self
     {
         $this->elements->removeElement($element);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Validation>
+     */
+    public function getValidations(): Collection
+    {
+        return $this->validations;
+    }
+
+    public function addValidation(Validation $validation): self
+    {
+        if (!$this->validations->contains($validation)) {
+            $this->validations->add($validation);
+            $validation->setConnection($this);
+        }
+
+        return $this;
+    }
+
+    public function removeValidation(Validation $validation): self
+    {
+        if ($this->validations->removeElement($validation)) {
+            // set the owning side to null (unless already changed)
+            if ($validation->getConnection() === $this) {
+                $validation->setConnection(null);
+            }
+        }
 
         return $this;
     }

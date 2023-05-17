@@ -56,12 +56,19 @@ class Spec
     #[ORM\ManyToMany(targetEntity: Element::class, inversedBy: 'specs')]
     private Collection $elements;
 
+    #[ORM\OneToMany(mappedBy: 'spec', targetEntity: Validation::class)]
+    private Collection $validations;
+
+    #[ORM\ManyToOne(inversedBy: 'specs')]
+    private ?Project $project = null;
+
     public function __construct()
     {
         $this->feedback = new ArrayCollection();
         $this->histories = new ArrayCollection();
         $this->source = null;
         $this->elements = new ArrayCollection();
+        $this->validations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -291,6 +298,48 @@ class Spec
     public function removeElement(Element $element): self
     {
         $this->elements->removeElement($element);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Validation>
+     */
+    public function getValidations(): Collection
+    {
+        return $this->validations;
+    }
+
+    public function addValidation(Validation $validation): self
+    {
+        if (!$this->validations->contains($validation)) {
+            $this->validations->add($validation);
+            $validation->setSpec($this);
+        }
+
+        return $this;
+    }
+
+    public function removeValidation(Validation $validation): self
+    {
+        if ($this->validations->removeElement($validation)) {
+            // set the owning side to null (unless already changed)
+            if ($validation->getSpec() === $this) {
+                $validation->setSpec(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getProject(): ?Project
+    {
+        return $this->project;
+    }
+
+    public function setProject(?Project $project): self
+    {
+        $this->project = $project;
 
         return $this;
     }

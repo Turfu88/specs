@@ -14,6 +14,9 @@ import UnpublishedOutlinedIcon from '@mui/icons-material/UnpublishedOutlined';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
+import { addPageValidation, deletePageValidation } from '../../common/api/validation';
+import { getUserId } from '../../common/api/user';
+import { ValidationBlock } from '../../common/components/ValidationBlock';
 
 const Transition = forwardRef(function Transition(
     props: TransitionProps & {
@@ -35,6 +38,7 @@ export function PageView() {
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setOpenMenu(event.currentTarget);
     };
+
     const handleCloseMenu = () => {
         setOpenMenu(null);
     };
@@ -47,9 +51,29 @@ export function PageView() {
         setDialog(true);
         handleCloseMenu();
     }
+
+    function sendValidation(status: boolean, type: string, validationToRemove: number | null) {
+        if (status) {
+            console.log("Valider la page")
+            addPageValidation({
+                type,
+                projectId: localStorage.getItem('project'),
+                userId: getUserId(),
+                pageId: localStorage.getItem('page')
+            });
+        } else {
+            deletePageValidation({
+                id: validationToRemove,
+                userId: getUserId(),
+            });
+            console.log("Retirer la validation de la page");
+        }
+    }
+
     if (page) {
         localStorage.setItem('page', JSON.stringify(page.id));
     }
+
     const breadcrumbs = [
         <Link key="1" color="inherit" to="/dashboard" className="link">
             Dashboard
@@ -114,6 +138,19 @@ export function PageView() {
                                 Modèle validé ? {page.isModelOk ? <CheckCircleOutlineOutlinedIcon color="success" /> : <UnpublishedOutlinedIcon />}
                             </Typography>
                             <StatusShow status={page.status} />
+                        </Box>
+                        <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
+                            <Box width={'100%'}>
+                                <Typography component="div" variant={'body1'} textAlign="center" mb={2}>
+                                    Valider la maquette de la page ?
+                                </Typography>
+                                <ValidationBlock
+                                    validations={page.validations}
+                                    validators={page.validators}
+                                    sendValidation={sendValidation}
+                                    element={'page'}
+                                />
+                            </Box>
                         </Box>
                         {page.comment !== null &&
                             <Box mb={4} className="border rounded" p={2}>

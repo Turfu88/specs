@@ -25,6 +25,7 @@ export interface Project {
     finishedAt: string,
     status: string,
     comment: string,
+    validators: number,
     isCore: boolean,
     devAccess: string,
     statusChoices: string[],
@@ -34,6 +35,19 @@ export interface Project {
     connections: Connection[],
     features: Feature[],
     pages: Page[]
+}
+
+export interface Validation {
+    id: number,
+    type: string,
+    user: User,
+    project: Project,
+    userId: number | null,
+    page?: Page,
+    feature?: Feature,
+    spec?: Spec,
+    connection?: Connection
+    created: string
 }
 
 export interface Element {
@@ -58,7 +72,9 @@ export interface Page {
     category: string,
     isPrivate: boolean,
     isModelOk: boolean,
-    modelUrl: string
+    modelUrl: string,
+    validations: Validation[],
+    validators: number | null
 }
 
 export interface Connection {

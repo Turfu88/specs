@@ -12,7 +12,7 @@ export function AreaChooser(props: AreaChooserProps) {
 
     return (
         <>
-            <Typography component='p' variant="h5" textAlign="center" mt={4} mb={2}>
+            <Typography component='p' variant="h5" textAlign="center" mb={2}>
                 Choisir le(s) espace(s) qui vont inclure ce projet
             </Typography>
             {error &&

@@ -53,10 +53,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Area::class, mappedBy: 'users')]
     private Collection $areas;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Validation::class, orphanRemoval: true)]
+    private Collection $validations;
+
     public function __construct()
     {
         $this->feedback = new ArrayCollection();
         $this->areas = new ArrayCollection();
+        $this->validations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -262,6 +266,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->areas->removeElement($area)) {
             $area->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Validation>
+     */
+    public function getValidations(): Collection
+    {
+        return $this->validations;
+    }
+
+    public function addValidation(Validation $validation): self
+    {
+        if (!$this->validations->contains($validation)) {
+            $this->validations->add($validation);
+            $validation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeValidation(Validation $validation): self
+    {
+        if ($this->validations->removeElement($validation)) {
+            // set the owning side to null (unless already changed)
+            if ($validation->getUser() === $this) {
+                $validation->setUser(null);
+            }
         }
 
         return $this;

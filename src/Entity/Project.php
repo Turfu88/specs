@@ -85,6 +85,15 @@ class Project
     #[ORM\ManyToMany(targetEntity: Area::class, mappedBy: 'projects')]
     private Collection $areas;
 
+    #[ORM\OneToMany(mappedBy: 'project', targetEntity: Validation::class, orphanRemoval: true)]
+    private Collection $validations;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $validators = null;
+
+    #[ORM\OneToMany(mappedBy: 'project', targetEntity: Spec::class)]
+    private Collection $specs;
+
     public function __construct()
     {
         $this->summaries = new ArrayCollection();
@@ -96,6 +105,8 @@ class Project
         $this->histories = new ArrayCollection();
         $this->source = null;
         $this->areas = new ArrayCollection();
+        $this->validations = new ArrayCollection();
+        $this->specs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -546,6 +557,78 @@ class Project
     {
         if ($this->areas->removeElement($area)) {
             $area->removeProject($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Validation>
+     */
+    public function getValidations(): Collection
+    {
+        return $this->validations;
+    }
+
+    public function addValidation(Validation $validation): self
+    {
+        if (!$this->validations->contains($validation)) {
+            $this->validations->add($validation);
+            $validation->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeValidation(Validation $validation): self
+    {
+        if ($this->validations->removeElement($validation)) {
+            // set the owning side to null (unless already changed)
+            if ($validation->getProject() === $this) {
+                $validation->setProject(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getValidators(): ?int
+    {
+        return $this->validators;
+    }
+
+    public function setValidators(?int $validators): self
+    {
+        $this->validators = $validators;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Spec>
+     */
+    public function getSpecs(): Collection
+    {
+        return $this->specs;
+    }
+
+    public function addSpec(Spec $spec): self
+    {
+        if (!$this->specs->contains($spec)) {
+            $this->specs->add($spec);
+            $spec->setProject($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSpec(Spec $spec): self
+    {
+        if ($this->specs->removeElement($spec)) {
+            // set the owning side to null (unless already changed)
+            if ($spec->getProject() === $this) {
+                $spec->setProject(null);
+            }
         }
 
         return $this;

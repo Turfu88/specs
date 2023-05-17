@@ -103,21 +103,21 @@ class ConnectionController extends AbstractController
                 'name' => $element->getName(),
             ];
         }
-        $feedbacksFormated = [];
-        foreach ($connection->getFeedbacks() as $feedback) {
-            $feedbacksFormated[] = [
-                'id' => $feedback->getId(),
-                'uid' => $feedback->getUid(),
-                'content' => $feedback->getContent(),
-                'status' => $feedback->getStatus(),
-                'toTreat' => $feedback->isToTreat(),
-                'username' => $feedback->getUser()->getUsername(),
-                'createdAt' => $feedback->getCreatedAt(),
-                'updatedAt' => $feedback->getUpdatedAt(),
-                'hasBeenModified' => $feedback->getCreatedAt() === $feedback->getUpdatedAt(),
-                'userId' => $feedback->getUser()->getId()
-            ];
-        }
+        // $feedbacksFormated = [];
+        // foreach ($connection->getFeedbacks() as $feedback) {
+        //     $feedbacksFormated[] = [
+        //         'id' => $feedback->getId(),
+        //         'uid' => $feedback->getUid(),
+        //         'content' => $feedback->getContent(),
+        //         'status' => $feedback->getStatus(),
+        //         'toTreat' => $feedback->isToTreat(),
+        //         'username' => $feedback->getUser()->getUsername(),
+        //         'createdAt' => $feedback->getCreatedAt(),
+        //         'updatedAt' => $feedback->getUpdatedAt(),
+        //         'hasBeenModified' => $feedback->getCreatedAt() === $feedback->getUpdatedAt(),
+        //         'userId' => $feedback->getUser()->getId()
+        //     ];
+        // }
         return [
             'id' => $connection->getId(),
             'uid' => $connection->getUid(),
@@ -131,7 +131,7 @@ class ConnectionController extends AbstractController
             'projectUid' => $connection->getProject()->getUid(),
             'projectName' => $connection->getProject()->getName(),
             'elements' => $elementsFormated,
-            'feedbacks' => $feedbacksFormated
+            // 'feedbacks' => $feedbacksFormated
         ];
     }
 }

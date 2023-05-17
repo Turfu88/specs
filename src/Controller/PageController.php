@@ -104,6 +104,16 @@ class PageController extends AbstractController
                 'specs' => $specsFormated
             ];
         }
+        $validationsFormated = [];
+        foreach ($page->getValidations() as $validation) {
+            $validationsFormated[] = [
+                'id' => $validation->getId(),
+                'created' => $validation->getCreated(),
+                'username' => $validation->getUser()->getUsername(),
+                'userId' => $validation->getUser()->getId(),
+                'type' => $validation->getType()
+            ];
+        }
         return [
             'id' => $page->getId(),
             'uid' => $page->getUid(),
@@ -112,9 +122,11 @@ class PageController extends AbstractController
             'status' => $page->getStatus(),
             'projectUid' => $page->getProject()->getUid(),
             'projectName' => $page->getProject()->getName(),
+            'validators' => $page->getProject()->getValidators(),
             'isModelOk' => $page->isIsModelOk(),
             'isPrivate' => $page->isIsPrivate(),
-            'features' => $featuresFormated
+            'features' => $featuresFormated,
+            'validations' => $validationsFormated
         ];
     }
 }

@@ -12,7 +12,6 @@ import { NewProjectForm } from './pages/Project/NewProjectForm';
 import { ConnectionView } from './pages/Connection/ConnectionView';
 import { ConnectionCreate } from './pages/Connection/ConnectionCreate';
 import { PageView } from './pages/Page/PageView';
-import { Summary } from './pages/Summary/Summary';
 import { FeatureView } from './pages/Feature/FeatureView';
 import { SpecView } from './pages/Spec/SpecView';
 import { AddUser } from './pages/AddUser/AddUser';
@@ -23,6 +22,7 @@ import { PageCreate } from './pages/Page/PageCreate';
 import { FeatureCreate } from './pages/Feature/FeatureCreate';
 import { SpecCreate } from './pages/Spec/SpecCreate';
 import { AreaView } from './pages/Area/AreaView';
+import { ProjectSummaryCreate } from './pages/Summary/ProjectSummaryCreate';
 
 export function Router() {
     return (
@@ -35,7 +35,8 @@ export function Router() {
                 <Route path="/dashboard"                    element={<UserRoute><LandingConnected /></UserRoute>} />
                 <Route path="/espace/:uid"                  element={<UserRoute><AreaView /></UserRoute>} />
                 <Route path="/projet/nouveau"               element={<UserRoute><NewProjectForm /></UserRoute>} />
-                <Route path="/projet/nouveau-coeur"         element={<UserRoute><ProjectCore /></UserRoute>} />
+                <Route path="/projet/nouveau-projet-mere"   element={<UserRoute><ProjectCore /></UserRoute>} />
+                <Route path="/projet/:uid/nouveau-resume"   element={<UserRoute><ProjectSummaryCreate /></UserRoute>} />
                 <Route path="/projet/:uid"                  element={<UserRoute><ProjectView /></UserRoute>} />
                 <Route path="/parametres/inviter-un-collaborateur" element={<UserRoute><AddUser /></UserRoute>} />
                 <Route path="/parametres"                   element={<UserRoute><Settings /></UserRoute>} />
@@ -45,7 +46,7 @@ export function Router() {
                 <Route path="/connexion/:uid"               element={<UserRoute><ConnectionView /></UserRoute>} />
                 <Route path="/page/nouvelle"                element={<UserRoute><PageCreate /></UserRoute>} />
                 <Route path="/page/:uid"                    element={<UserRoute><PageView /></UserRoute>} />
-                <Route path="/summary/:uid"                 element={<UserRoute><Summary /></UserRoute>} />
+                {/* <Route path="/summary/:uid"                 element={<UserRoute><Summary /></UserRoute>} /> */}
                 <Route path="/fonctionnalite/nouvelle"      element={<UserRoute><FeatureCreate /></UserRoute>} />
                 <Route path="/fonctionnalite/:uid"          element={<UserRoute><FeatureView /></UserRoute>} />
                 <Route path="/spec/nouvelle"                element={<UserRoute><SpecCreate /></UserRoute>} />

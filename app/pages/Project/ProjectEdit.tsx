@@ -1,8 +1,7 @@
-import { Box, Button, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField, Typography } from "@mui/material";
+import { Box, Button, FormControl, FormControlLabel, FormLabel, InputLabel, MenuItem, Radio, RadioGroup, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
 import { useForm } from '@mantine/form';
 import { Project } from "../../common/types";
 import { updateProject } from "../../common/api/project";
-import { useState } from "react";
 import { StatusChooser } from "../../common/components/StatusChooser";
 
 export interface EditProjectForm {
@@ -11,6 +10,7 @@ export interface EditProjectForm {
     version: string,
     previousVersion: string,
     status: string,
+    validators: string,
     projectId: string
 }
 
@@ -21,7 +21,6 @@ interface ProjectEditProps {
 
 export function ProjectEdit(props: ProjectEditProps) {
     const { project, handleCloseDialog } = props;
-    const [selectedElements, setSelectedElements] = useState<number[]>([]);
 
     const formPage = useForm({
         initialValues: {
@@ -29,6 +28,7 @@ export function ProjectEdit(props: ProjectEditProps) {
             version: project.version ? project.version : '',
             previousVersion: project.previousVersion ? project.previousVersion : '',
             status: project.status ? project.status : '',
+            validators: project.validators ? project.validators : '',
             comment: project.comment ? project.comment : '',
             projectId: project.id ? project.id : ''
             // devAccess: project.devAccess,
@@ -43,6 +43,10 @@ export function ProjectEdit(props: ProjectEditProps) {
         console.log(values);
         updateProject(values);
         handleCloseDialog();
+    }
+
+    function handleChangeValidators(e: SelectChangeEvent) {
+        formPage.setFieldValue('validators', e.target.value);
     }
 
 
@@ -84,6 +88,22 @@ export function ProjectEdit(props: ProjectEditProps) {
                         fullWidth
                         {...formPage.getInputProps('previousVersion')}
                     />
+                </Box>
+                <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
+                    <FormControl fullWidth>
+                        <InputLabel>Validateurs</InputLabel>
+                        <Select
+                            labelId="validator-label"
+                            id="validators"
+                            label="Validateurs"
+                            {...formPage.getInputProps('validators')}
+                            onChange={handleChangeValidators}
+                        >
+                            <MenuItem value={1}>Un</MenuItem>
+                            <MenuItem value={2}>Deux</MenuItem>
+                            <MenuItem value={3}>Trois</MenuItem>
+                        </Select>
+                    </FormControl>
                 </Box>
                 <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
                     <TextField

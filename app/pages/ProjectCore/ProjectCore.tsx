@@ -6,7 +6,7 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import { useEffect, useState } from 'react';
 import { ElementChooser } from './ElementChooser';
-import { DefaultArea, DefaultElement, DefaultPage, defaultCoreForm, defaultElements, defaultPages, steps } from './defaultValues';
+import { DefaultArea, DefaultElement, DefaultPage, DefaultProjectForm, DefaultStatus, defaultCoreForm, defaultElements, defaultPages, defaultStatus, steps } from './defaultValues';
 import { PageChooser } from './PageChooser';
 import { CoreInformations } from './CoreInformations';
 import { CoreNote } from './CoreNote';
@@ -15,12 +15,14 @@ import { AreaChooser } from './AreaChooser';
 import { useQuery } from 'react-query';
 import { getUserAreas } from '../../common/api/user';
 import { Area } from '../../common/types';
+import { StatusChooser } from './StatusChooser';
 
 export function ProjectCore() {
     const [activeStep, setActiveStep] = useState(0);
     const [elements, setElements] = useState<DefaultElement[]>(defaultElements);
+    const [status, setStatus] = useState<DefaultStatus[]>(defaultStatus);
     const [pages, setPages] = useState<DefaultPage[]>(defaultPages);
-    const [formCore, setFormCore] = useState<DefaultCoreForm>(defaultCoreForm);
+    const [formCore, setFormCore] = useState<DefaultProjectForm>(defaultCoreForm);
     const { isLoading, data: areasFound } = useQuery('getUserAreas', () => getUserAreas());    
     const userAreas = areasFound ? areasFound.map((area: Area) => { return {...area, choosed: true}}) : [];
     const [areas, setAreas] = useState<DefaultArea[]>([])
@@ -54,6 +56,17 @@ export function ProjectCore() {
         }));
     };
 
+    const handleChangeStatus = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setStatus(() => status.map((status) => {
+            if (status.name === event.target.name) {
+                return {
+                    ...status, choosed: !status.choosed
+                };
+            }
+            return status;
+        }));
+    };
+
     const handleChangePages = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPages(() => pages.map((page) => {
             if (page.name === event.target.name) {
@@ -65,13 +78,7 @@ export function ProjectCore() {
         }));
     };
 
-    interface DefaultCoreForm {
-        name: string,
-        version: string,
-        comment: string
-    }
-
-    const handleChangeFormCore = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChangeFormProject = (event: React.ChangeEvent<HTMLInputElement>) => {
         console.log(event.target.value, event.target.id);
         const { id, value } = event.target;
         setFormCore((prevFormCore) => ({ ...prevFormCore, [id]: value }));
@@ -79,7 +86,7 @@ export function ProjectCore() {
 
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
-        if (activeStep === 4) {
+        if (activeStep === 5) {
             createCore({
                 elements, pages, form: formCore, areas
             }).then(response => {
@@ -118,9 +125,10 @@ export function ProjectCore() {
                     {activeStep === 1 && <AreaChooser areas={areas} handleChangeElements={handleChangeAreas} error={error} />}
                     {activeStep === 2 && <ElementChooser elements={elements} handleChangeElements={handleChangeElements} />}
                     {activeStep === 3 && <PageChooser pages={pages} handleChangePages={handleChangePages} />}
-                    {activeStep === 4 && <CoreInformations formCore={formCore} handleChangeFormCore={handleChangeFormCore} />}
-                    {activeStep === 5 && <Typography variant="subtitle1" component="p" sx={{ mt: 8, mb: 1, textAlign: "center" }}>Création du coeur</Typography>}
-                    {activeStep < 5 && (
+                    {activeStep === 4 && <StatusChooser statusChoices={status} handleChangeStatus={handleChangeStatus} />}
+                    {activeStep === 5 && <CoreInformations formCore={formCore} handleChangeFormProject={handleChangeFormProject} />}
+                    {activeStep === 6 && <Typography variant="subtitle1" component="p" sx={{ mt: 8, mb: 1, textAlign: "center" }}>Création du projet</Typography>}
+                    {activeStep < 6 && (
                         <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                             <Button
                                 color="inherit"

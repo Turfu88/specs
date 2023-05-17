@@ -1,14 +1,26 @@
 import { EditProjectForm } from "../../pages/Project/ProjectEdit";
 import { ProjectSectionForm } from "../../pages/Project/ProjectEditSection";
 import { ProjectStatusForm } from "../../pages/Project/ProjectEditStatus";
-import { DefaultArea, DefaultCoreForm, DefaultElement, DefaultPage } from "../../pages/ProjectCore/defaultValues";
+import { DefaultArea, DefaultProjectForm, DefaultElement, DefaultPage } from "../../pages/ProjectCore/defaultValues";
+import { ConnectionSelect, ElementSelect, FeatureSelect, PageSelect, StatusSelect } from "../components/projectStepper/types";
 import request from "./request";
 
 interface createCoreType {
     elements: DefaultElement[],
     pages: DefaultPage[],
-    form: DefaultCoreForm,
+    form: DefaultProjectForm,
     areas: DefaultArea[]
+}
+
+interface createProjectType {
+    elements: ElementSelect[],
+    features: FeatureSelect[],
+    connections: ConnectionSelect[],
+    pages: PageSelect[],
+    status: StatusSelect[],
+    form: DefaultProjectForm,
+    areas: DefaultArea[],
+    projectId: number
 }
 
 export async function createCore(values: createCoreType) {    
@@ -19,6 +31,16 @@ export async function createCore(values: createCoreType) {
         return null;
     });
 }
+
+export async function createProject(values: createProjectType) {    
+    return await request('/api/project/create-project', "POST", values, true).then((res) => {
+        if (res.status === 200) {
+            return res.json;
+        }
+        return null;
+    });
+}
+
 
 export async function getAccountProjects() {    
     return await request(`/api/projects/get-all`, "GET", null, true).then((res) => {        

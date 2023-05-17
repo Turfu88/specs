@@ -1,4 +1,4 @@
-import { Box, Divider, Typography } from '@mui/material';
+import { Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Divider, Slide, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import { Layout } from '../../common/components/Layout';
 import { Link } from 'react-router-dom';
@@ -6,6 +6,8 @@ import { useQuery } from 'react-query';
 import { getUserAreas } from '../../common/api/user';
 import { Area } from '../../common/types';
 import StarIcon from '@mui/icons-material/Star';
+import { TransitionProps } from '@mui/material/transitions';
+import { forwardRef, useState } from 'react';
 
 interface Project {
     id: number,
@@ -15,12 +17,22 @@ interface Project {
     isCore: boolean
 }
 
+const Transition = forwardRef(function Transition(
+    props: TransitionProps & {
+        children: React.ReactElement<any, any>;
+    },
+    ref: React.Ref<unknown>,
+) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
+
 export function LandingConnected() {
     const { isLoading, data: areas } = useQuery('getUserAreas', () => getUserAreas());
     const userAreas = areas || null;
+    const [newProjectDialog, setNewProjectDialog] = useState(false);
+
     // const core = accountProjects && accountProjects.length > 0? accountProjects.filter((project: Project) => project.isCore) : null;
     let projects: Project[] = [];
-    let core = null;
     if (areas) {
         areas.forEach((area: Area) => {
             area.projects.forEach((project: Project) => {
@@ -29,8 +41,15 @@ export function LandingConnected() {
                 }
             })
         });
-        core = projects && projects.length > 0 ? projects.filter((project: Project) => project.isCore) : null;
     }
+
+    const handleClickOpenDialog = () => {
+        setNewProjectDialog(true);
+    };
+
+    const handleCloseDialog = () => {
+        setNewProjectDialog(false);
+    };
 
     return (
         <Layout>
@@ -82,43 +101,48 @@ export function LandingConnected() {
                                             }
                                         </Box>
                                     </Link>
-
                                 ))}
-                                {projects.length > 0 &&
-                                    <Box display="flex" justifyContent="center" mt={2}>
-                                        <Link to="/projet/nouveau">
-                                            <Button variant="contained" color="primary">
-                                                Nouveau projet
-                                            </Button>
-                                        </Link>
-                                    </Box>
+                                {projects.length === 0 &&
+                                    <Typography component="h2" variant="subtitle1" textAlign="center">Vous n'avez pas encore créé de projet</Typography>
                                 }
-                                {projects.length === 0 && !core &&
-                                    <Box mt={2}>
-                                        <Typography component="h2" variant="subtitle1" textAlign="center">Vous n'avez pas encore créé de projet</Typography>
-                                        <Box display="flex" justifyContent="center" alignItems="center" gap={2}>
-                                            <Box display="flex" justifyContent="center" mt={2}>
-                                                <Link to="/projet/nouveau-coeur">
-                                                    <Button variant="contained" color="primary">
-                                                        Créer un projet mère
-                                                    </Button>
-                                                </Link>
-                                            </Box>
-                                            <Box display="flex" justifyContent="center" mt={2}>
-                                                <Link to="/projet/nouveau">
-                                                    <Button variant="contained" color="primary">
-                                                        Créer un projet vierge
-                                                    </Button>
-                                                </Link>
-                                            </Box>
-                                        </Box>
-
-                                    </Box>
-                                }
+                                <Box display="flex" justifyContent="center" mt={4}>
+                                    <Button variant="contained" color="primary" onClick={handleClickOpenDialog}>
+                                        Nouveau projet
+                                    </Button>
+                                </Box>
                             </>
                         }
                     </>
                 }
+                <Dialog
+                    open={newProjectDialog}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    onClose={handleCloseDialog}
+                    aria-describedby="alert-dialog-create-project"
+                >
+                    <DialogTitle className='text-center'>{"Quel type de projet?"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Un projet mère correspond à un modèle tandis qu'un projet enfant correspond à un projet pouvant hériter de n'importe quelle propriété.
+                        </DialogContentText>
+                        <DialogContentText>
+                            Si vous n'avez pas encore créé de projet, il est conseillé de d'abord créer un projet mère.
+                            Vous serez guidé dans les deux cas.
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions className='justify-center' style={{padding: '20px'}}>
+                        <Box display="flex" flexDirection="row" justifyContent="space-between" width="100%">
+                            <Button onClick={handleCloseDialog} variant="outlined">Annuler</Button>
+                            <Link to="/projet/nouveau-projet-mere">
+                                <Button variant="contained" color="secondary">Projet mère</Button>
+                            </Link>
+                            <Link to="/projet/nouveau">
+                                <Button variant="contained" color="primary">Projet enfant</Button>
+                            </Link>
+                        </Box>
+                    </DialogActions>
+                </Dialog>
             </>
         </Layout>
     );
