@@ -42,7 +42,7 @@ export function Header() {
                         </div>
                         {!isLoggedIn &&
                             <Box display="flex" gap={2} alignItems="center">
-                                <Link to="/login">
+                                <Link to="/connexion">
                                     <Button
                                         variant="outlined"
                                         color="primary"

@@ -26,13 +26,12 @@ interface Token {
 // @TODO: typer les params d'entrée des fonctions
 export async function login(params: any) {
     return await request('/api/login', "POST", params).then((res) => {
-        console.log(res);
+        console.log("res login: ", res);
         if (res.status === 200) {
             Cookies.set('token', res.json.token)
-            window.location.replace("/dashboard");
-            return false;
+            return true;
         }
-        return true;
+        return false;
     });
 }
 

@@ -25,7 +25,11 @@ export function Login() {
 
     function handleLogin(values: LoginForm) {
         console.log(values);
-        login(values)
+        login(values).then((res) => {
+            if (res) {
+                window.location.replace("/dashboard");
+            }
+        })
     }
 
     function dataTest() {

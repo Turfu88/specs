@@ -20,11 +20,11 @@ export function AreaEdit(props: AreaEditProps) {
             name: area.name,
         } as EditAreaForm,
         validate: {
-            name: (value) => (value.length < 2 ? 'Le nom de la connexion est trop court' : null),
+            name: (value) => (value.length < 2 ? 'Le nom de l\'espace est trop court' : null),
         },
     });
 
-    function handleEditConnection(values: EditAreaForm) {
+    function handleEditArea(values: EditAreaForm) {
         editArea(area.id, values).then(() => {            
             setInvalidateQuery(true);
             handleCloseDialog();
@@ -36,7 +36,7 @@ export function AreaEdit(props: AreaEditProps) {
             <Typography component="h1" variant="h4" textAlign="center">
                 Modifier cet espace
             </Typography>
-            <form onSubmit={formArea.onSubmit((values) => handleEditConnection(values))}>
+            <form onSubmit={formArea.onSubmit((values) => handleEditArea(values))}>
                 <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
                     <TextField
                         id="name"

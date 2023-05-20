@@ -36,11 +36,6 @@ class FeedbackController extends AbstractController
             ->setUpdatedAt(new \DateTimeImmutable)
             ->setUid(Uuid::v1())
             ->setProject($project)
-            ->setPage(null)
-            ->setConnection(null)
-            ->setSpec(null)
-            ->setFeature(null)
-            ->setSummary(null)
             ->setUser($user);
 
         switch ($json->feedbackType) {
@@ -58,11 +53,11 @@ class FeedbackController extends AbstractController
                 break;
             case 'feature':
                 $feature = $em->getRepository(Feature::class)->find($json->parentId);
-                $feedback->setSummary($feature);
+                $feedback->setFeature($feature);
                 break;
             case 'page':
                 $page = $em->getRepository(Page::class)->find($json->parentId);
-                $feedback->setSummary($page);
+                $feedback->setPage($page);
                 break;
             default:
                 return $response->setStatusCode(400)->setContent(json_encode([
@@ -74,8 +69,8 @@ class FeedbackController extends AbstractController
         $em->persist($feedback);
         $em->flush();
 
-        return $response->setStatusCode(200)->setContent(json_encode([
-            'code' => 200,
+        return $response->setStatusCode(201)->setContent(json_encode([
+            'code' => 201,
             'message' => 'Nouveau feedback créé avec succès',
         ]));
     }

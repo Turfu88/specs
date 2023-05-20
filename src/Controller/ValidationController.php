@@ -52,6 +52,7 @@ class ValidationController extends AbstractController
             'message' => 'Validation ajoutée',
         ]));
     }
+    
     public function removeValidation(Request $req, EntityManagerInterface $em): Response
     {
         $json = json_decode($req->getContent());

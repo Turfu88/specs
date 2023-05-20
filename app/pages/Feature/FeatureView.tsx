@@ -11,6 +11,7 @@ import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import { StatusShow } from '../../common/components/StatusShow';
 import { FeatureEdit } from './FeatureEdit';
+import { FeedbackSection } from '../../common/components/FeedbackSection';
 
 const Transition = forwardRef(function Transition(
     props: TransitionProps & {
@@ -185,6 +186,12 @@ export function FeatureView() {
                                 ))}
                             </Box>
                         }
+                        <FeedbackSection
+                            feedbacks={feature.feedbacks}
+                            projectId={feature.projectId}
+                            feedbackType={"feature"}
+                            parentId={feature.id}
+                        />
                     </Box>
                 }
                 <Dialog

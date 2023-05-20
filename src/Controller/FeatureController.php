@@ -121,6 +121,21 @@ class FeatureController extends AbstractController
                 'description' => $spec->getDescription()
             ];
         }
+        $feedbacksFormated = [];
+        foreach ($feature->getFeedback() as $feedback) {
+            $feedbacksFormated[] = [
+                'id' => $feedback->getId(),
+                'uid' => $feedback->getUid(),
+                'content' => $feedback->getContent(),
+                'status' => $feedback->getStatus(),
+                'toTreat' => $feedback->isToTreat(),
+                'username' => $feedback->getUser()->getUsername(),
+                'createdAt' => $feedback->getCreatedAt(),
+                'updatedAt' => $feedback->getUpdatedAt(),
+                'hasBeenModified' => $feedback->getCreatedAt() === $feedback->getUpdatedAt(),
+                'userId' => $feedback->getUser()->getId()
+            ];
+        }
         return [
             'id' => $feature->getId(),
             'uid' => $feature->getUid(),
@@ -128,9 +143,11 @@ class FeatureController extends AbstractController
             'description' => $feature->getDescription(),
             'status' => $feature->getStatus(),
             'projectUid' => $feature->getProject()->getUid(),
+            'projectId' => $feature->getProject()->getId(),
             'projectName' => $feature->getProject()->getName(),
             'specs' => $specsFormated,
-            'connections' => $connectionsFormated
+            'connections' => $connectionsFormated,
+            'feedbacks' => $feedbacksFormated
         ];
     }
 }

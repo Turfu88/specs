@@ -80,149 +80,161 @@ export function FeedbackSection(props: FeedbackSectionProps) {
 
         return `${jour}-${mois}-${annee}`;
     }
+    console.log(feedbacks);
+
 
     return (
         <Box>
-            <Box display="flex" justifyContent="center">
-                <Typography component="h3" variant="h5" textAlign="center" mt={2}>
-                    Feedback & Commentaires
-                </Typography>
-            </Box>
-            <Box mb={2} display="flex" justifyContent="flex-end">
-                <Button variant="outlined" onClick={() => setOpenFeedback(!openFeedback)}>
-                    Ajouter
-                </Button>
-            </Box>
-            {openFeedback &&
-                <Box className="border rounded px-2 py-4">
-                    <form onSubmit={formFeedback.onSubmit((values) => handleCreateFeedback(values))}>
-                        <Box className="d-flex justify-content-center m-auto">
-                            <TextField
-                                id="content"
-                                label="Description du commentaire"
-                                name="content"
-                                variant="outlined"
-                                fullWidth
-                                multiline
-                                minRows={4}
-                                {...formFeedback.getInputProps('content')}
-                                error={formFeedback.errors.content ? true : false}
-                                helperText={formFeedback.errors.content}
-                            />
-                        </Box>
-                        <Box className="d-flex justify-content-center mw-75 m-auto mt-2">
-                            <FormControl>
-                                <FormLabel className="m-auto">
-                                    Créer un ticket ?
-                                </FormLabel>
-                                <RadioGroup
-                                    row
-                                    name="isPrivate"
-                                    value={toTreat}
-                                    onChange={() => setToTreat(!toTreat)}
-                                >
-                                    <FormControlLabel value={true} className="mx-4" control={<Radio />} label="Oui" />
-                                    <FormControlLabel value={false} className="mx-4" control={<Radio />} label="Non" />
-                                </RadioGroup>
-                            </FormControl>
-                        </Box>
-                        {toTreat &&
-                            <Box>
-                                <StatusChooser
-                                    currentStatus={formFeedback.getInputProps('status').value}
-                                    handleChooseStatus={(value: string) => formFeedback.setFieldValue('status', value)}
-                                />
-                            </Box>
-                        }
-                        <Box className="d-flex justify-content-center mw-75 m-auto mt-2">
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                size='large'
-                            >
-                                Ajouter
-                            </Button>
-                        </Box>
-                    </form>
-                </Box>
-            }
-            {feedbacks.length === 0 ?
-                <Box mb={4} p={2} display="flex" justifyContent="center">
-                    <Typography component="p" variant="body1">
-                        Pas de commentaire enregistré
-                    </Typography>
-                </Box>
-                :
+            {feedbacks &&
                 <>
-                    <Typography component="h3" variant="h5" textAlign="center" my={2}>
-                        Tickets de retours mineurs
-                    </Typography>
-                    <Box mb={4} className="border rounded" p={2}>
-                        {feedbacks.filter(feedback => feedback.toTreat).reverse().map((feedback: Feedback, index: number) => (
-                            <Box key={index}>
-                                <Box display="flex" justifyContent="space-between" alignItems="center">
-                                    <Box display="flex" alignItems="center" gap={2}>
-                                        <Typography component="p" variant="body1" fontWeight="bold">
-                                            {feedback.username}
-                                        </Typography>
-                                        <Typography component="p" variant="subtitle2">
-                                            {getDateTime(feedback.createdAt.date)}
-                                        </Typography>
-                                    </Box>
-                                    {null !== feedback.status &&
-                                        <StatusShow status={feedback.status} />
-                                    }
+                    <Box display="flex" justifyContent="center">
+                        <Typography component="h3" variant="h5" textAlign="center" mt={2}>
+                            Feedback & Commentaires
+                        </Typography>
+                    </Box>
+                    <Box mb={2} display="flex" justifyContent="flex-end">
+                        <Button variant="outlined" onClick={() => setOpenFeedback(!openFeedback)}>
+                            Ajouter
+                        </Button>
+                    </Box>
+                    {openFeedback &&
+                        <Box className="border rounded px-2 py-4">
+                            <form onSubmit={formFeedback.onSubmit((values) => handleCreateFeedback(values))}>
+                                <Box className="d-flex justify-content-center m-auto">
+                                    <TextField
+                                        id="content"
+                                        label="Description du commentaire"
+                                        name="content"
+                                        variant="outlined"
+                                        fullWidth
+                                        multiline
+                                        minRows={4}
+                                        {...formFeedback.getInputProps('content')}
+                                        error={formFeedback.errors.content ? true : false}
+                                        helperText={formFeedback.errors.content}
+                                    />
                                 </Box>
-                                <Box display="flex" gap={1} alignItems="start" mt={1} mb={2}>
-                                    <Box flexGrow="1">
-                                        <Typography component="div" variant="body1">
-                                            {feedback.content}
-                                        </Typography>
-                                    </Box>
+                                <Box className="d-flex justify-content-center mw-75 m-auto mt-2">
+                                    <FormControl>
+                                        <FormLabel className="m-auto">
+                                            Créer un ticket ?
+                                        </FormLabel>
+                                        <RadioGroup
+                                            row
+                                            name="isPrivate"
+                                            value={toTreat}
+                                            onChange={() => setToTreat(!toTreat)}
+                                        >
+                                            <FormControlLabel value={true} className="mx-4" control={<Radio />} label="Oui" />
+                                            <FormControlLabel value={false} className="mx-4" control={<Radio />} label="Non" />
+                                        </RadioGroup>
+                                    </FormControl>
+                                </Box>
+                                {toTreat &&
                                     <Box>
-                                        <button onClick={() => handleOpenDialog(feedback)} className="rounded border p-1">
-                                            <ModeEditIcon />
-                                        </button>
+                                        <StatusChooser
+                                            currentStatus={formFeedback.getInputProps('status').value}
+                                            handleChooseStatus={(value: string) => formFeedback.setFieldValue('status', value)}
+                                        />
                                     </Box>
+                                }
+                                <Box className="d-flex justify-content-center mw-75 m-auto mt-2">
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        size='large'
+                                    >
+                                        Ajouter
+                                    </Button>
                                 </Box>
-                            </Box>
-                        ))}
-                    </Box>
-                    <Typography component="h3" variant="h5" textAlign="center" my={2}>
-                        Commentaires
-                    </Typography>
-                    <Box mb={4} className="border rounded" p={2}>
-                        {feedbacks.filter(feedback => !feedback.toTreat).reverse().map((feedback: Feedback, index: number) => (
-                            <Box key={index}>
-                                <Box display="flex" justifyContent="space-between" alignItems="center">
-                                    <Box display="flex" alignItems="center" gap={2}>
-                                        <Typography component="p" variant="body1" fontWeight="bold">
-                                            {feedback.username}
-                                        </Typography>
-                                        <Typography component="p" variant="subtitle2">
-                                            {getDateTime(feedback.createdAt.date)}
-                                        </Typography>
+                            </form>
+                        </Box>
+                    }
+                    {feedbacks && feedbacks.length === 0 ?
+                        <Box mb={4} p={2} display="flex" justifyContent="center">
+                            <Typography component="p" variant="body1">
+                                Pas de commentaire enregistré
+                            </Typography>
+                        </Box>
+                        :
+                        <>
+                            {feedbacks.filter((feedback) => feedback.toTreat).length > 0 &&
+                                <>
+                                    <Typography component="h3" variant="h5" textAlign="center" my={2}>
+                                        Tickets de retours mineurs
+                                    </Typography>
+                                    <Box mb={4} className="border rounded" p={2}>
+                                        {feedbacks.filter(feedback => feedback.toTreat).reverse().map((feedback: Feedback, index: number) => (
+                                            <Box key={index}>
+                                                <Box display="flex" justifyContent="space-between" alignItems="center">
+                                                    <Box display="flex" alignItems="center" gap={2}>
+                                                        <Typography component="p" variant="body1" fontWeight="bold">
+                                                            {feedback.username}
+                                                        </Typography>
+                                                        <Typography component="p" variant="subtitle2">
+                                                            {getDateTime(feedback.createdAt.date)}
+                                                        </Typography>
+                                                    </Box>
+                                                    {null !== feedback.status &&
+                                                        <StatusShow status={feedback.status} />
+                                                    }
+                                                </Box>
+                                                <Box display="flex" gap={1} alignItems="start" mt={1} mb={2}>
+                                                    <Box flexGrow="1">
+                                                        <Typography component="div" variant="body1">
+                                                            {feedback.content}
+                                                        </Typography>
+                                                    </Box>
+                                                    <Box>
+                                                        <button onClick={() => handleOpenDialog(feedback)} className="rounded border p-1">
+                                                            <ModeEditIcon />
+                                                        </button>
+                                                    </Box>
+                                                </Box>
+                                            </Box>
+                                        ))}
                                     </Box>
-                                </Box>
-                                <Box display="flex" gap={1} alignItems="start" mt={1} mb={2}>
-                                    <Box flexGrow="1">
-                                        <Typography component="div" variant="body1">
-                                            {feedback.content}
-                                        </Typography>
-                                    </Box>
-                                    {feedback.userId === user &&
-                                        <Box>
-                                            <button onClick={() => handleOpenDialog(feedback)} className="rounded border p-1">
-                                                <ModeEditIcon />
-                                            </button>
+                                </>
+                            }
+
+                            <Typography component="h3" variant="h5" textAlign="center" my={2}>
+                                Commentaires
+                            </Typography>
+                            <Box mb={4} className="border rounded" p={2}>
+                                {feedbacks.filter(feedback => !feedback.toTreat).reverse().map((feedback: Feedback, index: number) => (
+                                    <Box key={index}>
+                                        <Box display="flex" justifyContent="space-between" alignItems="center">
+                                            <Box display="flex" alignItems="center" gap={2}>
+                                                <Typography component="p" variant="body1" fontWeight="bold">
+                                                    {feedback.username}
+                                                </Typography>
+                                                <Typography component="p" variant="subtitle2">
+                                                    {getDateTime(feedback.createdAt.date)}
+                                                </Typography>
+                                            </Box>
                                         </Box>
-                                    }
-                                </Box>
+                                        <Box display="flex" gap={1} alignItems="start" mt={1} mb={2}>
+                                            <Box flexGrow="1">
+                                                <Typography component="div" variant="body1">
+                                                    {feedback.content}
+                                                </Typography>
+                                            </Box>
+                                            {feedback.userId === user &&
+                                                <Box>
+                                                    <button onClick={() => handleOpenDialog(feedback)} className="rounded border p-1">
+                                                        <ModeEditIcon />
+                                                    </button>
+                                                </Box>
+                                            }
+                                        </Box>
+                                    </Box>
+                                ))}
                             </Box>
-                        ))}
-                    </Box>
+                        </>
+                    }
                 </>
             }
+
             <Dialog
                 fullScreen
                 open={dialog}

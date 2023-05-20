@@ -49,11 +49,11 @@ class Feedback
     #[ORM\ManyToOne(inversedBy: 'feedback')]
     private ?Spec $spec = null;
 
-    #[ORM\ManyToOne(inversedBy: 'feedback')]
-    private ?Connection $Connection = null;
-
     #[ORM\Column]
     private ?bool $toTreat = null;
+
+    #[ORM\ManyToOne(inversedBy: 'feedbacks')]
+    private ?Connection $connection = null;
 
     public function getId(): ?int
     {
@@ -191,18 +191,6 @@ class Feedback
         return $this;
     }
 
-    public function getConnection(): ?Connection
-    {
-        return $this->Connection;
-    }
-
-    public function setConnection(?Connection $Connection): self
-    {
-        $this->Connection = $Connection;
-
-        return $this;
-    }
-
     public function isToTreat(): ?bool
     {
         return $this->toTreat;
@@ -211,6 +199,18 @@ class Feedback
     public function setToTreat(bool $toTreat): self
     {
         $this->toTreat = $toTreat;
+
+        return $this;
+    }
+
+    public function getConnection(): ?Connection
+    {
+        return $this->connection;
+    }
+
+    public function setConnection(?Connection $connection): self
+    {
+        $this->connection = $connection;
 
         return $this;
     }

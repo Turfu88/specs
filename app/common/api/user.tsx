@@ -8,6 +8,7 @@ interface Token {
     roles: string[],
     username: string,
     userId: number,
+    userEmail: string,
     accountId: number
 }
 
@@ -17,6 +18,18 @@ export function getUserId(): number | null {
         const token: Token | null = jwt_decode(cookie);
         if (token) {
             return token.userId;
+        }
+    }
+
+    return null;
+}
+
+export function getUserEmail(): string | null {
+    let cookie = Cookies.get('token');
+    if (cookie) {
+        const token: Token | null = jwt_decode(cookie);
+        if (token) {
+            return token.userEmail;
         }
     }
 

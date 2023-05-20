@@ -10,6 +10,7 @@ import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import { StatusShow } from '../../common/components/StatusShow';
 import { SpecEdit } from './SpecEdit';
+import { FeedbackSection } from '../../common/components/FeedbackSection';
 
 const Transition = forwardRef(function Transition(
     props: TransitionProps & {
@@ -126,6 +127,12 @@ export function SpecView() {
                                 ))}
                             </Box>
                         }
+                        <FeedbackSection
+                            feedbacks={spec.feedbacks}
+                            projectId={spec.projectId}
+                            feedbackType={"spec"}
+                            parentId={spec.id}
+                        />
                     </Box>
                 }
                 <Dialog

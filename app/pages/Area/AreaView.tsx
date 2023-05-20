@@ -108,7 +108,7 @@ export function AreaView() {
                             {area.name}
                         </Typography>
                         {area.users.length > 0 &&
-                            <Box mb={4} p={2}>
+                            <Box p={2}>
                                 <Typography component="h2" variant="body1" my={2}>
                                     Utilisateurs utilisant cet espace :
                                 </Typography>
@@ -140,6 +140,16 @@ export function AreaView() {
                                 ))}
                             </Box>
                         }
+                        <Typography component="p" variant="body1">
+                            Cet espace est collaboratif. Vous pouvez à tout moment inviter une personne à vous rejoindre pour valider, créer, améliorer vos projets.
+                        </Typography>
+                        <Box mt={2} mb={4} display="flex" justifyContent="center">
+                            <Link to={`/espace/${area.uid}/inviter-un-collaborateur`}>
+                                <Button variant="contained">
+                                    Inviter un collaborateur
+                                </Button>
+                            </Link>
+                        </Box>
                         {area.projects.length === 0 ?
                             <Typography component="h2" variant="body1" textAlign="center" mt={2}>
                                 Pas de projet lié à cet espace
@@ -150,7 +160,7 @@ export function AreaView() {
                                     Projets liés à cet espace
                                 </Typography>
                                 {area.projects.map((project: Project, index: number) => (
-                                    <Link to={`/projet/${project.uid}`}>
+                                    <Link to={`/projet/${project.uid}`} key={index}>
                                         <Box key={index} display="flex" flexDirection="column" gap={2} className="border rounded p-2">
                                             <Typography component="p" variant="body1">
                                                 {project.name}

@@ -113,6 +113,21 @@ class SpecController extends AbstractController
                 'name' => $element->getName(),
             ];
         }
+        $feedbacksFormated = [];
+        foreach ($spec->getFeedback() as $feedback) {
+            $feedbacksFormated[] = [
+                'id' => $feedback->getId(),
+                'uid' => $feedback->getUid(),
+                'content' => $feedback->getContent(),
+                'status' => $feedback->getStatus(),
+                'toTreat' => $feedback->isToTreat(),
+                'username' => $feedback->getUser()->getUsername(),
+                'createdAt' => $feedback->getCreatedAt(),
+                'updatedAt' => $feedback->getUpdatedAt(),
+                'hasBeenModified' => $feedback->getCreatedAt() === $feedback->getUpdatedAt(),
+                'userId' => $feedback->getUser()->getId()
+            ];
+        }
         return [
             'id' => $spec->getId(),
             'uid' => $spec->getUid(),
@@ -122,8 +137,10 @@ class SpecController extends AbstractController
             'featureUid' => $spec->getFeature()->getUid(),
             'featureName' => $spec->getFeature()->getName(),
             'projectUid' => $spec->getFeature()->getProject()->getUid(),
+            'projectId' => $spec->getFeature()->getProject()->getId(),
             'projectName' => $spec->getFeature()->getProject()->getName(),
-            'elements' => $elementsFormated
+            'elements' => $elementsFormated,
+            'feedbacks' => $feedbacksFormated
         ];
     }
 }

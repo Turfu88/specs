@@ -84,7 +84,7 @@ page-edit:
     path: '/api/page/{id}/edit'
     controller: App\Controller\PageController::editPage
     methods: PATCH
-page-info:
+page-details:
     path: '/api/page/{uid}'
     controller: App\Controller\PageController::getPageDetails
     methods: GET
@@ -127,6 +127,15 @@ validation-delete:
     controller: App\Controller\ValidationController::removeValidation
     methods: POST
 
+# Invitation
+invitation-create:
+    path: '/api/invitation/create'
+    controller: App\Controller\InvitationController::createInvitation
+    methods: POST
+invitation-details:
+    path: '/api/invitation/{uid}'
+    controller: App\Controller\InvitationController::getInvitationDetails
+    methods: GET
 
 # Feedback
 feedback-create:

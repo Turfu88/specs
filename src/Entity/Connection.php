@@ -50,9 +50,6 @@ class Connection
     #[ORM\JoinColumn(nullable: false)]
     private ?Project $project = null;
 
-    #[ORM\OneToMany(mappedBy: 'connection', targetEntity: Feedback::class)]
-    private Collection $feedback;
-
     #[ORM\OneToMany(mappedBy: 'connection', targetEntity: History::class)]
     private Collection $histories;
 
@@ -65,13 +62,16 @@ class Connection
     #[ORM\OneToMany(mappedBy: 'connection', targetEntity: Validation::class)]
     private Collection $validations;
 
+    #[ORM\OneToMany(mappedBy: 'connection', targetEntity: Feedback::class)]
+    private Collection $feedbacks;
+
     public function __construct()
     {
-        $this->feedback = new ArrayCollection();
         $this->histories = new ArrayCollection();
         $this->source = null;
         $this->elements = new ArrayCollection();
         $this->validations = new ArrayCollection();
+        $this->feedbacks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -212,36 +212,6 @@ class Connection
     }
 
     /**
-     * @return Collection<int, Feedback>
-     */
-    public function getFeedbacks(): Collection
-    {
-        return $this->feedback;
-    }
-
-    public function addFeedback(Feedback $feedback): self
-    {
-        if (!$this->feedback->contains($feedback)) {
-            $this->feedback->add($feedback);
-            $feedback->setConnection($this);
-        }
-
-        return $this;
-    }
-
-    public function removeFeedback(Feedback $feedback): self
-    {
-        if ($this->feedback->removeElement($feedback)) {
-            // set the owning side to null (unless already changed)
-            if ($feedback->getConnection() === $this) {
-                $feedback->setConnection(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, History>
      */
     public function getHistories(): Collection
@@ -358,4 +328,38 @@ class Connection
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Feedback>
+     */
+    public function getFeedbacks(): Collection
+    {
+        return $this->feedbacks;
+    }
+
+    public function addFeedback(Feedback $feedback): self
+    {
+        if (!$this->feedbacks->contains($feedback)) {
+            $this->feedbacks->add($feedback);
+            $feedback->setConnection($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeedback(Feedback $feedback): self
+    {
+        if ($this->feedbacks->removeElement($feedback)) {
+            // set the owning side to null (unless already changed)
+            if ($feedback->getConnection() === $this) {
+                $feedback->setConnection(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+
+  
 }

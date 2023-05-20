@@ -114,6 +114,21 @@ class PageController extends AbstractController
                 'type' => $validation->getType()
             ];
         }
+        $feedbacksFormated = [];
+        foreach ($page->getFeedback() as $feedback) {
+            $feedbacksFormated[] = [
+                'id' => $feedback->getId(),
+                'uid' => $feedback->getUid(),
+                'content' => $feedback->getContent(),
+                'status' => $feedback->getStatus(),
+                'toTreat' => $feedback->isToTreat(),
+                'username' => $feedback->getUser()->getUsername(),
+                'createdAt' => $feedback->getCreatedAt(),
+                'updatedAt' => $feedback->getUpdatedAt(),
+                'hasBeenModified' => $feedback->getCreatedAt() === $feedback->getUpdatedAt(),
+                'userId' => $feedback->getUser()->getId()
+            ];
+        }
         return [
             'id' => $page->getId(),
             'uid' => $page->getUid(),
@@ -121,12 +136,14 @@ class PageController extends AbstractController
             'comment' => $page->getComment(),
             'status' => $page->getStatus(),
             'projectUid' => $page->getProject()->getUid(),
+            'projectId' => $page->getProject()->getId(),
             'projectName' => $page->getProject()->getName(),
             'validators' => $page->getProject()->getValidators(),
             'isModelOk' => $page->isIsModelOk(),
             'isPrivate' => $page->isIsPrivate(),
             'features' => $featuresFormated,
-            'validations' => $validationsFormated
+            'validations' => $validationsFormated,
+            'feedbacks' => $feedbacksFormated
         ];
     }
 }

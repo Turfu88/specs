@@ -19,3 +19,12 @@ export async function editArea(id: number, values: EditAreaForm) {
         return null;
     })
 }
+
+export async function createArea(values: EditAreaForm) {
+    return await request(`/api/area/create`, "POST", values, true).then((res) => {
+        if (res.status === 200) {
+            return res.json;
+        }
+        return null;
+    })
+}

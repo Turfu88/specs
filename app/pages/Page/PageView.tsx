@@ -17,6 +17,7 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { addPageValidation, deletePageValidation } from '../../common/api/validation';
 import { getUserId } from '../../common/api/user';
 import { ValidationBlock } from '../../common/components/ValidationBlock';
+import { FeedbackSection } from '../../common/components/FeedbackSection';
 
 const Transition = forwardRef(function Transition(
     props: TransitionProps & {
@@ -237,6 +238,12 @@ export function PageView() {
                                 </Box>
                             </>
                         }
+                        <FeedbackSection
+                            feedbacks={page.feedbacks}
+                            projectId={page.projectId}
+                            feedbackType={"page"}
+                            parentId={page.id}
+                        />
                     </Box>
                 }
                 <Dialog
