@@ -12,6 +12,9 @@ import { TransitionProps } from '@mui/material/transitions';
 import { StatusShow } from '../../common/components/StatusShow';
 import { FeatureEdit } from './FeatureEdit';
 import { FeedbackSection } from '../../common/components/FeedbackSection';
+import { addValidation, deleteValidation } from '../../common/api/validation';
+import { getUserId } from '../../common/api/user';
+import { ValidationBlock } from '../../common/components/ValidationBlock';
 
 const Transition = forwardRef(function Transition(
     props: TransitionProps & {
@@ -47,6 +50,22 @@ export function FeatureView() {
     }
     if (feature) {
         localStorage.setItem('feature', JSON.stringify(feature.id));
+    }
+    
+    function sendValidation(status: boolean, type: string, validationToRemove: number | null) {
+        if (status) {
+            addValidation({
+                type,
+                projectId: localStorage.getItem('project'),
+                userId: getUserId(),
+                featureId: feature.id
+            });
+        } else {
+            deleteValidation({
+                id: validationToRemove,
+                userId: getUserId(),
+            });
+        }
     }
 
     const breadcrumbs = [
@@ -108,6 +127,12 @@ export function FeatureView() {
                         <Box display="flex" justifyContent="center" mb={4}>
                             <StatusShow status={feature.status} />
                         </Box>
+                        <ValidationBlock
+                            validations={feature.validations}
+                            validators={feature.validators}
+                            sendValidation={sendValidation}
+                            element={'feature'}
+                        />
                         {feature.description !== null &&
                             <Box mb={4} className="border rounded" p={2}>
                                 <Typography component="h1" variant="body1" textAlign="center" mt={2}>

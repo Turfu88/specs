@@ -14,7 +14,7 @@ import UnpublishedOutlinedIcon from '@mui/icons-material/UnpublishedOutlined';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
-import { addPageValidation, deletePageValidation } from '../../common/api/validation';
+import { addValidation, deleteValidation } from '../../common/api/validation';
 import { getUserId } from '../../common/api/user';
 import { ValidationBlock } from '../../common/components/ValidationBlock';
 import { FeedbackSection } from '../../common/components/FeedbackSection';
@@ -55,19 +55,17 @@ export function PageView() {
 
     function sendValidation(status: boolean, type: string, validationToRemove: number | null) {
         if (status) {
-            console.log("Valider la page")
-            addPageValidation({
+            addValidation({
                 type,
                 projectId: localStorage.getItem('project'),
                 userId: getUserId(),
                 pageId: localStorage.getItem('page')
             });
         } else {
-            deletePageValidation({
+            deleteValidation({
                 id: validationToRemove,
                 userId: getUserId(),
             });
-            console.log("Retirer la validation de la page");
         }
     }
 

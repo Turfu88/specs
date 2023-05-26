@@ -114,6 +114,16 @@ class SpecController extends AbstractController
                 'name' => $element->getName(),
             ];
         }
+        $validationsFormated = [];
+        foreach ($spec->getValidations() as $validation) {
+            $validationsFormated[] = [
+                'id' => $validation->getId(),
+                'created' => $validation->getCreated(),
+                'username' => $validation->getUser()->getUsername(),
+                'userId' => $validation->getUser()->getId(),
+                'type' => $validation->getType()
+            ];
+        }
         $feedbacksFormated = [];
         foreach ($spec->getFeedback() as $feedback) {
             $feedbacksFormated[] = [
@@ -141,6 +151,8 @@ class SpecController extends AbstractController
             'projectId' => $spec->getFeature()->getProject()->getId(),
             'projectName' => $spec->getFeature()->getProject()->getName(),
             'elements' => $elementsFormated,
+            'validations' => $validationsFormated,
+            'validators' => $spec->getProject()->getValidators(),
             'feedbacks' => $feedbacksFormated
         ];
     }

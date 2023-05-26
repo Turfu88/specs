@@ -103,6 +103,16 @@ class ConnectionController extends AbstractController
                 'name' => $element->getName(),
             ];
         }
+        $validationsFormated = [];
+        foreach ($connection->getValidations() as $validation) {
+            $validationsFormated[] = [
+                'id' => $validation->getId(),
+                'created' => $validation->getCreated(),
+                'username' => $validation->getUser()->getUsername(),
+                'userId' => $validation->getUser()->getId(),
+                'type' => $validation->getType()
+            ];
+        }
         $feedbacksFormated = [];
         foreach ($connection->getFeedbacks() as $feedback) {
             $feedbacksFormated[] = [
@@ -131,6 +141,8 @@ class ConnectionController extends AbstractController
             'projectUid' => $connection->getProject()->getUid(),
             'projectName' => $connection->getProject()->getName(),
             'elements' => $elementsFormated,
+            'validations' => $validationsFormated,
+            'validators' => $connection->getProject()->getValidators(),
             'feedbacks' => $feedbacksFormated
         ];
     }

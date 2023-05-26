@@ -141,12 +141,12 @@ class PageController extends AbstractController
             'projectUid' => $page->getProject()->getUid(),
             'projectId' => $page->getProject()->getId(),
             'projectName' => $page->getProject()->getName(),
-            'validators' => $page->getProject()->getValidators(),
             'isModelOk' => $page->isIsModelOk(),
             'modelUrl' => $page->getModelUrl(),
             'isPrivate' => $page->isIsPrivate(),
             'features' => $featuresFormated,
             'validations' => $validationsFormated,
+            'validators' => $page->getProject()->getValidators(),
             'feedbacks' => $feedbacksFormated
         ];
     }

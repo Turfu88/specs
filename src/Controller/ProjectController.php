@@ -221,7 +221,6 @@ class ProjectController extends AbstractController
 
     public function getProjectInfo(Request $req, EntityManagerInterface $em, string $uid): Response
     {
-
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
         if (strlen($uid) > 10) {

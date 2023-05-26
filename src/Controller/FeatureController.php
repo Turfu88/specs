@@ -121,6 +121,16 @@ class FeatureController extends AbstractController
                 'description' => $spec->getDescription()
             ];
         }
+        $validationsFormated = [];
+        foreach ($feature->getValidations() as $validation) {
+            $validationsFormated[] = [
+                'id' => $validation->getId(),
+                'created' => $validation->getCreated(),
+                'username' => $validation->getUser()->getUsername(),
+                'userId' => $validation->getUser()->getId(),
+                'type' => $validation->getType()
+            ];
+        }
         $feedbacksFormated = [];
         foreach ($feature->getFeedback() as $feedback) {
             $feedbacksFormated[] = [
@@ -147,6 +157,8 @@ class FeatureController extends AbstractController
             'projectName' => $feature->getProject()->getName(),
             'specs' => $specsFormated,
             'connections' => $connectionsFormated,
+            'validations' => $validationsFormated,
+            'validators' => $feature->getProject()->getValidators(),
             'feedbacks' => $feedbacksFormated
         ];
     }

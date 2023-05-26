@@ -1,6 +1,6 @@
 import request from "./request";
 
-export async function addPageValidation(values: any) {
+export async function addValidation(values: any) {
     return await request('/api/validation/add', "POST", values, true).then((res) => {
         if (res.status === 200) {
             return res.json;
@@ -9,7 +9,7 @@ export async function addPageValidation(values: any) {
     })
 }
 
-export async function deletePageValidation(values: any) {
+export async function deleteValidation(values: any) {
     return await request('/api/validation/remove', "POST", values, true).then((res) => {
         if (res.status === 200) {
             return res.json;

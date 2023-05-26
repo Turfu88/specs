@@ -11,6 +11,9 @@ import { ConnectionEdit } from './ConnectionEdit';
 import { StatusShow } from '../../common/components/StatusShow';
 import { Element } from '../../common/types';
 import { FeedbackSection } from '../../common/components/FeedbackSection';
+import { addValidation, deleteValidation } from '../../common/api/validation';
+import { getUserId } from '../../common/api/user';
+import { ValidationBlock } from '../../common/components/ValidationBlock';
 
 const Transition = forwardRef(function Transition(
     props: TransitionProps & {
@@ -30,8 +33,8 @@ export function ConnectionView() {
     const [openMenu, setOpenMenu] = useState<null | HTMLElement>(null);
     const open = Boolean(openMenu);
     const queryClient = useQueryClient();
-    
-console.log(connection);
+
+    console.log(connection);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setOpenMenu(event.currentTarget);
@@ -54,6 +57,22 @@ console.log(connection);
         if (invalidateQuery) {
             queryClient.invalidateQueries(['getConnectionDetails']);
             setInvalidateQuery(false);
+        }
+    }
+
+    function sendValidation(status: boolean, type: string, validationToRemove: number | null) {
+        if (status) {
+            addValidation({
+                type,
+                projectId: localStorage.getItem('project'),
+                userId: getUserId(),
+                connectionId: connection.id
+            });
+        } else {
+            deleteValidation({
+                id: validationToRemove,
+                userId: getUserId(),
+            });
         }
     }
 
@@ -118,6 +137,12 @@ console.log(connection);
                         <Box display="flex" justifyContent="center" mb={4}>
                             <StatusShow status={connection.status} />
                         </Box>
+                        <ValidationBlock
+                            validations={connection.validations}
+                            validators={connection.validators}
+                            sendValidation={sendValidation}
+                            element={'connection'}
+                        />
                         {connection.description !== null &&
                             <Box mb={4} className="border rounded" p={2}>
                                 <Typography component="h2" variant="body1" textAlign="center" mt={2}>

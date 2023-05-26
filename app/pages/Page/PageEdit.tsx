@@ -6,7 +6,7 @@ import { StatusChooser } from '../../common/components/StatusChooser';
 import { editPage } from '../../common/api/page';
 import { useId, useState } from 'react';
 import { ValidationBlock } from '../../common/components/ValidationBlock';
-import { addPageValidation, deletePageValidation } from '../../common/api/validation';
+import { addValidation, deleteValidation } from '../../common/api/validation';
 import { getUserId } from '../../common/api/user';
 
 export interface EditPageForm {
@@ -55,14 +55,14 @@ export function PageEdit(props: PageEditProps) {
     function sendValidation(status: boolean, type: string, validationToRemove: number | null) {
         if (status) {
             console.log("Valider la page")
-            addPageValidation({
+            addValidation({
                 type,
                 projectId: localStorage.getItem('project'),
                 userId: getUserId(),
                 pageId: localStorage.getItem('page')
             });
         } else {
-            deletePageValidation({
+            deleteValidation({
                 id: validationToRemove,
                 userId: getUserId(),
             });

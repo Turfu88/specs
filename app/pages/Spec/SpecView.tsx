@@ -11,6 +11,9 @@ import { TransitionProps } from '@mui/material/transitions';
 import { StatusShow } from '../../common/components/StatusShow';
 import { SpecEdit } from './SpecEdit';
 import { FeedbackSection } from '../../common/components/FeedbackSection';
+import { addValidation, deleteValidation } from '../../common/api/validation';
+import { getUserId } from '../../common/api/user';
+import { ValidationBlock } from '../../common/components/ValidationBlock';
 
 const Transition = forwardRef(function Transition(
     props: TransitionProps & {
@@ -43,6 +46,22 @@ export function SpecView() {
     const handleOpenConnectionForm = () => {
         setDialog(true);
         handleCloseMenu();
+    }
+
+    function sendValidation(status: boolean, type: string, validationToRemove: number | null) {
+        if (status) {
+            addValidation({
+                type,
+                projectId: localStorage.getItem('project'),
+                userId: getUserId(),
+                specId: spec.id
+            });
+        } else {
+            deleteValidation({
+                id: validationToRemove,
+                userId: getUserId(),
+            });
+        }
     }
 
     const breadcrumbs = [
@@ -106,6 +125,12 @@ export function SpecView() {
                         <Box display="flex" justifyContent="center" mb={4}>
                             <StatusShow status={spec.status} />
                         </Box>
+                        <ValidationBlock
+                            validations={spec.validations}
+                            validators={spec.validators}
+                            sendValidation={sendValidation}
+                            element={'spec'}
+                        />
                         {spec.description !== null &&
                             <Box mb={4} className="border rounded" p={2}>
                                 <Typography component="h1" variant="body1" textAlign="center" mt={2}>

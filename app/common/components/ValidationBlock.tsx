@@ -32,14 +32,17 @@ export function ValidationBlock(props: ValidationBlockProps) {
         sendValidation(validation, selectedType, validationToRemove);
         handleClose();
     }
+    console.log(validations, validators);
 
     if (null === validators) {
         return (
-            <Typography component="div" variant="body1">
+            <Typography component="div" variant="body1" textAlign="center" mt={2} mb={4}>
                 Pas de validation mise en place sur ce projet
             </Typography>
         );
     }
+    
+    const blockLength = 12 / validators;
     const userId = getUserId();
     const specificationValidatedByUser = validations.filter((validation) => validation.type === 'specification' && validation.userId === userId);
     const specificationValidatedByOthers = validations.filter((validation) => validation.type === 'specification' && validation.userId !== userId).length;
@@ -54,33 +57,33 @@ export function ValidationBlock(props: ValidationBlockProps) {
     const renderingValidationNotOk = validators - 1 - renderingValidatedByOthers;
 
     return (
-        <>
+        <Box mb={4}>
             <Typography component="h4" variant="h5" textAlign="center" mt={2}>
                 Spécification
             </Typography>
             <Grid container spacing={2}>
                 {specificationValidatedByUser.length === 1 ?
-                    <Grid item xs={4}>
+                    <Grid item xs={blockLength}>
                         <Typography component='div' variant='body1' className="border rounded p-2 pointer" textAlign="center" style={{ backgroundColor: 'green', height: '80px' }} onClick={() => handleClickOpen(false, 'specification', specificationValidatedByUser[0].id)}>
                             Validé
                         </Typography>
                     </Grid>
                     :
-                    <Grid item xs={4}>
+                    <Grid item xs={blockLength}>
                         <Typography component='div' variant='body1' className="border rounded p-2 pointer" textAlign="center" style={{ backgroundColor: 'grey', height: '80px' }} onClick={() => handleClickOpen(true, 'specification')}>
                             Non validé
                         </Typography>
                     </Grid>
                 }
                 {Array.from(Array(specificationValidationsOK).keys()).map((index) => (
-                    <Grid item xs={4} key={index}>
+                    <Grid item xs={blockLength} key={index}>
                         <Typography component='div' variant='body1' className="border rounded p-2" textAlign="center" style={{ backgroundColor: 'green', height: '80px' }}>
                             Validé
                         </Typography>
                     </Grid>
                 ))}
                 {Array.from(Array(specificationValidationNotOk).keys()).map((index) => (
-                    <Grid item xs={4} key={index}>
+                    <Grid item xs={blockLength} key={index}>
                         <Typography component='div' variant='body1' className="border rounded p-2" textAlign="center" style={{ backgroundColor: 'grey', height: '80px' }}>
                             Validation nécessaire
                         </Typography>
@@ -93,27 +96,27 @@ export function ValidationBlock(props: ValidationBlockProps) {
             {specificationsValidatedByAllUser ?
                 <Grid container spacing={2}>
                     {renderingValidatedByUser ?
-                        <Grid item xs={4}>
+                        <Grid item xs={blockLength}>
                             <Typography component='div' variant='body1' className="border rounded p-2 pointer" textAlign="center" style={{ backgroundColor: 'green', height: '80px' }} onClick={() => handleClickOpen(false, 'rendering', renderingValidatedByUser[0].id)}>
                                 Validé
                             </Typography>
                         </Grid>
                         :
-                        <Grid item xs={4}>
+                        <Grid item xs={blockLength}>
                             <Typography component='div' variant='body1' className="border rounded p-2 pointer" textAlign="center" style={{ backgroundColor: 'grey', height: '80px' }} onClick={() => handleClickOpen(true, 'rendering')}>
                                 Non validé
                             </Typography>
                         </Grid>
                     }
                     {Array.from(Array(renderingValidationsOK).keys()).map((index) => (
-                        <Grid item xs={4} key={index}>
+                        <Grid item xs={blockLength} key={index}>
                             <Typography component='div' variant='body1' className="border rounded p-2" textAlign="center" style={{ backgroundColor: 'green', height: '80px' }}>
                                 Validé
                             </Typography>
                         </Grid>
                     ))}
                     {Array.from(Array(renderingValidationNotOk).keys()).map((index) => (
-                        <Grid item xs={4} key={index}>
+                        <Grid item xs={blockLength} key={index}>
                             <Typography component='div' variant='body1' className="border rounded p-2" textAlign="center" style={{ backgroundColor: 'grey', height: '80px' }}>
                                 Validation nécessaire
                             </Typography>
@@ -123,7 +126,7 @@ export function ValidationBlock(props: ValidationBlockProps) {
                 :
                 <Grid container spacing={2}>
                     {Array.from(Array(validators).keys()).map((index) => (
-                        <Grid item xs={4} key={index}>
+                        <Grid item xs={blockLength} key={index}>
                             <Typography component='div' variant='body1' className="border rounded p-2" textAlign="center" style={{ backgroundColor: 'grey', height: '80px' }}>
                                 Validation nécessaire
                             </Typography>
@@ -150,6 +153,6 @@ export function ValidationBlock(props: ValidationBlockProps) {
                     </Box>
                 </DialogActions>
             </Dialog>
-        </>
+        </Box>
     );
 }
