@@ -48,7 +48,7 @@ export function PageView() {
         setDialog(false);
     };
 
-    const handleOpenELementForm = () => {
+    const handleOpenElementForm = () => {
         setDialog(true);
         handleCloseMenu();
     }
@@ -105,7 +105,6 @@ export function PageView() {
                             </Breadcrumbs>
                             <div>
                                 <Button
-                                    id="basic-button"
                                     aria-controls={open ? 'basic-menu' : undefined}
                                     aria-haspopup="true"
                                     aria-expanded={open ? 'true' : undefined}
@@ -123,8 +122,8 @@ export function PageView() {
                                         'aria-labelledby': 'basic-button',
                                     }}
                                 >
-                                    <MenuItem onClick={handleOpenELementForm}>Modifier cette page</MenuItem>
-                                    <MenuItem onClick={handleOpenELementForm}>Supprimer cette page (TODO)</MenuItem>
+                                    <MenuItem onClick={handleOpenElementForm}>Modifier cette page</MenuItem>
+                                    <MenuItem onClick={handleOpenElementForm}>Supprimer cette page (TODO)</MenuItem>
                                 </Menu>
                             </div>
                         </Box>
@@ -153,8 +152,15 @@ export function PageView() {
                                 />
                             </Box>
                         </Box>
+                        {page.modelUrl !== null &&
+                            <Box mt={4} mb={4} className="border rounded" p={2}>
+                                <Typography component="h1" variant="body1" textAlign="center" mt={2}>
+                                    {page.modelUrl}
+                                </Typography>
+                            </Box>
+                        }
                         {page.comment !== null &&
-                            <Box mb={4} className="border rounded" p={2}>
+                            <Box mt={4} mb={4} className="border rounded" p={2}>
                                 <Typography component="h1" variant="body1" textAlign="center" mt={2}>
                                     {page.comment}
                                 </Typography>

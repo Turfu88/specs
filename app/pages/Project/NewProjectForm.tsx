@@ -188,7 +188,6 @@ export function NewProjectForm() {
         }
         if ((activeStep === 3 && 0 === motherProjectChoosed) || (activeStep === 8 && 0 !== motherProjectChoosed)) {
             console.log("création du projet");
-            
             createProject({
                 elements: elementsChoosed,
                 features: featuresChoosed,

@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogTitle, Grid, Typography } from "@mui/material";
 import { Validation } from "../types";
 import { useState } from "react";
 import { getUserId } from "../api/user";
@@ -19,7 +19,7 @@ export function ValidationBlock(props: ValidationBlockProps) {
 
     function handleClickOpen(status: boolean, type: string, idToRemove?: number) {
         setValidation(status);
-        setSelectedType(type)
+        setSelectedType(type);
         idToRemove ? setValidationToRemove(idToRemove) : setValidationToRemove(null);
         setOpenDialog(true);
     };
@@ -33,14 +33,12 @@ export function ValidationBlock(props: ValidationBlockProps) {
         handleClose();
     }
 
-    console.log(validations);
-
     if (null === validators) {
         return (
-            <Typography component='div' variant={'body1'}>
+            <Typography component="div" variant="body1">
                 Pas de validation mise en place sur ce projet
             </Typography>
-        )
+        );
     }
     const userId = getUserId();
     const specificationValidatedByUser = validations.filter((validation) => validation.type === 'specification' && validation.userId === userId);
@@ -54,8 +52,6 @@ export function ValidationBlock(props: ValidationBlockProps) {
     const renderingValidatedByOthers = validations.filter((validation) => validation.type === 'rendering' && validation.userId !== userId).length;
     const renderingValidationsOK = validations.length - (renderingValidatedByUser.length ? 1 : 0);
     const renderingValidationNotOk = validators - 1 - renderingValidatedByOthers;
-
-    console.log(specificationValidatedByUser, specificationValidationsOK, specificationValidationNotOk)
 
     return (
         <>

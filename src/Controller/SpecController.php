@@ -39,6 +39,7 @@ class SpecController extends AbstractController
             ->setStatus($json->status)
             ->setUid(Uuid::v1())
             ->setIsFromCore($project->isIsCore())
+            ->setProject($project)
             ->setFeature($feature)
             ->setSource(null);
 

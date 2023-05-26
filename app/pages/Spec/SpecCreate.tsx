@@ -3,12 +3,12 @@ import { Layout } from "../../common/components/Layout";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
 import { createSpec } from "../../common/api/spec";
-import { Element, Project } from "../../common/types";
+import { Element, Project, Spec } from "../../common/types";
 import { useQuery } from "react-query";
 import { getProjectDetails } from "../../common/api/project";
 import { useState } from "react";
 import { StatusChooser } from "../../common/components/StatusChooser";
-import { log } from "console";
+import { SpecSearch } from "./SpecSearch";
 
 export interface NewSpecForm {
     name: string,
@@ -46,6 +46,12 @@ export function SpecCreate() {
         createSpec({ ...values, elements: selectedElements });
     }
 
+    function handleImportData(values: Spec) {
+        formFeature.setFieldValue('name', values.name ? values.name : '');
+        formFeature.setFieldValue('description', values.description ? values.description : '');
+        formFeature.setFieldValue('status', values.status ? values.status : '');
+    }
+
     function toggleElement(id: number) {
         if (selectedElements.includes(id)) {
             setSelectedElements(selectedElements.filter((element) => element !== id));
@@ -78,6 +84,7 @@ export function SpecCreate() {
                             handleChooseStatus={(value: string) => formFeature.setFieldValue('status', value)}
                         />
                     </Box>
+                    <SpecSearch importData={handleImportData} />
                     <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
                         <TextField
                             id="name"
@@ -101,7 +108,7 @@ export function SpecCreate() {
                     </Box>
                     <Divider></Divider>
                     {isLoading || project?.elements.length === 0 ?
-                        <Typography component="p" variant="body1" textAlign="center">
+                        <Typography component="p" variant="body1" textAlign="center" mt={4}>
                             Pas d'élément enregistré
                         </Typography>
                         :

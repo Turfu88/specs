@@ -33,6 +33,7 @@ class PageController extends AbstractController
             ->setIsFromCore($project->isIsCore())
             ->setProject($project)
             ->setIsModelOk($json->isModelOk)
+            ->setModelUrl($json->modelUrl)
             ->setIsPrivate($json->isPrivate)
             ->setSource(null);
         $em->persist($page);
@@ -57,6 +58,7 @@ class PageController extends AbstractController
             ->setStatus($json->status)
             ->setUpdatedAt(new \DateTimeImmutable)
             ->setIsModelOk($json->isModelOk)
+            ->setModelUrl($json->modelUrl)
             ->setIsPrivate($json->isPrivate);
         $em->persist($page);
         $em->flush();
@@ -134,12 +136,14 @@ class PageController extends AbstractController
             'uid' => $page->getUid(),
             'name' => $page->getName(),
             'comment' => $page->getComment(),
+            'category' => $page->getCategory(),
             'status' => $page->getStatus(),
             'projectUid' => $page->getProject()->getUid(),
             'projectId' => $page->getProject()->getId(),
             'projectName' => $page->getProject()->getName(),
             'validators' => $page->getProject()->getValidators(),
             'isModelOk' => $page->isIsModelOk(),
+            'modelUrl' => $page->getModelUrl(),
             'isPrivate' => $page->isIsPrivate(),
             'features' => $featuresFormated,
             'validations' => $validationsFormated,

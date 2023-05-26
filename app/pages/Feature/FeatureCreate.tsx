@@ -5,9 +5,10 @@ import { createFeature } from "../../common/api/feature";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useQuery } from "react-query";
-import { Project } from "../../common/types";
+import { Feature, Project } from "../../common/types";
 import { getProjectDetails } from "../../common/api/project";
 import { StatusChooser } from "../../common/components/StatusChooser";
+import { FeatureSearch } from "./FeatureSearch";
 
 export interface NewFeatureForm {
     name: string,
@@ -48,6 +49,14 @@ export function FeatureCreate() {
         navigate(-1);
     }
 
+    function handleImportData(values: Feature) {
+        formFeature.setFieldValue('name', values.name ? values.name : '');
+        formFeature.setFieldValue('description', values.description ? values.description : '');
+        // @TODO: vérifier si section appartient aux sections de ce projet, sinon afficher une notification
+        // indiquant que la manip n'est pas possible
+        formFeature.setFieldValue('section', values.section ? values.section : '');
+    }
+
     function dataTest() {
         formFeature.setFieldValue('name', 'Gestion d\'une wishlist');
         formFeature.setFieldValue('description', "Pas de description");
@@ -72,6 +81,7 @@ export function FeatureCreate() {
                             handleChooseStatus={(value: string) => formFeature.setFieldValue('status', value)}
                         />
                     </Box>
+                    <FeatureSearch importData={handleImportData} />
                     <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
                         <TextField
                             id="name"
@@ -83,7 +93,7 @@ export function FeatureCreate() {
                     </Box>
                     <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
                         <TextField
-                            id="name"
+                            id="description"
                             label="Description"
                             variant="outlined"
                             fullWidth
@@ -95,7 +105,7 @@ export function FeatureCreate() {
                     {project &&
                         <Box className="d-flex justify-content-center mw-75 m-auto mt-4">
                             <FormControl fullWidth>
-                                <InputLabel id="section-label">Catégorie</InputLabel>
+                                <InputLabel id="section-label">Section</InputLabel>
                                 <Select
                                     labelId="section-label"
                                     id="section"

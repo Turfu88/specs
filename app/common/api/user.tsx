@@ -45,6 +45,33 @@ export async function getUserAreas() {
     });
 }
 
+export async function getUserPages() {    
+    return await request(`/api/user/pages`, "GET", null, true).then((res) => {        
+        if (res.status === 200) {
+            return res.json.content;
+        }
+        return null;
+    });
+}
+
+export async function getUserFeatures() {    
+    return await request(`/api/user/features`, "GET", null, true).then((res) => {        
+        if (res.status === 200) {
+            return res.json.content;
+        }
+        return null;
+    });
+}
+
+export async function getUserSpecs() {    
+    return await request(`/api/user/specs`, "GET", null, true).then((res) => {        
+        if (res.status === 200) {
+            return res.json.content;
+        }
+        return null;
+    });
+}
+
 // @TODO: Typer toutes ces fonctions
 export function testExistingUser(params: any) {
     request('/api/user/find', "POST", params).then((res) => {

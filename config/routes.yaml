@@ -10,6 +10,18 @@ user-areas:
     path: '/api/user/areas'
     controller: App\Controller\UserController::getUserAreas
     methods: GET
+user-pages:
+    path: '/api/user/pages'
+    controller: App\Controller\UserController::getUserPages
+    methods: GET
+user-features:
+    path: '/api/user/features'
+    controller: App\Controller\UserController::getUserFeatures
+    methods: GET
+user-specs:
+    path: '/api/user/specs'
+    controller: App\Controller\UserController::getUserSpecs
+    methods: GET
 
 #Area
 area-edit:
@@ -25,6 +37,10 @@ area-details:
 create-core:
     path: '/api/project/create-core'
     controller: App\Controller\ProjectController::createCore
+    methods: POST
+create-project:
+    path: '/api/project/create-project'
+    controller: App\Controller\ProjectController::createProject
     methods: POST
 update-status:
     path: '/api/project/update-status'

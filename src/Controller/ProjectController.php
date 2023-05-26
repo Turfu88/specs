@@ -19,23 +19,73 @@ class ProjectController extends AbstractController
 {
     public function createProject(Request $req, EntityManagerInterface $em): Response
     {
-        // @TODO: A terminer
-
         $json = json_decode($req->getContent());
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
+        $user = $em->getRepository(User::class)->find($req->headers->all()["userid"][0]);
 
-        // $area = new Area();
-        // $area->setName($json->areaName)
-        //     ->setUid(Uuid::v1())
-        //     ->setCreatedAt(new \DateTimeImmutable)
-        //     ->setUpdatedAt(new \DateTimeImmutable);
-        // $em->persist($area);
+        $project = new Project();
+        // Ajouter les espaces choisis
+        if ($json->areas) {
+            $areaSelected = [];
+            foreach ($json->areas as $area) {
+                if ($area->choosed) {
+                    $areaSelected[] = $area->id;
+                }
+            }
+            foreach ($user->getAreas() as $area) {
+                if (in_array($area->getId(), $areaSelected)) {
+                    $project->addArea($area);
+                }
+            }
+        }
+        $project->setName($json->form->name)
+            ->setVersion($json->form->version)
+            ->setComment($json->form->comment)
+            ->setCreatedAt(new \DateTimeImmutable)
+            ->setUpdatedAt(new \DateTimeImmutable)
+            ->setUid(Uuid::v1())
+            ->setIsCore(false)
+            ->setSource(null);
+        $em->persist($project);
 
+        foreach ($json->pages as $page) {
+            if (!$page->choosed) {
+                continue;
+            }
+            $pageNew = new Page();
+            $pageNew->setName($page->name)
+                ->setUid(Uuid::v1())
+                ->setCategory($page->category)
+                ->setCreatedAt(new \DateTimeImmutable)
+                ->setUpdatedAt(new \DateTimeImmutable)
+                ->setIsFromCore(false)
+                ->setIsPrivate($page->isPrivate)
+                ->setSource(null)
+                ->setIsModelOk(true)
+                ->setProject($project);
+            $em->persist($pageNew);
+        }
+
+        foreach ($json->elements as $element) {
+            if (!$element->choosed) {
+                continue;
+            }
+            $elementNew = new Element();
+            $elementNew->setName($element->name)
+                ->setUid(Uuid::v1())
+                ->setCreatedAt(new \DateTimeImmutable)
+                ->setUpdatedAt(new \DateTimeImmutable)
+                ->setIsFromCore(false)
+                ->setSource(null)
+                ->setProject($project);
+            $em->persist($elementNew);
+        }
+        $em->flush();
 
         return $response->setStatusCode(200)->setContent(json_encode([
             'code' => 200,
-            'message' => 'Nouvel utilisateur créé avec succès',
+            'message' => 'Projet créé avec succès',
         ]));
     }
 
@@ -199,7 +249,8 @@ class ProjectController extends AbstractController
                 'uid' => $page->getUid(),
                 'name' => $page->getName(),
                 'status' => $page->getStatus(),
-                'category' => $page->getCategory()
+                'category' => $page->getCategory(),
+                'isPrivate' => $page->isIsPrivate()
             ];
         }
         $elementsFormated = [];

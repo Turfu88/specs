@@ -91,16 +91,18 @@ export function LandingConnected() {
                                     <Typography component="h2" variant="h4" mb={4}>Tous mes projets</Typography>
                                 </Box>
                                 {projects.map((project: Project, index: number) => (
-                                    <Link to={`/projet/${project.uid}`} key={index}>
-                                        <Box display="flex" justifyContent="space-between" alignItems="center" className="rounded p-2 bg-neutral" >
-                                            <Typography component="p" variant="subtitle1">
-                                                {project.name}
-                                            </Typography>
-                                            {project.isCore &&
-                                                <StarIcon />
-                                            }
-                                        </Box>
-                                    </Link>
+                                    <Box mb={2} key={index}>
+                                        <Link to={`/projet/${project.uid}`}>
+                                            <Box display="flex" justifyContent="space-between" alignItems="center" className="rounded p-2 bg-neutral" >
+                                                <Typography component="p" variant="subtitle1">
+                                                    {project.name}
+                                                </Typography>
+                                                {project.isCore &&
+                                                    <StarIcon />
+                                                }
+                                            </Box>
+                                        </Link>
+                                    </Box>
                                 ))}
                                 {projects.length === 0 &&
                                     <Typography component="h2" variant="subtitle1" textAlign="center">Vous n'avez pas encore créé de projet</Typography>
@@ -131,7 +133,7 @@ export function LandingConnected() {
                             Vous serez guidé dans les deux cas.
                         </DialogContentText>
                     </DialogContent>
-                    <DialogActions className='justify-center' style={{padding: '20px'}}>
+                    <DialogActions className='justify-center' style={{ padding: '20px' }}>
                         <Box display="flex" flexDirection="row" justifyContent="space-between" width="100%">
                             <Button onClick={handleCloseDialog} variant="outlined">Annuler</Button>
                             <Link to="/projet/nouveau-projet-mere">
