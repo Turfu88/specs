@@ -3,7 +3,7 @@
 # -----------------------------------
 # User
 create-user:
-    path: '/api/area/create'
+    path: '/api/account/create'
     controller: App\Controller\UserController::createAccount
     methods: POST
 user-areas:
@@ -24,6 +24,10 @@ user-specs:
     methods: GET
 
 #Area
+create-area:
+    path: '/api/area/create'
+    controller: App\Controller\AreaController::createArea
+    methods: POST
 area-edit:
     path: '/api/area/{id}/edit'
     controller: App\Controller\AreaController::editArea

@@ -156,12 +156,12 @@ export function AreaView() {
                             </Typography>
                             :
                             <Box mb={4} p={2}>
-                                <Typography component="h2" variant="body1" textAlign="center" mt={2}>
+                                <Typography component="h2" variant="body1" textAlign="center" mt={2} mb={2}>
                                     Projets liés à cet espace
                                 </Typography>
                                 {area.projects.map((project: Project, index: number) => (
                                     <Link to={`/projet/${project.uid}`} key={index}>
-                                        <Box key={index} display="flex" flexDirection="column" gap={2} className="border rounded p-2">
+                                        <Box key={index} display="flex" flexDirection="column" gap={2} className="border rounded p-2 mb-4">
                                             <Typography component="p" variant="body1">
                                                 {project.name}
                                             </Typography>

@@ -307,6 +307,15 @@ class ProjectController extends AbstractController
                 'specs' => $specsFormated
             ];
         }
+        $specsFormated = [];
+        foreach ($project->getSpecs() as $spec) {
+            $specsFormated[] = [
+                'id' => $spec->getId(),
+                'uid' => $spec->getUid(),
+                'name' => $spec->getName(),
+                'status' => $spec->getStatus(),
+            ];
+        }
 
         return [
             'id' => $project->getId(),
@@ -322,6 +331,7 @@ class ProjectController extends AbstractController
             'sectionChoices' => $project->getSectionChoices(),
             'elements' => $elementsFormated,
             'pages' => $pagesFormated,
+            'specs' => $specsFormated,
             'connections' => $connectionsFormated,
             'features' => $featuresFormated,
             'validations' => $validationsFormated

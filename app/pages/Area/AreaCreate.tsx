@@ -3,9 +3,10 @@ import { Area, Project } from "../../common/types";
 import { Box, Button, Checkbox, FormControlLabel, TextField, Typography } from "@mui/material";
 import { createArea } from "../../common/api/area";
 import { Layout } from "../../common/components/Layout";
-import { getUserAreas } from "../../common/api/user";
+import { getUserAreas, getUserId } from "../../common/api/user";
 import { useQuery } from "react-query";
 import StarIcon from '@mui/icons-material/Star';
+import { useState } from "react";
 
 export interface EditAreaForm {
     name: string,
@@ -17,6 +18,8 @@ export function AreaCreate() {
     const userAreas = areas || null;
 
     let projects: Project[] = [];
+    const [selectedProjects, setSelectedProjects] = useState<number[]>([]);
+
     if (areas) {
         areas.forEach((area: Area) => {
             area.projects.forEach((project: Project) => {
@@ -27,22 +30,29 @@ export function AreaCreate() {
         });
     }
 
-    console.log(projects);
-
-
     const formArea = useForm({
         initialValues: {
             name: '',
+            userId: getUserId()
         } as EditAreaForm,
         validate: {
             name: (value) => (value.length < 2 ? 'Le nom de l\'espace est trop court' : null),
         },
     });
 
-    function handleCreateArea(values: EditAreaForm) {
-        createArea(values).then(() => {
-            console.log("created");
+    function toggleProject(id: number) {
+        if (selectedProjects.includes(id)) {
+            setSelectedProjects(selectedProjects.filter((project) => project !== id));
+        } else {
+            setSelectedProjects([...selectedProjects, id]);
+        }
+    }
 
+    function handleCreateArea(values: EditAreaForm) {
+        console.log({...values, selectedProjects});
+        
+        createArea({...values, selectedProjects}).then(() => {
+            console.log("created");
         });
     }
 
@@ -72,10 +82,10 @@ export function AreaCreate() {
                     </Box>
 
                     {projects.map((project: Project, index: number) => (
-                        <Box className="d-flex justify-content-between align-items-center mw-75 m-auto">
-                            <FormControlLabel key={index}
+                        <Box key={index} className="d-flex justify-content-between align-items-center mw-75 m-auto">
+                            <FormControlLabel
                                 control={
-                                    <Checkbox name={project.name} />
+                                    <Checkbox name={project.name} onChange={() => toggleProject(project.id)}/>
                                 }
                                 label={project.name}
                             />

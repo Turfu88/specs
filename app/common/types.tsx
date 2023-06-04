@@ -34,7 +34,8 @@ export interface Project {
     elements: Element[],
     connections: Connection[],
     features: Feature[],
-    pages: Page[]
+    pages: Page[],
+    specs: Spec[]
 }
 
 export interface Validation {

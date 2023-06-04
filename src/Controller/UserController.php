@@ -170,8 +170,6 @@ class UserController extends AbstractController
         } else {
             $content = null;
         }
-        dump($user);
-        dump($content);
         return $response->setStatusCode(200)->setContent(json_encode([
             'code' => 200,
             'content' => $content,

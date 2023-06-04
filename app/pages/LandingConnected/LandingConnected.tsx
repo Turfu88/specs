@@ -67,7 +67,7 @@ export function LandingConnected() {
                             <>
                                 {userAreas.map((area: Area, index: number) => (
                                     <Link to={`/espace/${area.uid}`} key={index}>
-                                        <Box className="rounded p-2 d-flex bg-neutral" >
+                                        <Box className="rounded p-2 d-flex bg-neutral mb-3" >
                                             <Typography component="p" variant="subtitle1">
                                                 {area.name}
                                             </Typography>

@@ -9,6 +9,7 @@ import { TransitionProps } from '@mui/material/transitions';
 import { Project } from '../../common/types';
 import { ProjectSummaries } from '../Summary/ProjectSummaries';
 import { ProjectContent } from './ProjectContent';
+import { WorkInProgress } from './WorkInProgress';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -97,11 +98,13 @@ export function ProjectView() {
                                 <Tab label="Contenu" {...a11yProps(0)} />
                                 <Tab label="Evolution" {...a11yProps(1)} />
                                 <Tab label="Résumés" {...a11yProps(2)} />
+                                <Tab label="Tickets en cours" {...a11yProps(3)} />
                             </Tabs>
                         </Box>
                         {tabValue === 0 && <ProjectContent project={project} />}
                         {tabValue === 1 && <div>Item Two</div>}
                         {tabValue === 2 && <ProjectSummaries project={project} />}
+                        {tabValue === 3 && <WorkInProgress project={project} />}
                     </Box>
                 </Box>
             }

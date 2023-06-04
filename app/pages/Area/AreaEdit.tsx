@@ -5,6 +5,7 @@ import { editArea } from "../../common/api/area";
 
 export interface EditAreaForm {
     name: string,
+    selectedProjects: number[]
 }
 
 interface AreaEditProps {

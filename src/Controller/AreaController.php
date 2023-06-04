@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Area;
 use App\Entity\Project;
-use App\Entity\Element;
+use App\Entity\User;
 use Symfony\Component\Uid\Uuid;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,9 +20,6 @@ class AreaController extends AbstractController
         $json = json_decode($req->getContent());
         $response = new Response();
         $response->headers->set('Content-Type', 'application/json');
-        // $project = $em->getRepository(Project::class)->find($json->project);
-
-        // @TODO: Ajouter les projets/utilisateurs associés
 
         $area = new Area();
         $area->setName($json->name)
@@ -30,6 +27,16 @@ class AreaController extends AbstractController
             ->setUpdatedAt(new \DateTimeImmutable)
             ->setUid(Uuid::v1());
         $em->persist($area);
+
+        foreach ($json->selectedProjects as $projectId) {
+            $project = $em->getRepository(Project::class)->find($projectId);
+            $area->addProject($project);
+        }
+
+        $user = $em->getRepository(User::class)->find($json->userId);
+        $area->addUser($user);
+
+
         $em->flush();
 
         return $response->setStatusCode(200)->setContent(json_encode([
