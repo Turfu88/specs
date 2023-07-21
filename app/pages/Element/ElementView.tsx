@@ -2,8 +2,8 @@ import { Box, Breadcrumbs, Button, Dialog, Menu, MenuItem, Slide, Typography } f
 import { Layout } from '../../common/components/Layout';
 import { useQuery, useQueryClient } from 'react-query';
 import { Element } from '../../common/types';
-import { Link, useParams } from 'react-router-dom';
-import { getElementDetails } from '../../common/api/element';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { deleteElement, getElementDetails } from '../../common/api/element';
 import { forwardRef, useEffect, useState } from 'react';
 import { TransitionProps } from '@mui/material/transitions';
 import { ElementEdit } from './ElementEdit';
@@ -20,6 +20,7 @@ const Transition = forwardRef(function Transition(
 
 export function ElementView() {
     const { uid } = useParams();
+    const navigate = useNavigate();
     const queryClient = useQueryClient();
     const { isLoading, data } = useQuery('getElementDetails', () => getElementDetails(uid));
     const element: Element = data || null;
@@ -49,6 +50,11 @@ export function ElementView() {
             queryClient.invalidateQueries(['getElementDetails']);
             setInvalidateQuery(false);
         }
+    }
+
+    const handleDeleteElement = () => {            
+        deleteElement(element.id);
+        navigate(`/projet/${element.projectUid}`);
     }
 
     const breadcrumbs = [
@@ -97,7 +103,7 @@ export function ElementView() {
                                 }}
                             >
                                 <MenuItem onClick={handleOpenELementForm}>Modifier cet élément</MenuItem>
-                                <MenuItem onClick={handleOpenELementForm}>Supprimer cet élément (TODO)</MenuItem>
+                                <MenuItem onClick={handleDeleteElement} disabled={element && (element.specs.length > 0 || element.connections.length > 0)}>Supprimer cet élément</MenuItem>
                             </Menu>
                         </div>
                     </Box>
@@ -116,6 +122,34 @@ export function ElementView() {
                                     {element.comment}
                                 </Typography>
                             </Box>
+                            {element.connections.length > 0 &&
+                                <Box mb={4} className="border rounded" p={2}>
+                                    <Typography component="h1" variant="body1" textAlign="center" mt={2}>
+                                        Connections liées à cet élément
+                                    </Typography>
+                                    {element.connections.map((connection: {id: number, name: string}, index: number) => (
+                                        <Box key={index} display="flex" flexDirection="column" gap={2}>
+                                            <Typography component="p" variant="body1">
+                                                {connection.name}
+                                            </Typography>
+                                        </Box>
+                                    ))}
+                                </Box>
+                            }
+                            {element.specs.length > 0 &&
+                                <Box mb={4} className="border rounded" p={2}>
+                                    <Typography component="h1" variant="body1" textAlign="center" mt={2}>
+                                        Connections liées à cet élément
+                                    </Typography>
+                                    {element.specs.map((spec: {id: number, name: string}, index: number) => (
+                                        <Box key={index} display="flex" flexDirection="column" gap={2}>
+                                            <Typography component="p" variant="body1">
+                                                {spec.name}
+                                            </Typography>
+                                        </Box>
+                                    ))}
+                                </Box>
+                            }
                         </Box>
                     }
                 </Box>

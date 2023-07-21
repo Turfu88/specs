@@ -84,6 +84,10 @@ element-edit:
     path: '/api/element/{id}/edit'
     controller: App\Controller\ElementController::editElement
     methods: PATCH
+element-delete:
+    path: '/api/element/{id}/delete'
+    controller: App\Controller\ElementController::deleteElement
+    methods: DELETE
 element-details:
     path: '/api/element/{uid}'
     controller: App\Controller\ElementController::getElementDetails

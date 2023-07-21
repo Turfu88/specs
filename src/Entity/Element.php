@@ -41,7 +41,7 @@ class Element
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'source')]
     private ?self $source = null;
 
-    #[ORM\ManyToMany(targetEntity: Spec::class, mappedBy: 'element')]
+    #[ORM\ManyToMany(targetEntity: Spec::class, mappedBy: 'elements')]
     private Collection $specs;
 
     #[ORM\ManyToMany(targetEntity: Connection::class, mappedBy: 'elements')]

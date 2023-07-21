@@ -59,6 +59,14 @@ export interface Element {
     comment: string,
     projectUid: string,
     projectName: string
+    connections: {
+        id: number,
+        name: string
+    }[],
+    specs: {
+        id: number,
+        name: string
+    }[],
 }
 
 export interface Page {

@@ -77,25 +77,43 @@ class ElementController extends AbstractController
 
     private function serializeElement($element)
     {
-        // @TODO: get entrypoint
-        // @TODO: get specs
-        // $featuresFormated = [];
-        // foreach ($element->getFeatures() as $feature) {
-        //     $featuresFormated[] = [
-        //         'id' => $feature->getId(),
-        //         'uid' => $feature->getUid(),
-        //         'name' => $feature->getName(),
-        //         'status' => $feature->getStatus()
-        //     ];
-        // }
+        $connectionsFormated = [];
+        foreach ($element->getConnections() as $connection) {
+            $connectionsFormated[] = [
+                'id' => $connection->getId(),
+                'name' => $connection->getName()
+            ];
+        }
+        $specsFormated = [];
+        foreach ($element->getSpecs() as $spec) {
+            $specsFormated[] = [
+                'id' => $spec->getId(),
+                'name' => $spec->getName()
+            ];
+        }
         return [
             'id' => $element->getId(),
             'uid' => $element->getUid(),
             'name' => $element->getName(),
             'comment' => $element->getComment(),
             'projectUid' => $element->getProject()->getUid(),
-            'projectName' => $element->getProject()->getName()
-            // 'features' => $featuresFormated
+            'projectName' => $element->getProject()->getName(),
+            'connections' => $connectionsFormated,
+            'specs' => $specsFormated
         ];
+    }
+
+    public function deleteElement(Request $req, EntityManagerInterface $em, $id): Response
+    {
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $element = $em->getRepository(Element::class)->find($id);
+        $em->remove($element);
+        $em->flush();
+
+        return $response->setStatusCode(200)->setContent(json_encode([
+            'code' => 200,
+            'message' => 'Element supprimée',
+        ]));
     }
 }

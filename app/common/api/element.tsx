@@ -29,3 +29,12 @@ export async function editElement(id: number, values: EditElementForm) {
         return null;
     })
 }
+
+export async function deleteElement(elementId: number) {
+    return await request(`/api/element/${elementId}/delete`, "DELETE", true).then((res) => {        
+        if (res.status === 200) {
+            return res.json;
+        }
+        return null;
+    });
+}
