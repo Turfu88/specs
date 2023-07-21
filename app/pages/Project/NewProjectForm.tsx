@@ -7,7 +7,7 @@ import StepLabel from '@mui/material/StepLabel';
 import { useEffect, useState } from 'react';
 import { DefaultArea, DefaultProjectForm, MotherProject, defaultProjectForm } from '../ProjectCore/defaultValues';
 import { AreaChooser } from '../ProjectCore/AreaChooser';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { getUserAreas } from '../../common/api/user';
 import { Area, Connection, Element, Feature, Page } from '../../common/types';
 import { MotherProjectChooser } from './MotherProjectChooser';
@@ -21,16 +21,19 @@ import { ConnectionSelect, ElementSelect, FeatureSelect, PageSelect, StatusSelec
 import { ProjectPagesChooser } from '../../common/components/projectStepper/ProjectPageChooser';
 import { ProjectFeaturesChooser } from '../../common/components/projectStepper/ProjectFeaturesChooser';
 import { ProjectCreationLoader } from '../../common/components/projectStepper/ProjectCreationLoader';
+import { useNavigate } from 'react-router-dom';
 
-export const defaultFunnelSteps = ['Choix du projet mère','...']
+export const defaultFunnelSteps = ['Choix du projet mère', '...']
 export const longFunnelSteps = ['Choix du projet mère', 'Espaces', 'Status', 'Connexions', 'Eléments', 'Pages', 'Fonctionnalités', 'Informations du projet', 'Résumé'];
 export const shortFunnelSteps = ['Choix du projet mère', 'Espaces', 'Informations du projet', 'Résumé'];
 
 export function NewProjectForm() {
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const [activeSteps, setActiveSteps] = useState(defaultFunnelSteps);
     const [activeStep, setActiveStep] = useState(0);
     const { isLoading, data: areasFound } = useQuery('getUserAreas', () => getUserAreas());
-    const userAreas = areasFound ? areasFound.map((area: Area) => { return {...area, choosed: false}}) : [];
+    const userAreas = areasFound ? areasFound.map((area: Area) => { return { ...area, choosed: false } }) : [];
     const [error, setError] = useState(false);
     const [motherProjects, setMotherProjects] = useState<MotherProject[]>([]);
     const [creationStatus, setCreationStatus] = useState(false);
@@ -44,7 +47,7 @@ export function NewProjectForm() {
     const [featuresChoosed, setFeaturesChoosed] = useState<FeatureSelect[]>([]);
     const [formProject, setFormProject] = useState<DefaultProjectForm>(defaultProjectForm);
     const [motherProjectChoosed, setMotherProjectChoosed] = useState<number | undefined>(undefined);
-    
+
     useEffect(() => {
         setAreas(userAreas);
         getMotherProjects();
@@ -53,8 +56,8 @@ export function NewProjectForm() {
     function getMotherProjects() {
         let projects: MotherProject[] = [];
         let projectIds: number[] = [];
-    
-        userAreas.forEach((area: any) => {            
+
+        userAreas.forEach((area: any) => {
             area.projects.forEach((project: any) => {
                 if (project.isCore && !projectIds.includes(project.id)) {
                     projectIds.push(project.id);
@@ -65,7 +68,7 @@ export function NewProjectForm() {
         setMotherProjects(projects);
         setError(true); // Dois choisir un projet mère ou aucun
     }
-    
+
     const handleChangeAreas = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = areas.map((area) => {
             if (area.name === event.target.name) {
@@ -75,7 +78,7 @@ export function NewProjectForm() {
             }
             return area;
         })
-        setAreas(() => newValue);        
+        setAreas(() => newValue);
         setError(() => !newValue.some((value) => value.choosed === true))
     };
 
@@ -129,7 +132,7 @@ export function NewProjectForm() {
     };
 
     const handleChangeStatus = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setStatusChoosed(() => statusChoosed.map((status: {label: string, color: string, choosed: boolean}) => {
+        setStatusChoosed(() => statusChoosed.map((status: { label: string, color: string, choosed: boolean }) => {
             if (status.label === event.target.name) {
                 return {
                     ...status, choosed: !status.choosed
@@ -160,22 +163,22 @@ export function NewProjectForm() {
             }
         }
         if (activeStep === 0 && 0 !== motherProjectChoosed) {
-            const motherProject = motherProjects.find((project) => project.id === motherProjectChoosed);            
+            const motherProject = motherProjects.find((project) => project.id === motherProjectChoosed);
             getProjectDetails(motherProject?.uid).then((res) => {
                 setStatusChoosed(() => res.statusChoices.map((status: string, index: number) => {
-                    return {label: status, color: res.statusColors[index], choosed: true};
+                    return { label: status, color: res.statusColors[index], choosed: true };
                 }));
                 setConnectionsChoosed(() => res.connections.map((connection: Connection) => {
-                    return {...connection, choosed: true};
+                    return { ...connection, choosed: true };
                 }));
                 setElementsChoosed(() => res.elements.map((element: Element) => {
-                    return {...element, choosed: true};
+                    return { ...element, choosed: true };
                 }));
                 setPagesChoosed(() => res.pages.map((page: Page) => {
-                    return {...page, choosed: true};
+                    return { ...page, choosed: true };
                 }));
                 setFeaturesChoosed(() => res.features.map((feature: Feature) => {
-                    return {...feature, choosed: true};
+                    return { ...feature, choosed: true };
                 }));
             });
         }
@@ -195,9 +198,11 @@ export function NewProjectForm() {
                 status: statusChoosed,
                 projectId: motherProjectChoosed as number,
                 areas
-            }).then((response: any) => {
-                if (200 === response.status) {
+            }).then((response: any) => {                
+                if (200 === response.code) {
                     setCreationStatus(true);
+                    queryClient.invalidateQueries(['getUserAreas']);
+                    navigate(`/dashboard`);
                     // @TODO: open notification success: Le projet a été créé.
                 } else {
                     // @TODO: open notification error: Une erreur s'est produite. Le projet n'a pas pu être créé.
@@ -249,7 +254,7 @@ export function NewProjectForm() {
                     {activeStep === 0 && <MotherProjectChooser handleChangeMotherProject={handleChangeMotherProject} motherProjects={motherProjects} motherProjectChoosed={motherProjectChoosed} />}
                     {activeStep === 1 && <AreaChooser areas={areas} handleChangeAreas={handleChangeAreas} error={error} />}
                     {activeStep === 2 && 0 === motherProjectChoosed && <CoreInformations formCore={formProject} handleChangeFormProject={handleChangeFormProject} />}
-                    {activeStep === 3 && 0 === motherProjectChoosed && 
+                    {activeStep === 3 && 0 === motherProjectChoosed &&
                         <ProjectRecap
                             formProject={formProject}
                             handleChangeFormProject={handleChangeFormProject}
@@ -269,7 +274,7 @@ export function NewProjectForm() {
                     {activeStep === 5 && 0 !== motherProjectChoosed && <ProjectPagesChooser pagesChoosed={pagesChoosed} handleChangePage={handleChangePage} />}
                     {activeStep === 6 && 0 !== motherProjectChoosed && <ProjectFeaturesChooser featuresChoosed={featuresChoosed} handleChangeFeature={handleChangeFeature} />}
                     {activeStep === 7 && 0 !== motherProjectChoosed && <CoreInformations formCore={formProject} handleChangeFormProject={handleChangeFormProject} />}
-                    {activeStep === 8 && 0 !== motherProjectChoosed && 
+                    {activeStep === 8 && 0 !== motherProjectChoosed &&
                         <ProjectRecap
                             formProject={formProject}
                             handleChangeFormProject={handleChangeFormProject}

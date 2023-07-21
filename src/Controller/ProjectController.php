@@ -371,4 +371,38 @@ class ProjectController extends AbstractController
         ]));
     }
 
+    public function deleteProject(Request $req, EntityManagerInterface $em, $id): Response
+    {
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $project = $em->getRepository(Project::class)->find($id);
+        foreach ($project->getPages() as $page) {
+            foreach ($page->getFeatures() as $feature) {
+                foreach ($feature->getSpecs() as $spec) {
+                    foreach ($spec->getElements() as $element) {
+                        $spec->removeElement($element);
+                    }
+                    $em->remove($spec);
+                }
+                $em->remove($feature);
+            }
+            $em->remove($page);
+        }
+        foreach ($project->getFeatures() as $feature) {
+            $em->remove($feature);
+        }
+        foreach ($project->getConnections() as $connection) {
+            $em->remove($connection);
+        }
+        foreach ($project->getElements() as $element) {
+            $em->remove($element);
+        }
+        $em->remove($project);
+        $em->flush();
+
+        return $response->setStatusCode(200)->setContent(json_encode([
+            'code' => 200,
+            'message' => 'Projet supprimé',
+        ]));
+    }
 }

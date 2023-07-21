@@ -66,6 +66,10 @@ update-project:
     path: '/api/project/update'
     controller: App\Controller\ProjectController::updateProject
     methods: POST
+project-delete:
+    path: '/api/project/{id}/delete'
+    controller: App\Controller\ProjectController::deleteProject
+    methods: DELETE
 projects-get-all:
     path: '/api/projects/get-all'
     controller: App\Controller\ProjectController::getAll

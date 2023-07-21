@@ -87,3 +87,12 @@ export async function updateProject(values: EditProjectForm) {
         return null;
     });
 }
+
+export async function deleteProject(projectId: number) {
+    return await request(`/api/project/${projectId}/delete`, "DELETE", true).then((res) => {        
+        if (res.status === 200) {
+            return res.json;
+        }
+        return null;
+    });
+}

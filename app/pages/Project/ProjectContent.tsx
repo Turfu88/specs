@@ -1,6 +1,6 @@
 import { Box, Divider, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PageThumbnail } from './PageThumbnail';
 import { forwardRef, useState } from 'react';
 import Menu from '@mui/material/Menu';
@@ -13,6 +13,8 @@ import { ProjectEditSection } from './ProjectEditSection';
 import { Project } from '../../common/types';
 import { ProjectEdit } from './ProjectEdit';
 import { getColorFromStatus } from '../../common/helpers/projectHelper';
+import { deleteProject } from '../../common/api/project';
+import { useQueryClient } from 'react-query';
 
 const Transition = forwardRef(function Transition(
     props: TransitionProps & {
@@ -30,6 +32,8 @@ interface ProjectContentProps {
 
 export function ProjectContent(props: ProjectContentProps) {
     const {project, setInvalidateQuery} = props;
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const [dialog, setDialog] = useState(false);
     const [dialogContent, setDialogContent] = useState<'projectForm' | 'status' | 'section' | null>(null);
     const [openMenu, setOpenMenu] = useState<null | HTMLElement>(null);
@@ -69,6 +73,13 @@ export function ProjectContent(props: ProjectContentProps) {
         setDialogContent('section');
         setDialog(true);
     };
+
+    const handleDeleteProject = () => {            
+        deleteProject(project.id).then(() => {
+            queryClient.invalidateQueries(['getPageDetails']);
+            navigate(`/dashboard`);
+        });
+    }
 
     if (project) {
         localStorage.setItem('project', JSON.stringify(project.id));
@@ -111,6 +122,7 @@ export function ProjectContent(props: ProjectContentProps) {
                             <MenuItem onClick={handleOpenProjectForm}>Modifier les informations</MenuItem>
                             <MenuItem onClick={handleOpenStatus}>Gestion des statuts</MenuItem>
                             <MenuItem onClick={handleOpenSection}>Gestion des sections</MenuItem>
+                            <MenuItem onClick={handleDeleteProject}>Supprimer le projet</MenuItem>
                         </Menu>
                     </div>
                 </Box>
