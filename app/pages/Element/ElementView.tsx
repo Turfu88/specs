@@ -1,10 +1,10 @@
 import { Box, Breadcrumbs, Button, Dialog, Menu, MenuItem, Slide, Typography } from '@mui/material';
 import { Layout } from '../../common/components/Layout';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { Element } from '../../common/types';
 import { Link, useParams } from 'react-router-dom';
 import { getElementDetails } from '../../common/api/element';
-import { forwardRef, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import { TransitionProps } from '@mui/material/transitions';
 import { ElementEdit } from './ElementEdit';
 
@@ -20,9 +20,11 @@ const Transition = forwardRef(function Transition(
 
 export function ElementView() {
     const { uid } = useParams();
+    const queryClient = useQueryClient();
     const { isLoading, data } = useQuery('getElementDetails', () => getElementDetails(uid));
     const element: Element = data || null;
     const [dialog, setDialog] = useState(false);
+    const [invalidateQuery, setInvalidateQuery] = useState(false);
     const [openMenu, setOpenMenu] = useState<null | HTMLElement>(null);
     const open = Boolean(openMenu);
 
@@ -42,6 +44,13 @@ export function ElementView() {
         handleCloseMenu();
     }
 
+    function refreshConnectionDetails() {
+        if (invalidateQuery) {
+            queryClient.invalidateQueries(['getElementDetails']);
+            setInvalidateQuery(false);
+        }
+    }
+
     const breadcrumbs = [
         <Link key="1" color="inherit" to="/dashboard" className="link">
             Dashboard
@@ -53,6 +62,8 @@ export function ElementView() {
             {element ? element.name : ''}
         </Typography>,
     ];
+
+    useEffect(refreshConnectionDetails, [invalidateQuery])
 
     return (
         <Layout>
@@ -122,6 +133,7 @@ export function ElementView() {
                         </Box>
                         <ElementEdit
                             handleCloseDialog={handleCloseDialog}
+                            setInvalidateQuery={setInvalidateQuery}
                             element={element}
                         />
                     </Box>

@@ -40,9 +40,7 @@ export function ProjectSummaryCreate() {
     };
 
     const handleNext = () => {   
-        if (activeStep === 2) {
-            console.log("création du projet");
-            
+        if (activeStep === 2) {            
             // createSummary({
             
             // }).then((response: any) => {

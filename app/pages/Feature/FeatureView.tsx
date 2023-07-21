@@ -1,11 +1,11 @@
 import { Box, Breadcrumbs, Menu, MenuItem, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import { Layout } from '../../common/components/Layout';
-import { Link, useParams } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useQuery, useQueryClient } from 'react-query';
 import { Connection, Spec } from '../../common/types';
-import { getFeatureDetails } from '../../common/api/feature';
-import { forwardRef, useState } from 'react';
+import { deleteFeature, getFeatureDetails } from '../../common/api/feature';
+import { forwardRef, useEffect, useState } from 'react';
 import Dialog from '@mui/material/Dialog';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
@@ -27,9 +27,12 @@ const Transition = forwardRef(function Transition(
 
 export function FeatureView() {
     const { uid } = useParams();
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const { isLoading, data } = useQuery('getFeatureDetails', () => getFeatureDetails(uid));
     const feature = data || null;
     const [dialog, setDialog] = useState(false);
+    const [invalidateQuery, setInvalidateQuery] = useState(false);
     const [openMenu, setOpenMenu] = useState<null | HTMLElement>(null);
     const open = Boolean(openMenu);
 
@@ -44,10 +47,16 @@ export function FeatureView() {
         setDialog(false);
     };
 
-    const handleOpenConnectionForm = () => {
+    const handleOpenFeatureForm = () => {
         setDialog(true);
         handleCloseMenu();
     }
+
+    const handleDeleteFeature = () => {            
+        deleteFeature(feature.id);
+        navigate(`/projet/${feature.projectUid}`);
+    }
+
     if (feature) {
         localStorage.setItem('feature', JSON.stringify(feature.id));
     }
@@ -68,6 +77,13 @@ export function FeatureView() {
         }
     }
 
+    function refreshConnectionDetails() {
+        if (invalidateQuery) {
+            queryClient.invalidateQueries(['getFeatureDetails']);
+            setInvalidateQuery(false);
+        }
+    }
+
     const breadcrumbs = [
         <Link key="1" color="inherit" to="/dashboard" className="link">
             Dashboard
@@ -79,6 +95,8 @@ export function FeatureView() {
             {feature ? feature.name : ''}
         </Typography>,
     ];
+
+    useEffect(refreshConnectionDetails, [invalidateQuery])
 
     return (
         <Layout>
@@ -116,8 +134,8 @@ export function FeatureView() {
                                         'aria-labelledby': 'basic-button',
                                     }}
                                 >
-                                    <MenuItem onClick={handleOpenConnectionForm}>Modifier la fonctionnalité</MenuItem>
-                                    <MenuItem onClick={handleOpenConnectionForm}>Supprimer la fonctionnalité (TODO)</MenuItem>
+                                    <MenuItem onClick={handleOpenFeatureForm}>Modifier la fonctionnalité</MenuItem>
+                                    <MenuItem onClick={handleDeleteFeature}>Supprimer la fonctionnalité</MenuItem>
                                 </Menu>
                             </div>
                         </Box>
@@ -175,7 +193,7 @@ export function FeatureView() {
                                         </Box>
                                     ))}
                                 </Box>
-                                <Box mt={2} display="flex" justifyContent="center">
+                                <Box mt={2} mb={2} display="flex" justifyContent="center">
                                     <Link to="/spec/nouvelle">
                                         <Button variant="contained">
                                             Ajouter une spec
@@ -216,6 +234,7 @@ export function FeatureView() {
                             projectId={feature.projectId}
                             feedbackType={"feature"}
                             parentId={feature.id}
+                            setInvalidateQuery={setInvalidateQuery}
                         />
                     </Box>
                 }
@@ -233,6 +252,7 @@ export function FeatureView() {
                         </Box>
                         <FeatureEdit
                             handleCloseDialog={handleCloseDialog}
+                            setInvalidateQuery={setInvalidateQuery}
                             feature={feature}
                         />
                     </Box>

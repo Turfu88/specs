@@ -59,7 +59,7 @@ export function LandingConnected() {
                         <Typography component="h1" variant="h5" textAlign="center">Chargement...</Typography>
                     </Box>
                     :
-                    <>
+                    <Box mb={8}>
                         <Box display="flex" justifyContent="center" mt={2}>
                             <Typography component="h1" variant="h4" mt={2} mb={4}>Mes espaces</Typography>
                         </Box>
@@ -114,7 +114,7 @@ export function LandingConnected() {
                                 </Box>
                             </>
                         }
-                    </>
+                    </Box>
                 }
                 <Dialog
                     open={newProjectDialog}

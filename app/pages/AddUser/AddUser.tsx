@@ -19,7 +19,6 @@ export function AddUser() {
     });
 
     function submitInviteUser(values: {email: string, areaUid: string}) {
-        console.log(values);
         createInvitation(values);
     }
 

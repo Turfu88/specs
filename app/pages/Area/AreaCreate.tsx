@@ -48,12 +48,8 @@ export function AreaCreate() {
         }
     }
 
-    function handleCreateArea(values: EditAreaForm) {
-        console.log({...values, selectedProjects});
-        
-        createArea({...values, selectedProjects}).then(() => {
-            console.log("created");
-        });
+    function handleCreateArea(values: EditAreaForm) {        
+        createArea({...values, selectedProjects});
     }
 
     return (

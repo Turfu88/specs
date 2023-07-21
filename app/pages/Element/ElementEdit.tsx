@@ -13,11 +13,12 @@ export interface EditElementForm {
 
 interface ElementEditProps {
     element: Element,
-    handleCloseDialog: () => void
+    handleCloseDialog: () => void,
+    setInvalidateQuery: (value: boolean) => void
 }
 
 export function ElementEdit(props: ElementEditProps) {
-    const {element, handleCloseDialog} = props;
+    const {element, handleCloseDialog, setInvalidateQuery} = props;
 
     const formElement = useForm({
         initialValues: {
@@ -31,9 +32,10 @@ export function ElementEdit(props: ElementEditProps) {
     });
 
     function handleEditElement(values: EditElementForm) {
-        console.log(values);
-        editElement(element.id, values);
-        handleCloseDialog();
+        editElement(element.id, values).then(() => {
+            setInvalidateQuery(true);
+            handleCloseDialog();
+        });
     }
 
     function dataTest() {

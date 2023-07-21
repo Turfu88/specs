@@ -16,11 +16,12 @@ export interface EditSpecForm {
 
 interface SpecEditProps {
     spec: Spec,
-    handleCloseDialog: () => void
+    handleCloseDialog: () => void,
+    setInvalidateQuery: (value: boolean) => void
 }
 
 export function SpecEdit(props: SpecEditProps) {
-    const { spec, handleCloseDialog } = props;
+    const { spec, handleCloseDialog, setInvalidateQuery } = props;
     const { isLoading, data } = useQuery('getProjectDetails', () => getProjectDetails(localStorage.getItem('project')));
     const project: Project = data || null;
     const [selectedElements, setSelectedElements] = useState<number[]>(spec.elements.map((element) => element.id));
@@ -39,10 +40,11 @@ export function SpecEdit(props: SpecEditProps) {
     });
 
     function handlecEditSpec(values: EditSpecForm) {
-        console.log(values);
         // Ajouter les éléments associés
-        editSpec(spec.id, { ...values, elements: selectedElements });
-        handleCloseDialog();
+        editSpec(spec.id, { ...values, elements: selectedElements }).then(() => {
+            setInvalidateQuery(true);
+            handleCloseDialog();
+        });
     }
 
     function toggleElement(id: number) {

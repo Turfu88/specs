@@ -39,8 +39,8 @@ export function WorkInProgress(props: ProjectContentProps) {
             <Box mt={2} mb={10}>
                 <Typography component="h1" variant="h3" textAlign="center">Tickets en cours</Typography>
                 <Typography component="h2" variant="h5" mt={4}>Pages</Typography>
-                {project.pages.map((page) => (
-                    <Box mt={2} display="flex" justifyContent="space-between" alignItems="center">
+                {project.pages.map((page, index) => (
+                    <Box key={index} mt={2} display="flex" justifyContent="space-between" alignItems="center">
                         <Box display="flex" alignItems="center" gap={2}>
                             <Typography component="p" variant="body1">
                                 {page.name}
@@ -63,8 +63,8 @@ export function WorkInProgress(props: ProjectContentProps) {
                     </Box>
                 ))}
                 <Typography component="h2" variant="h5" mt={4}>Fonctionnalités</Typography>
-                {project.features.map((feature) => (
-                    <Box mt={2} display="flex" justifyContent="space-between" alignItems="center">
+                {project.features.map((feature, index) => (
+                    <Box key={index} mt={2} display="flex" justifyContent="space-between" alignItems="center">
                         <Box display="flex" alignItems="center" gap={2}>
                             <Typography component="p" variant="body1">
                                 {feature.name}
@@ -87,8 +87,8 @@ export function WorkInProgress(props: ProjectContentProps) {
                     </Box>
                 ))}
                 <Typography component="h2" variant="h5" mt={4}>Specs</Typography>
-                {project.specs.map((spec) => (
-                    <Box mt={2} display="flex" justifyContent="space-between" alignItems="center">
+                {project.specs.map((spec, index) => (
+                    <Box key={index} mt={2} display="flex" justifyContent="space-between" alignItems="center">
                         <Box display="flex" alignItems="center" gap={2}>
                             <Typography component="p" variant="body1">
                                 {spec.name}
@@ -111,8 +111,8 @@ export function WorkInProgress(props: ProjectContentProps) {
                     </Box>
                 ))}
                 <Typography component="h2" variant="h5" mt={4}>Connections</Typography>
-                {project.connections.map((connection) => (
-                    <Box mt={2} display="flex" justifyContent="space-between" alignItems="center">
+                {project.connections.map((connection, index) => (
+                    <Box key={index} mt={2} display="flex" justifyContent="space-between" alignItems="center">
                         <Box display="flex" alignItems="center" gap={2}>
                             <Typography component="p" variant="body1">
                                 {connection.name}

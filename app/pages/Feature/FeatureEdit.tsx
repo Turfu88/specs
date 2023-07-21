@@ -17,12 +17,13 @@ export interface EditFeatureForm {
 
 interface FeatureEditProps {
     feature: Feature,
-    handleCloseDialog: () => void
+    handleCloseDialog: () => void,
+    setInvalidateQuery: (value: boolean) => void
 }
 
 
 export function FeatureEdit(props: FeatureEditProps) {
-    const { feature, handleCloseDialog } = props;
+    const { feature, handleCloseDialog, setInvalidateQuery } = props;
     const { isLoading, data } = useQuery('getProjectDetails', () => getProjectDetails(localStorage.getItem('project')));
     const project: Project = data || null;
     const [selectedConnections, setSelectedConnections] = useState<number[]>(feature.connections.map((connection) => connection.id));
@@ -46,9 +47,10 @@ export function FeatureEdit(props: FeatureEditProps) {
     });
 
     function handleCreateFeature(values: EditFeatureForm) {
-        console.log(values);
-        editFeature(feature.id, {...values, connections: selectedConnections});
-        handleCloseDialog();
+        editFeature(feature.id, {...values, connections: selectedConnections}).then(() => {
+            setInvalidateQuery(true);
+            handleCloseDialog();
+        });
     }
 
     function toggleConnection(id: number) {

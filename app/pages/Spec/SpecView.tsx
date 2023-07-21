@@ -1,10 +1,10 @@
 import { Box, Breadcrumbs, Button, Menu, MenuItem, Typography } from '@mui/material';
 import { Layout } from '../../common/components/Layout';
-import { Link, useParams } from 'react-router-dom';
-import { useQuery } from 'react-query';
-import { getSpecDetails } from '../../common/api/spec';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useQuery, useQueryClient } from 'react-query';
+import { getSpecDetails, deleteSpec } from '../../common/api/spec';
 import { Element } from '../../common/types';
-import { forwardRef, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import Dialog from '@mui/material/Dialog';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
@@ -26,9 +26,12 @@ const Transition = forwardRef(function Transition(
 
 export function SpecView() {
     const { uid } = useParams();
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const { isLoading, data } = useQuery('getSpecDetails', () => getSpecDetails(uid));
     const spec = data || null;
     const [dialog, setDialog] = useState(false);
+    const [invalidateQuery, setInvalidateQuery] = useState(false);
     const [openMenu, setOpenMenu] = useState<null | HTMLElement>(null);
     const open = Boolean(openMenu);
 
@@ -43,9 +46,14 @@ export function SpecView() {
         setDialog(false);
     };
 
-    const handleOpenConnectionForm = () => {
+    const handleOpenSpecForm = () => {
         setDialog(true);
         handleCloseMenu();
+    }
+
+    const handleDeleteSpec = () => {            
+        deleteSpec(spec.id);
+        navigate(`/fonctionnalite/${spec.featureUid}`);
     }
 
     function sendValidation(status: boolean, type: string, validationToRemove: number | null) {
@@ -64,6 +72,13 @@ export function SpecView() {
         }
     }
 
+    function refreshConnectionDetails() {
+        if (invalidateQuery) {
+            queryClient.invalidateQueries(['getSpecDetails']);
+            setInvalidateQuery(false);
+        }
+    }
+
     const breadcrumbs = [
         <Link key="1" color="inherit" to="/dashboard" className="link">
             Dashboard
@@ -78,6 +93,9 @@ export function SpecView() {
             Spec
         </Typography>,
     ];
+
+    useEffect(refreshConnectionDetails, [invalidateQuery])
+
     return (
         <Layout>
             <>
@@ -114,8 +132,8 @@ export function SpecView() {
                                         'aria-labelledby': 'basic-button',
                                     }}
                                 >
-                                    <MenuItem onClick={handleOpenConnectionForm}>Modifier la spec</MenuItem>
-                                    <MenuItem onClick={handleOpenConnectionForm}>Supprimer la spec (TODO)</MenuItem>
+                                    <MenuItem onClick={handleOpenSpecForm}>Modifier la spec</MenuItem>
+                                    <MenuItem onClick={handleDeleteSpec}>Supprimer la spec</MenuItem>
                                 </Menu>
                             </div>
                         </Box>
@@ -157,6 +175,7 @@ export function SpecView() {
                             projectId={spec.projectId}
                             feedbackType={"spec"}
                             parentId={spec.id}
+                            setInvalidateQuery={setInvalidateQuery}
                         />
                     </Box>
                 }
@@ -174,6 +193,7 @@ export function SpecView() {
                         </Box>
                         <SpecEdit
                             handleCloseDialog={handleCloseDialog}
+                            setInvalidateQuery={setInvalidateQuery}
                             spec={spec}
                         />
                     </Box>

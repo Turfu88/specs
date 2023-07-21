@@ -3,12 +3,12 @@ import { DefaultArea } from "./defaultValues";
 
 interface AreaChooserProps {
     areas: DefaultArea[],
-    handleChangeElements: (event: React.ChangeEvent<HTMLInputElement>) => void,
+    handleChangeAreas: (event: React.ChangeEvent<HTMLInputElement>) => void,
     error: boolean
 }
 
 export function AreaChooser(props: AreaChooserProps) {
-    const { handleChangeElements, areas, error } = props;
+    const { handleChangeAreas, areas, error } = props;
 
     return (
         <>
@@ -27,7 +27,7 @@ export function AreaChooser(props: AreaChooserProps) {
                         {areas.map((area, index) => (
                             <FormControlLabel key={index}
                                 control={
-                                    <Checkbox checked={area.choosed} onChange={handleChangeElements} name={area.name} />
+                                    <Checkbox checked={area.choosed} onChange={handleChangeAreas} name={area.name} />
                                 }
                                 label={area.name}
                             />

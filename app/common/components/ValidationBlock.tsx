@@ -32,7 +32,6 @@ export function ValidationBlock(props: ValidationBlockProps) {
         sendValidation(validation, selectedType, validationToRemove);
         handleClose();
     }
-    console.log(validations, validators);
 
     if (null === validators) {
         return (

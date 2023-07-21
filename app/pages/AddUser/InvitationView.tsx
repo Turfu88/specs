@@ -15,16 +15,11 @@ export function InvitationView() {
     const { uid } = useParams();
     const { isLoading, data } = useQuery('getInvitationDetails', () => getInvitationDetails(uid));
     const validation = data || null;
-    console.log(validation);
-    console.log(getUserEmail());
     let [searchParams, setSearchParams] = useSearchParams();
-    console.log(searchParams.get('userHasAccount'));
-
 
     function joinArea() {
         console.log("join area");
     }
-
 
     if (validation && getUserEmail() === validation.email) {
         return (

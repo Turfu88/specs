@@ -75,8 +75,8 @@ export function NewProjectForm() {
             }
             return area;
         })
-        setAreas(() => newValue);
-        setError(() => newValue.some((value) => !value.choosed))
+        setAreas(() => newValue);        
+        setError(() => !newValue.some((value) => value.choosed === true))
     };
 
     const handleChangeMotherProject = (newValue: number) => {
@@ -162,7 +162,6 @@ export function NewProjectForm() {
         if (activeStep === 0 && 0 !== motherProjectChoosed) {
             const motherProject = motherProjects.find((project) => project.id === motherProjectChoosed);            
             getProjectDetails(motherProject?.uid).then((res) => {
-                console.log(res);
                 setStatusChoosed(() => res.statusChoices.map((status: string, index: number) => {
                     return {label: status, color: res.statusColors[index], choosed: true};
                 }));
@@ -187,7 +186,6 @@ export function NewProjectForm() {
             setError(true);
         }
         if ((activeStep === 3 && 0 === motherProjectChoosed) || (activeStep === 8 && 0 !== motherProjectChoosed)) {
-            console.log("création du projet");
             createProject({
                 elements: elementsChoosed,
                 features: featuresChoosed,
@@ -249,7 +247,7 @@ export function NewProjectForm() {
                         </Box>
                     )}
                     {activeStep === 0 && <MotherProjectChooser handleChangeMotherProject={handleChangeMotherProject} motherProjects={motherProjects} motherProjectChoosed={motherProjectChoosed} />}
-                    {activeStep === 1 && <AreaChooser areas={areas} handleChangeElements={handleChangeAreas} error={error} />}
+                    {activeStep === 1 && <AreaChooser areas={areas} handleChangeAreas={handleChangeAreas} error={error} />}
                     {activeStep === 2 && 0 === motherProjectChoosed && <CoreInformations formCore={formProject} handleChangeFormProject={handleChangeFormProject} />}
                     {activeStep === 3 && 0 === motherProjectChoosed && 
                         <ProjectRecap

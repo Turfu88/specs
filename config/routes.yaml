@@ -6,6 +6,10 @@ create-user:
     path: '/api/account/create'
     controller: App\Controller\UserController::createAccount
     methods: POST
+user-edit:
+    path: '/api/user/{id}/edit'
+    controller: App\Controller\UserController::editUser
+    methods: PATCH
 user-areas:
     path: '/api/user/areas'
     controller: App\Controller\UserController::getUserAreas
@@ -21,6 +25,10 @@ user-features:
 user-specs:
     path: '/api/user/specs'
     controller: App\Controller\UserController::getUserSpecs
+    methods: GET
+user-details:
+    path: '/api/user/{id}'
+    controller: App\Controller\UserController::getUserDetails
     methods: GET
 
 #Area
@@ -90,6 +98,10 @@ connection-edit:
     path: '/api/connection/{id}/edit'
     controller: App\Controller\ConnectionController::editConnection
     methods: PATCH
+connection-delete:
+    path: '/api/connection/{id}/delete'
+    controller: App\Controller\ConnectionController::deleteConnection
+    methods: DELETE
 connection-details:
     path: '/api/connection/{uid}'
     controller: App\Controller\ConnectionController::getConnectionDetails
@@ -104,6 +116,10 @@ page-edit:
     path: '/api/page/{id}/edit'
     controller: App\Controller\PageController::editPage
     methods: PATCH
+page-delete:
+    path: '/api/page/{id}/delete'
+    controller: App\Controller\PageController::deletePage
+    methods: DELETE
 page-details:
     path: '/api/page/{uid}'
     controller: App\Controller\PageController::getPageDetails
@@ -118,6 +134,10 @@ feature-edit:
     path: '/api/feature/{id}/edit'
     controller: App\Controller\FeatureController::editFeature
     methods: PATCH
+feature-delete:
+    path: '/api/feature/{id}/delete'
+    controller: App\Controller\FeatureController::deleteFeature
+    methods: DELETE
 feature-info:
     path: '/api/feature/{uid}'
     controller: App\Controller\FeatureController::getFeatureDetails
@@ -132,6 +152,10 @@ spec-edit:
     path: '/api/spec/{id}/edit'
     controller: App\Controller\SpecController::editSpec
     methods: PATCH
+spec-delete:
+    path: '/api/spec/{id}/delete'
+    controller: App\Controller\SpecController::deleteSpec
+    methods: DELETE
 spec-info:
     path: '/api/spec/{uid}'
     controller: App\Controller\SpecController::getSpecDetails

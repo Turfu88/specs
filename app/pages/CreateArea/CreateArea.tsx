@@ -40,7 +40,6 @@ export function CreateArea() {
     });
 
     function createAccount(values: UserForm) {
-        console.log(values);
         createAdmin(values)
     }
 

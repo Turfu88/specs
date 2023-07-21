@@ -21,13 +21,20 @@ export async function getPageDetails(uid: string | undefined) {
     });
 }
 
-export async function editPage(id: number, values: EditPageForm) {
-    console.log(values);
-    
+export async function editPage(id: number, values: EditPageForm) {    
     return await request(`/api/page/${id}/edit`, "PATCH", values, true).then((res) => {
         if (res.status === 200) {
             return res.json;
         }
         return null;
     })
+}
+
+export async function deletePage(pageId: number) {
+    return await request(`/api/page/${pageId}/delete`, "DELETE", true).then((res) => {        
+        if (res.status === 200) {
+            return res.json;
+        }
+        return null;
+    });
 }

@@ -27,5 +27,14 @@ export async function editSpec(id: number, values: EditSpecForm) {
             return res.json;
         }
         return null;
-    })
+    });
+}
+
+export async function deleteSpec(specId: number) {
+    return await request(`/api/spec/${specId}/delete`, "DELETE", true).then((res) => {        
+        if (res.status === 200) {
+            return res.json;
+        }
+        return null;
+    });
 }

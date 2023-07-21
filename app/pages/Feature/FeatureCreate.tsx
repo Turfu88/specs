@@ -44,7 +44,6 @@ export function FeatureCreate() {
     });
 
     function handleCreateFeature(values: NewFeatureForm) {
-        console.log(values);
         createFeature(values);
         navigate(-1);
     }

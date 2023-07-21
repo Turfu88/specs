@@ -77,6 +77,21 @@ class ConnectionController extends AbstractController
         ]));
     }
 
+
+    public function deleteConnection(Request $req, EntityManagerInterface $em, $id): Response
+    {
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $connection = $em->getRepository(Connection::class)->find($id);
+        $em->remove($connection);
+        $em->flush();
+
+        return $response->setStatusCode(200)->setContent(json_encode([
+            'code' => 200,
+            'message' => 'Connexion supprimée',
+        ]));
+    }
+
     public function getConnectionDetails(Request $req, EntityManagerInterface $em, string $uid): Response
     {
         $response = new Response();

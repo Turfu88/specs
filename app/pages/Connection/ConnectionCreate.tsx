@@ -34,7 +34,6 @@ export function ConnectionCreate() {
     });
 
     function handleCreateConnection(values: NewConnectionForm) {
-        console.log(values);
         createConnection(values);
         navigate(-1);
     }
@@ -45,8 +44,6 @@ export function ConnectionCreate() {
         formConnection.setFieldValue('code', "100-PROD");
         formConnection.setFieldValue('url', "https://specforge.johan-clement.fr/api/product");
     }
-
-    // console.log(formConnection.errors);
 
     return (
         <Layout>

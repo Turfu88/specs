@@ -41,9 +41,9 @@ export function SpecCreate() {
     });
 
     function handlecCreateSpec(values: NewSpecForm) {
-        console.log(values);
         // Ajouter les éléments associés
         createSpec({ ...values, elements: selectedElements });
+        navigate(-1);
     }
 
     function handleImportData(values: Spec) {

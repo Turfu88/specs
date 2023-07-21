@@ -100,7 +100,6 @@ class ProjectController extends AbstractController
             ->setVersion($json->version)
             ->setPreviousVersion($json->previousVersion)
             ->setComment($json->comment)
-            ->setValidators($json->validators)
             ->setStatus($json->status)
             ->setUpdatedAt(new \DateTimeImmutable);
         $em->persist($project);

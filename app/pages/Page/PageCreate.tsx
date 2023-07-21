@@ -41,8 +41,9 @@ export function PageCreate() {
         },
     });
 
-    function createAccount(values: NewPageForm) {
-        createPage(values)
+    function handleCreatePage(values: NewPageForm) {
+        createPage(values);
+        navigate(-1);
     }
 
     function handleImportData(values: Page) {
@@ -74,7 +75,7 @@ export function PageCreate() {
                     Nouvelle page
                 </Typography>
                 <Button onClick={dataTest}>Data test</Button>
-                <form onSubmit={formPage.onSubmit((values) => createAccount(values))}>
+                <form onSubmit={formPage.onSubmit((values) => handleCreatePage(values))}>
                     <Box>
                         <StatusChooser
                             currentStatus={formPage.getInputProps('status').value}

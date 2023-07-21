@@ -33,16 +33,16 @@ interface FeedbackSectionProps {
     feedbacks: Feedback[],
     projectId: number,
     feedbackType: FeedbackType,
-    parentId: number
+    parentId: number,
+    setInvalidateQuery: (value: boolean) => void
 }
 
 export function FeedbackSection(props: FeedbackSectionProps) {
-    const { feedbacks, projectId, parentId, feedbackType } = props;
+    const { feedbacks, projectId, parentId, feedbackType, setInvalidateQuery } = props;
     const [openFeedback, setOpenFeedback] = useState<boolean>(false);
     const [toTreat, setToTreat] = useState<boolean>(false);
     const user = getUserId();
     const [dialog, setDialog] = useState(false);
-    const [invalidateQuery, setInvalidateQuery] = useState(false);
     const [feedbackToSet, setFeedbackToSet] = useState<Feedback | null>(null);
 
     const handleCloseDialog = () => {
@@ -67,8 +67,11 @@ export function FeedbackSection(props: FeedbackSectionProps) {
     });
 
     function handleCreateFeedback(values: CreateFeedbackForm) {
-        console.log({ ...values, toTreat, feedbackType, projectId, parentId });
-        createFeedback({ ...values, toTreat, feedbackType, projectId, parentId, userId: getUserId() });
+        createFeedback({ ...values, toTreat, feedbackType, projectId, parentId, userId: getUserId() }).then(() => {
+            setInvalidateQuery(true);
+            formFeedback.setFieldValue('content', '');
+            setToTreat(false);
+        });
     }
 
     // @TODO: A mettre dans un helper
@@ -80,8 +83,6 @@ export function FeedbackSection(props: FeedbackSectionProps) {
 
         return `${jour}-${mois}-${annee}`;
     }
-    console.log(feedbacks);
-
 
     return (
         <Box>
@@ -121,7 +122,7 @@ export function FeedbackSection(props: FeedbackSectionProps) {
                                         </FormLabel>
                                         <RadioGroup
                                             row
-                                            name="isPrivate"
+                                            name="isToTreat"
                                             value={toTreat}
                                             onChange={() => setToTreat(!toTreat)}
                                         >

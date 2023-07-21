@@ -37,7 +37,6 @@ export function CreateUser() {
     });
 
     function createAccount(values: UserForm) {
-        console.log(values);
         createAdmin(values)
     }
 

@@ -79,7 +79,6 @@ export function ProjectCore() {
     };
 
     const handleChangeFormProject = (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(event.target.value, event.target.id);
         const { id, value } = event.target;
         setFormCore((prevFormCore) => ({ ...prevFormCore, [id]: value }));
     };
@@ -122,7 +121,7 @@ export function ProjectCore() {
                         })}
                     </Stepper>
                     {activeStep === 0 && <CoreNote />}
-                    {activeStep === 1 && <AreaChooser areas={areas} handleChangeElements={handleChangeAreas} error={error} />}
+                    {activeStep === 1 && <AreaChooser areas={areas} handleChangeAreas={handleChangeAreas} error={error} />}
                     {activeStep === 2 && <ElementChooser elements={elements} handleChangeElements={handleChangeElements} />}
                     {activeStep === 3 && <PageChooser pages={pages} handleChangePages={handleChangePages} />}
                     {activeStep === 4 && <StatusChooser statusChoices={status} handleChangeStatus={handleChangeStatus} />}

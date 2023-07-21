@@ -26,7 +26,6 @@ export function ElementCreate() {
     });
 
     function handleCreateElement(values: NewElementForm) {
-        console.log(values);
         createElement(values);
         navigate(-1);
     }
@@ -35,11 +34,6 @@ export function ElementCreate() {
         formElement.setFieldValue('name', 'Organisation');
         formElement.setFieldValue('comment', "Pas de commentaire");
     }
-
-    console.log(formElement.errors);
-    console.log(formElement.getInputProps('name'));
-    
-    
 
     return (
         <Layout>

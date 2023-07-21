@@ -21,11 +21,12 @@ export interface EditPageForm {
 
 interface PageEditProps {
     page: Page,
-    handleCloseDialog: () => void
+    handleCloseDialog: () => void,
+    setInvalidateQuery: (value: boolean) => void
 }
 
 export function PageEdit(props: PageEditProps) {
-    const { page, handleCloseDialog } = props;
+    const { page, handleCloseDialog, setInvalidateQuery } = props;
     const [isModelOk, setIsModelOk] = useState<boolean>(page.isModelOk);
     const [isPrivate, setIsPrivate] = useState<boolean>(page.isPrivate);
     
@@ -48,13 +49,14 @@ export function PageEdit(props: PageEditProps) {
 
     function handleEditPage(values: any) {
         values = {...values, isModelOk, isPrivate}        
-        editPage(page.id, values);
-        handleCloseDialog();
+        editPage(page.id, values).then(() => {
+            setInvalidateQuery(true);
+            handleCloseDialog();
+        });
     }
 
     function sendValidation(status: boolean, type: string, validationToRemove: number | null) {
         if (status) {
-            console.log("Valider la page")
             addValidation({
                 type,
                 projectId: localStorage.getItem('project'),
@@ -66,7 +68,6 @@ export function PageEdit(props: PageEditProps) {
                 id: validationToRemove,
                 userId: getUserId(),
             });
-            console.log("Retirer la validation de la page");
         }
     }
 

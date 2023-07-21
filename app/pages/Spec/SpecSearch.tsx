@@ -25,9 +25,6 @@ export function SpecSearch(props: SpecSearchProps) {
     const results = allSpecs || [];
     const [specs, setSpecs] = useState<Spec[]>([]);
 
-    console.log(specs)
-
-
     const handleOpenDialog = () => {
         setDialog(true);
     };

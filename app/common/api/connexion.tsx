@@ -1,3 +1,4 @@
+import { log } from "console";
 import { NewConnectionForm } from "../../pages/Connection/ConnectionCreate";
 import { EditConnectionForm } from "../../pages/Connection/ConnectionEdit";
 import request from "./request";
@@ -23,6 +24,15 @@ export async function createConnection(values: NewConnectionForm) {
 
 export async function editConnection(id: number, values: EditConnectionForm) {
     return await request(`/api/connection/${id}/edit`, "PATCH", values, true).then((res) => {
+        if (res.status === 200) {
+            return res.json;
+        }
+        return null;
+    })
+}
+
+export async function deleteConnection(connectionId: number) {
+    return await request(`/api/connection/${connectionId}/delete`, "DELETE", true).then((res) => {        
         if (res.status === 200) {
             return res.json;
         }

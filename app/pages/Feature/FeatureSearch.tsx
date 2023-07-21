@@ -25,9 +25,6 @@ export function FeatureSearch(props: FeatureSearchProps) {
     const results = allFeatures || [];
     const [features, setFeatures] = useState<Feature[]>([]);
 
-    console.log(features)
-
-
     const handleOpenDialog = () => {
         setDialog(true);
     };

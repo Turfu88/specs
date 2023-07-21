@@ -35,7 +35,7 @@ class FeatureController extends AbstractController
             ->setIsFromCore($project->isIsCore())
             ->setProject($project)
             ->setSource(null);
-        
+
         if ($json->page) {
             $page = $em->getRepository(Page::class)->find($json->page);
             if ($page) {
@@ -61,7 +61,7 @@ class FeatureController extends AbstractController
 
         if (count($json->connections) > 0) {
             // Faire une différence entre les connections existantes et les nouvelles
-            foreach($feature->getConnections() as $connection) {
+            foreach ($feature->getConnections() as $connection) {
                 if (!in_array($connection->getId(), $json->connections)) {
                     $feature->removeConnection($connection);
                 }
@@ -161,5 +161,25 @@ class FeatureController extends AbstractController
             'validators' => $feature->getProject()->getValidators(),
             'feedbacks' => $feedbacksFormated
         ];
+    }
+
+    public function deleteFeature(Request $req, EntityManagerInterface $em, $id): Response
+    {
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $feature = $em->getRepository(Feature::class)->find($id);
+        foreach ($feature->getSpecs() as $spec) {
+            foreach ($spec->getElements() as $element) {
+                $spec->removeElement($element);
+            }
+            $em->remove($spec);
+        }
+        $em->remove($feature);
+        $em->flush();
+
+        return $response->setStatusCode(200)->setContent(json_encode([
+            'code' => 200,
+            'message' => 'Fonctionnalité supprimée',
+        ]));
     }
 }

@@ -1,8 +1,8 @@
 import { Box, Breadcrumbs, Button, Menu, MenuItem, Typography } from '@mui/material';
 import { Layout } from '../../common/components/Layout';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from 'react-query';
-import { getConnectionDetails } from '../../common/api/connexion';
+import { deleteConnection, getConnectionDetails } from '../../common/api/connexion';
 import { forwardRef, useEffect, useState } from 'react';
 import Dialog from '@mui/material/Dialog';
 import Slide from '@mui/material/Slide';
@@ -26,6 +26,7 @@ const Transition = forwardRef(function Transition(
 
 export function ConnectionView() {
     const { uid } = useParams();
+    const navigate = useNavigate();
     const { isLoading, data } = useQuery('getConnectionDetails', () => getConnectionDetails(uid));
     const connection = data || null;
     const [dialog, setDialog] = useState(false);
@@ -33,8 +34,6 @@ export function ConnectionView() {
     const [openMenu, setOpenMenu] = useState<null | HTMLElement>(null);
     const open = Boolean(openMenu);
     const queryClient = useQueryClient();
-
-    console.log(connection);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setOpenMenu(event.currentTarget);
@@ -51,6 +50,11 @@ export function ConnectionView() {
     const handleOpenConnectionForm = () => {
         setDialog(true);
         handleCloseMenu();
+    }
+
+    const handleDeleteConnection = () => {            
+        deleteConnection(connection.id);
+        navigate(`/projet/${connection.projectUid}`);
     }
 
     function refreshConnectionDetails() {
@@ -127,7 +131,7 @@ export function ConnectionView() {
                                     }}
                                 >
                                     <MenuItem onClick={handleOpenConnectionForm}>Modifier la connexion</MenuItem>
-                                    <MenuItem onClick={handleOpenConnectionForm}>Supprimer la connexion(TODO)</MenuItem>
+                                    <MenuItem onClick={handleDeleteConnection}>Supprimer la connexion</MenuItem>
                                 </Menu>
                             </div>
                         </Box>
@@ -183,6 +187,7 @@ export function ConnectionView() {
                             projectId={connection.projectId}
                             feedbackType={"connection"}
                             parentId={connection.id}
+                            setInvalidateQuery={setInvalidateQuery}
                         />
                     </Box>
                 }

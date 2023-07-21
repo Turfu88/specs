@@ -24,6 +24,15 @@ export function getUserId(): number | null {
     return null;
 }
 
+export async function getUserDetails() {    
+    return await request(`/api/user/${getUserId()}`, "GET", null, true).then((res) => {        
+        if (res.status === 200) {
+            return res.json.content;
+        }
+        return null;
+    });
+}
+
 export function getUserEmail(): string | null {
     let cookie = Cookies.get('token');
     if (cookie) {
@@ -109,8 +118,8 @@ export function updateUserPassword(params: any) {
     })
 }
 
-export function updateUser(params: any) {
-    request('/api/user/update', "PATCH", params, true).then((res) => {
+export function updateUser(id: string, params: any) {
+    request(`/api/user/${id}/edit`, "PATCH", params, true).then((res) => {        
         if (res.status === 200) {
             return res.json.content;
         }

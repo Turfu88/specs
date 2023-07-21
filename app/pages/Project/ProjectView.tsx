@@ -1,9 +1,9 @@
 import { Box, Breadcrumbs, Tab, Tabs, Typography } from '@mui/material';
 import { Layout } from '../../common/components/Layout';
 import { Link, useParams } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { getProjectDetails } from '../../common/api/project';
-import { forwardRef, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
 import { Project } from '../../common/types';
@@ -55,9 +55,11 @@ function a11yProps(index: number) {
 
 export function ProjectView() {
     const { uid } = useParams();
+    const queryClient = useQueryClient();
     const { isLoading, data } = useQuery('getProjectDetails', () => getProjectDetails(uid));
     const project: Project = data || null;
     const [tabValue, setTabValue] = useState(0);
+    const [invalidateQuery, setInvalidateQuery] = useState(false);
 
     const handleChangeTab = (event: React.SyntheticEvent, newValue: number) => {
         setTabValue(newValue);
@@ -65,6 +67,13 @@ export function ProjectView() {
 
     if (project) {
         localStorage.setItem('project', JSON.stringify(project.id));
+    }
+
+    function refreshConnectionDetails() {
+        if (invalidateQuery) {
+            queryClient.invalidateQueries(['getProjectDetails']);
+            setInvalidateQuery(false);
+        }
     }
 
     const breadcrumbs = [
@@ -75,6 +84,8 @@ export function ProjectView() {
             {project ? project.name : ''}
         </Typography>,
     ];
+
+    useEffect(refreshConnectionDetails, [invalidateQuery])
 
     return (
         <Layout>
@@ -101,7 +112,7 @@ export function ProjectView() {
                                 <Tab label="Tickets en cours" {...a11yProps(3)} />
                             </Tabs>
                         </Box>
-                        {tabValue === 0 && <ProjectContent project={project} />}
+                        {tabValue === 0 && <ProjectContent project={project} setInvalidateQuery={setInvalidateQuery} />}
                         {tabValue === 1 && <div>Item Two</div>}
                         {tabValue === 2 && <ProjectSummaries project={project} />}
                         {tabValue === 3 && <WorkInProgress project={project} />}

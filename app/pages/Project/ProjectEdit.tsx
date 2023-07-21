@@ -16,11 +16,12 @@ export interface EditProjectForm {
 
 interface ProjectEditProps {
     handleCloseDialog: () => void
-    project: Project
+    project: Project,
+    setInvalidateQuery: (value: boolean) => void
 }
 
 export function ProjectEdit(props: ProjectEditProps) {
-    const { project, handleCloseDialog } = props;
+    const { project, handleCloseDialog, setInvalidateQuery } = props;
 
     const formPage = useForm({
         initialValues: {
@@ -40,9 +41,10 @@ export function ProjectEdit(props: ProjectEditProps) {
     });
 
     function handleUpdateProject(values: EditProjectForm) {
-        console.log(values);
-        updateProject(values);
-        handleCloseDialog();
+        updateProject(values).then(() => {
+            setInvalidateQuery(true);
+            handleCloseDialog();
+        });
     }
 
     function handleChangeValidators(e: SelectChangeEvent) {

@@ -1,12 +1,12 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, Breadcrumbs, Dialog, Divider, Menu, MenuItem, Slide, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import { Layout } from '../../common/components/Layout';
-import { Link, useParams } from 'react-router-dom';
-import { useQuery } from 'react-query';
-import { getPageDetails } from '../../common/api/page';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useQuery, useQueryClient } from 'react-query';
+import { deletePage, getPageDetails } from '../../common/api/page';
 import { Feature, Spec } from '../../common/types';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { forwardRef, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import { TransitionProps } from '@mui/material/transitions';
 import { PageEdit } from './PageEdit';
 import { StatusShow } from '../../common/components/StatusShow';
@@ -30,8 +30,11 @@ const Transition = forwardRef(function Transition(
 
 export function PageView() {
     const { uid } = useParams();
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const { isLoading, data } = useQuery('getPageDetails', () => getPageDetails(uid));
     const page = data || null;
+    const [invalidateQuery, setInvalidateQuery] = useState(false);
     const [dialog, setDialog] = useState(false);
     const [openMenu, setOpenMenu] = useState<null | HTMLElement>(null);
     const open = Boolean(openMenu);
@@ -48,9 +51,14 @@ export function PageView() {
         setDialog(false);
     };
 
-    const handleOpenElementForm = () => {
+    const handleOpenPageForm = () => {
         setDialog(true);
         handleCloseMenu();
+    }
+
+    const handleDeletePage = () => {            
+        deletePage(page.id);
+        navigate(`/projet/${page.projectUid}`);
     }
 
     function sendValidation(status: boolean, type: string, validationToRemove: number | null) {
@@ -69,6 +77,13 @@ export function PageView() {
         }
     }
 
+    function refreshConnectionDetails() {
+        if (invalidateQuery) {
+            queryClient.invalidateQueries(['getPageDetails']);
+            setInvalidateQuery(false);
+        }
+    }
+
     if (page) {
         localStorage.setItem('page', JSON.stringify(page.id));
     }
@@ -84,6 +99,8 @@ export function PageView() {
             {page ? page.name : ''}
         </Typography>,
     ];
+
+    useEffect(refreshConnectionDetails, [invalidateQuery])
 
     return (
         <Layout>
@@ -120,8 +137,8 @@ export function PageView() {
                                         'aria-labelledby': 'basic-button',
                                     }}
                                 >
-                                    <MenuItem onClick={handleOpenElementForm}>Modifier cette page</MenuItem>
-                                    <MenuItem onClick={handleOpenElementForm}>Supprimer cette page (TODO)</MenuItem>
+                                    <MenuItem onClick={handleOpenPageForm}>Modifier cette page</MenuItem>
+                                    <MenuItem onClick={handleDeletePage}>Supprimer cette page</MenuItem>
                                 </Menu>
                             </div>
                         </Box>
@@ -247,6 +264,7 @@ export function PageView() {
                             projectId={page.projectId}
                             feedbackType={"page"}
                             parentId={page.id}
+                            setInvalidateQuery={setInvalidateQuery}
                         />
                     </Box>
                 }
@@ -264,6 +282,7 @@ export function PageView() {
                         </Box>
                         <PageEdit
                             handleCloseDialog={handleCloseDialog}
+                            setInvalidateQuery={setInvalidateQuery}
                             page={page}
                         />
                     </Box>

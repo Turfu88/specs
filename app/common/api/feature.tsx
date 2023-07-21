@@ -29,3 +29,12 @@ export async function editFeature(id: number, values: EditFeatureForm) {
         return null;
     })
 }
+
+export async function deleteFeature(featureId: number) {
+    return await request(`/api/feature/${featureId}/delete`, "DELETE", true).then((res) => {        
+        if (res.status === 200) {
+            return res.json;
+        }
+        return null;
+    });
+}

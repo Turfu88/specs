@@ -24,11 +24,12 @@ const Transition = forwardRef(function Transition(
 });
 
 interface ProjectContentProps {
-    project: Project
+    project: Project,
+    setInvalidateQuery: (value: boolean) => void
 }
 
 export function ProjectContent(props: ProjectContentProps) {
-    const {project} = props;
+    const {project, setInvalidateQuery} = props;
     const [dialog, setDialog] = useState(false);
     const [dialogContent, setDialogContent] = useState<'projectForm' | 'status' | 'section' | null>(null);
     const [openMenu, setOpenMenu] = useState<null | HTMLElement>(null);
@@ -128,14 +129,16 @@ export function ProjectContent(props: ProjectContentProps) {
                             </Typography>
                         }
                     </Box>
-                    <Typography
-                        component="span"
-                        variant="body1"
-                        className="border rounded p-2"
-                        style={{ backgroundColor: getColorFromStatus(project.status, project) }}
-                    >
-                        {project.status}
-                    </Typography>
+                    {project.status &&
+                        <Typography
+                            component="span"
+                            variant="body1"
+                            className="border rounded p-2"
+                            style={{ backgroundColor: getColorFromStatus(project.status, project) }}
+                        >
+                            {project.status}
+                        </Typography>
+                    }
                 </Box>
                 {project.comment &&
                     <Box mt={2} className="border rounded p-2">
@@ -285,6 +288,7 @@ export function ProjectContent(props: ProjectContentProps) {
                     {dialogContent === 'projectForm' &&
                         <ProjectEdit
                             handleCloseDialog={handleCloseDialog}
+                            setInvalidateQuery={setInvalidateQuery}
                             project={project}
                         />
                     }

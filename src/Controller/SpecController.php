@@ -156,4 +156,21 @@ class SpecController extends AbstractController
             'feedbacks' => $feedbacksFormated
         ];
     }
+
+    public function deleteSpec(Request $req, EntityManagerInterface $em, $id): Response
+    {
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $spec = $em->getRepository(Spec::class)->find($id);
+        foreach($spec->getElements() as $element) {
+            $spec->removeElement($element);    
+        }
+        $em->remove($spec);
+        $em->flush();
+
+        return $response->setStatusCode(200)->setContent(json_encode([
+            'code' => 200,
+            'message' => 'Spec supprimée',
+        ]));
+    }
 }

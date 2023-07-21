@@ -25,9 +25,6 @@ export function PageSearch(props: PageSearchProps) {
     const results = allPages || [];
     const [pages, setPages] = useState<Page[]>([]);
 
-    console.log(pages)
-
-
     const handleOpenDialog = () => {
         setDialog(true);
     };

@@ -50,6 +50,54 @@ class UserController extends AbstractController
         ]));
     }
 
+
+    public function editUser(Request $req, EntityManagerInterface $em, $id): Response
+    {
+        $json = json_decode($req->getContent());
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $user = $em->getRepository(User::class)->find($id);
+
+        $user->setEmail($json->email)
+            ->setFirstname($json->firstname)
+            ->setLastname($json->lastname)
+            ->setCompany($json->company)
+            ->setUpdatedAt(new \DateTimeImmutable);
+
+        $em->persist($user);
+        $em->flush();
+        return $response->setStatusCode(200)->setContent(json_encode([
+            'code' => 200,
+            'message' => 'Modification du compte utilisateur ok',
+        ]));
+    }
+
+    public function getUserDetails(Request $req, EntityManagerInterface $em, string $id): Response
+    {
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/json');
+        $user = $em->getRepository(User::class)->findOneBy(['id' => $id]);
+        if ($user) {
+            $content = $this->serializeUser($user);
+        } else {
+            $content = null;
+        }
+        return $response->setStatusCode(200)->setContent(json_encode([
+            'code' => 200,
+            'content' => $content,
+        ]));
+    }
+
+    private function serializeUser($user) {
+        return [
+            'id' => $user->getId(),
+            'email' => $user->getEmail(),
+            'firstname' => $user->getUsername(),
+            'lastname' => $user->getLastname(),
+            'company' => $user->getCompany()
+        ];
+    }
+
     public function getUserAreas(Request $req, EntityManagerInterface $em): Response
     {
         $response = new Response();

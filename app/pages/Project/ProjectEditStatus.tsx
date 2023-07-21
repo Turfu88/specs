@@ -38,9 +38,6 @@ export function ProjectEditStatus(props: ProjectEditStatusProps) {
         formStatusChoices.setFieldValue('statusChoices', [...formStatusChoices.getInputProps('statusChoices').value, ''])
         formStatusChoices.setFieldValue('statusColors', [...formStatusChoices.getInputProps('statusColors').value, ''])
     }
-
-    // console.log(formStatusChoices.getInputProps('statusChoices').value);
-    // console.log(formStatusChoices.getInputProps('statusColors').value);
     // ['Dev en cours', 'En attente', 'Terminé']
     // ['#e1bee7', '', '#dcedc8']
 
