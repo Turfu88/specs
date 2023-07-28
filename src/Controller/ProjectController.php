@@ -283,6 +283,7 @@ class ProjectController extends AbstractController
                 'pageId' => $validation->getPage() ? $validation->getPage()->getUid() : null,
                 'featureId' => $validation->getFeature() ? $validation->getFeature()->getUid() : null,
                 'specId' => $validation->getSpec() ? $validation->getSpec()->getUid() : null,
+                'connectionId' => $validation->getConnection() ? $validation->getConnection()->getUid() : null,
             ];
         }
         $featuresFormated = [];

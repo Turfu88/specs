@@ -56,6 +56,13 @@ export function SpecView() {
         navigate(`/fonctionnalite/${spec.featureUid}`);
     }
 
+    function refreshConnectionDetails() {
+        if (invalidateQuery) {
+            queryClient.invalidateQueries(['getSpecDetails']);
+            setInvalidateQuery(false);
+        }
+    }
+
     function sendValidation(status: boolean, type: string, validationToRemove: number | null) {
         if (status) {
             addValidation({
@@ -63,21 +70,20 @@ export function SpecView() {
                 projectId: localStorage.getItem('project'),
                 userId: getUserId(),
                 specId: spec.id
+            }).then(() => {
+                queryClient.invalidateQueries(['getSpecDetails']);
+                setInvalidateQuery(false);
             });
         } else {
             deleteValidation({
                 id: validationToRemove,
                 userId: getUserId(),
+            }).then(() => {
+                queryClient.invalidateQueries(['getSpecDetails']);
+                setInvalidateQuery(false);
             });
         }
-    }
-
-    function refreshConnectionDetails() {
-        if (invalidateQuery) {
-            queryClient.invalidateQueries(['getSpecDetails']);
-            setInvalidateQuery(false);
-        }
-    }
+    }    
 
     const breadcrumbs = [
         <Link key="1" color="inherit" to="/dashboard" className="link">

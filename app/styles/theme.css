@@ -34,3 +34,7 @@ a {
 .pointer {
     cursor: pointer;
 }
+.css-15njdv1-MuiLinearProgress-root {
+    height: 8px !important;
+    border-radius: 5px;
+}

@@ -71,11 +71,17 @@ export function ConnectionView() {
                 projectId: localStorage.getItem('project'),
                 userId: getUserId(),
                 connectionId: connection.id
+            }).then(() => {
+                queryClient.invalidateQueries(['getConnectionDetails']);
+                setInvalidateQuery(false);
             });
         } else {
             deleteValidation({
                 id: validationToRemove,
                 userId: getUserId(),
+            }).then(() => {
+                queryClient.invalidateQueries(['getConnectionDetails']);
+                setInvalidateQuery(false);
             });
         }
     }

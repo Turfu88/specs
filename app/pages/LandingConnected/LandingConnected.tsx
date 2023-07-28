@@ -33,10 +33,12 @@ export function LandingConnected() {
 
     // const core = accountProjects && accountProjects.length > 0? accountProjects.filter((project: Project) => project.isCore) : null;
     let projects: Project[] = [];
+    let projectIds: string[] = [];
     if (areas) {
         areas.forEach((area: Area) => {
             area.projects.forEach((project: Project) => {
-                if (!projects.includes(project)) {
+                if (!projectIds.includes(project.uid)) {
+                    projectIds.push(project.uid);
                     projects.push(project);
                 }
             })

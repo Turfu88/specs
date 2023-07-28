@@ -10,6 +10,7 @@ import { Project } from '../../common/types';
 import { ProjectSummaries } from '../Summary/ProjectSummaries';
 import { ProjectContent } from './ProjectContent';
 import { WorkInProgress } from './WorkInProgress';
+import { ProjectValidations } from './ProjectValidations';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -113,7 +114,7 @@ export function ProjectView() {
                             </Tabs>
                         </Box>
                         {tabValue === 0 && <ProjectContent project={project} setInvalidateQuery={setInvalidateQuery} />}
-                        {tabValue === 1 && <div>Item Two</div>}
+                        {tabValue === 1 && <ProjectValidations project={project} />}
                         {tabValue === 2 && <ProjectSummaries project={project} />}
                         {tabValue === 3 && <WorkInProgress project={project} />}
                     </Box>

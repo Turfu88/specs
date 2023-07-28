@@ -68,11 +68,17 @@ export function FeatureView() {
                 projectId: localStorage.getItem('project'),
                 userId: getUserId(),
                 featureId: feature.id
+            }).then(() => {
+                queryClient.invalidateQueries(['getFeatureDetails']);
+                setInvalidateQuery(false);
             });
         } else {
             deleteValidation({
                 id: validationToRemove,
                 userId: getUserId(),
+            }).then(() => {
+                queryClient.invalidateQueries(['getFeatureDetails']);
+                setInvalidateQuery(false);
             });
         }
     }

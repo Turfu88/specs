@@ -79,7 +79,7 @@ export function NewProjectForm() {
             return area;
         })
         setAreas(() => newValue);
-        setError(() => !newValue.some((value) => value.choosed === true))
+        setError(() => !newValue.some((value) => value.choosed === true));
     };
 
     const handleChangeMotherProject = (newValue: number) => {

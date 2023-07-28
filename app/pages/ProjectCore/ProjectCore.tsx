@@ -12,12 +12,15 @@ import { CoreInformations } from './CoreInformations';
 import { CoreNote } from './CoreNote';
 import { createCore } from '../../common/api/project';
 import { AreaChooser } from './AreaChooser';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { getUserAreas } from '../../common/api/user';
 import { Area } from '../../common/types';
 import { StatusChooser } from './StatusChooser';
+import { useNavigate } from 'react-router-dom';
 
 export function ProjectCore() {
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const [activeStep, setActiveStep] = useState(0);
     const [elements, setElements] = useState<DefaultElement[]>(defaultElements);
     const [status, setStatus] = useState<DefaultStatus[]>(defaultStatus);
@@ -42,7 +45,7 @@ export function ProjectCore() {
             return area;
         })
         setAreas(() => newValue);
-        setError(() => newValue.some((value) => !value.choosed))
+        setError(() => !newValue.some((value) => value.choosed === true));
     };
 
     const handleChangeElements = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,8 +92,10 @@ export function ProjectCore() {
             createCore({
                 elements, pages, form: formCore, areas
             }).then(response => {
-                if (200 === response.status) {
+                if (200 === response.code) {
                     window.location.replace('/dashboard');
+                    queryClient.invalidateQueries(['getUserAreas']);
+                    navigate(`/dashboard`);
                     // @TODO: open notification success: Le coeur a été créé.
                 } else {
                     // @TODO: open notification error: Une erreur s'est produite. Le coeur n'a pas pu être créé.

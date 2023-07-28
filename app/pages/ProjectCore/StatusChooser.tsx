@@ -18,8 +18,8 @@ export function StatusChooser(props: ElementChooserProps) {
                 <FormControl component="fieldset" variant="standard" style={{ width: '100%'}}>
                     <FormGroup>
                         {statusChoices.map((status, index) => (
-                            <Box display="flex" justifyContent="space-between" mb={1}>
-                                <FormControlLabel key={index}
+                            <Box key={index} display="flex" justifyContent="space-between" mb={1}>
+                                <FormControlLabel
                                     control={
                                         <Checkbox checked={status.choosed} onChange={handleChangeStatus} name={status.name} />
                                     }

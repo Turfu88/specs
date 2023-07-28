@@ -61,6 +61,13 @@ export function PageView() {
         navigate(`/projet/${page.projectUid}`);
     }
 
+    function refreshConnectionDetails() {
+        if (invalidateQuery) {
+            queryClient.invalidateQueries(['getPageDetails']);
+            setInvalidateQuery(false);
+        }
+    }
+
     function sendValidation(status: boolean, type: string, validationToRemove: number | null) {
         if (status) {
             addValidation({
@@ -68,19 +75,18 @@ export function PageView() {
                 projectId: localStorage.getItem('project'),
                 userId: getUserId(),
                 pageId: localStorage.getItem('page')
+            }).then(() => {
+                queryClient.invalidateQueries(['getPageDetails']);
+                setInvalidateQuery(false);
             });
         } else {
             deleteValidation({
                 id: validationToRemove,
                 userId: getUserId(),
+            }).then(() => {
+                queryClient.invalidateQueries(['getPageDetails']);
+                setInvalidateQuery(false);
             });
-        }
-    }
-
-    function refreshConnectionDetails() {
-        if (invalidateQuery) {
-            queryClient.invalidateQueries(['getPageDetails']);
-            setInvalidateQuery(false);
         }
     }
 
