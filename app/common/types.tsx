@@ -27,6 +27,7 @@ export interface Project {
     status: string,
     comment: string,
     validators: number,
+    validations: ProjectValidation[],
     isCore: boolean,
     devAccess: string,
     statusChoices: string[],
@@ -37,6 +38,17 @@ export interface Project {
     features: Feature[],
     pages: Page[],
     specs: Spec[]
+}
+
+export interface ProjectValidation {
+    id: number,
+    type: string,
+    user: string,
+    pageId: string | null,
+    featureId: string | null,
+    specId: string | null,
+    connectionId: string | null,
+    created: Date
 }
 
 export interface Validation {

@@ -334,7 +334,8 @@ class ProjectController extends AbstractController
             'specs' => $specsFormated,
             'connections' => $connectionsFormated,
             'features' => $featuresFormated,
-            'validations' => $validationsFormated
+            'validations' => $validationsFormated,
+            'validators' => $project->getValidators()
         ];
     }
 

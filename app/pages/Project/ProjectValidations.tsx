@@ -1,14 +1,8 @@
-import { Box, Divider, LinearProgress, LinearProgressProps, Typography } from '@mui/material';
-import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom';
-import { PageThumbnail } from './PageThumbnail';
-import { forwardRef, useState } from 'react';
-
+import { Box, LinearProgress, LinearProgressProps, Typography } from '@mui/material';
+import { forwardRef } from 'react';
 import Slide from '@mui/material/Slide';
 import { TransitionProps } from '@mui/material/transitions';
-
-import { Project } from '../../common/types';
-import { getColorFromStatus } from '../../common/helpers/projectHelper';
+import { Project, ProjectValidation } from '../../common/types';
 
 const Transition = forwardRef(function Transition(
     props: TransitionProps & {
@@ -40,9 +34,6 @@ interface ProjectContentProps {
 
 export function ProjectValidations(props: ProjectContentProps) {
     const { project } = props;
-
-    console.log(project);
-
     if (localStorage.getItem('page')) {
         localStorage.removeItem('page');
     }
@@ -51,8 +42,28 @@ export function ProjectValidations(props: ProjectContentProps) {
         localStorage.setItem('project', JSON.stringify(project.id));
     }
 
-    function getProgress() {
-        // TODO:
+    function getProgress(uid: string, type: string) {
+        if (project.validators === null) {
+            return 0;
+        }
+        if (type === 'page') {
+            const validationsFound = project.validations.filter((validation: ProjectValidation) => validation.pageId === uid);
+            return validationsFound.length * 100 / (project.validators * 2);
+        }
+        if (type === 'feature') {
+            const validationsFound = project.validations.filter((validation: ProjectValidation) => validation.featureId === uid);
+            return validationsFound.length * 100 / (project.validators * 2);
+        }
+        if (type === 'spec') {
+            const validationsFound = project.validations.filter((validation: ProjectValidation) => validation.specId === uid);
+            return validationsFound.length * 100 / (project.validators * 2);
+        }
+        if (type === 'connection') {
+            const validationsFound = project.validations.filter((validation: ProjectValidation) => validation.connectionId === uid);
+            return validationsFound.length * 100 / (project.validators * 2);
+        }
+
+        return 0;
     }
 
     return (
@@ -68,7 +79,7 @@ export function ProjectValidations(props: ProjectContentProps) {
                             </Typography>
                         </Box>
                         <Box sx={{ width: '50%' }}>
-                            <LinearProgressWithLabel value={10} />
+                            <LinearProgressWithLabel value={getProgress(page.uid, 'page')} />
                         </Box>
                     </Box>
                 ))}
@@ -81,7 +92,7 @@ export function ProjectValidations(props: ProjectContentProps) {
                             </Typography>
                         </Box>
                         <Box sx={{ width: '50%' }}>
-                            <LinearProgressWithLabel value={10} />
+                            <LinearProgressWithLabel value={getProgress(feature.uid, 'feature')} />
                         </Box>
                     </Box>
                 ))}
@@ -94,7 +105,7 @@ export function ProjectValidations(props: ProjectContentProps) {
                             </Typography>
                         </Box>
                         <Box sx={{ width: '50%' }}>
-                            <LinearProgressWithLabel value={10} />
+                            <LinearProgressWithLabel value={getProgress(spec.uid, 'spec')} />
                         </Box>
                     </Box>
                 ))}
@@ -107,7 +118,7 @@ export function ProjectValidations(props: ProjectContentProps) {
                             </Typography>
                         </Box>
                         <Box sx={{ width: '50%' }}>
-                            <LinearProgressWithLabel value={10} />
+                            <LinearProgressWithLabel value={getProgress(connection.uid, 'connection')} />
                         </Box>
                     </Box>
                 ))}
